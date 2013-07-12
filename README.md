@@ -10,6 +10,10 @@ Chiffon - Project for Chiffon Recipe Viewer
 
 Project for Chiffon Recipe Viewer.
 
+# INSTALL
+
+    cpanm --installdeps .
+
 # LICENSE
 
 Copyright (C) nqounet.
