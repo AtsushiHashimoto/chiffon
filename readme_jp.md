@@ -24,13 +24,20 @@ Perlを管理するツール（plenv）と、Perl本体、パッケージ管理�
     $ plenv global 5.16.3
     $ plenv install-cpanm
 
+``.bash_profile``は適宜読み替えてください。``.bashrc``だったり``.zshrc``だったりします。
+
 ## Chiffon-Viewer
 
 上記のようにインストールした場合のインストール方法です。
+
+システムのPerlを使う場合は、モジュールのインストール時にroot権限が必要になります。
 
     $ git clone https://github.com/AtsushiHashimoto/chiffon-viewer.git
     $ cd chiffon-viewer
     $ git checkout develop
     $ cpanm --installdeps .
+
+## 起動
+
     $ morbo script/chiffon_web
 
