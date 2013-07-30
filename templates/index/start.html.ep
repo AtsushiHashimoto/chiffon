@@ -1,0 +1,3 @@
+<div class="span12">
+<%=l 'Hello World' %>
+</div>
