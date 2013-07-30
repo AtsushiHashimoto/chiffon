@@ -5,7 +5,9 @@ our $VERSION = "0.01";
 
 BEGIN {
   $ENV{MOJO_I18N_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_SYSTEM_DEBUG} = 1;
+  $ENV{CHIFFON_WEB_SYSTEM_DEBUG} = 0;
+  $ENV{CHIFFON_WEB_INDEX_DEBUG} = 1;
+  $ENV{CHIFFON_WEB_RECIPE_DEBUG} = 1;
 };
 
 use Mojo::ByteStream qw(b);
@@ -13,6 +15,9 @@ use Mojo::ByteStream qw(b);
 use JSON::XS qw(encode_json decode_json);
 use Crypt::SaltedHash;
 use Path::Class qw(file dir);
+use XML::Simple;
+
+has xml => sub { XML::Simple->new };
 
 # This method will run once at server start
 sub startup {

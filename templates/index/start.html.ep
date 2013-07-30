@@ -1,3 +1,9 @@
 <div class="span12">
 <%=l 'Hello World' %>
+<ul>
+% for my $recipe (@{$recipes}) {
+  % my $name = $recipe->basename;
+  <li><%= link_to $name => url_for('/recipe')->query(name => $name) %></li>
+% }
+</ul>
 </div>
