@@ -1,5 +1,41 @@
 <div class="span12">
+
+%= tag h1 => 'recipe'
+
+%= tag h2 => 'title'
+%= link_to $recipe->{title} => url_for($recipe_xml_url);
+
+%= tag h2 => 'overview'
+%= image url_for(qq{$name/$recipe->{overview}});
+
+%= tag h2 => 'materials'
+% for my $material (@{$recipe->{materials}}) {
+  % for my $key (keys %{$material}) {
+    % if ($key eq 'object_group') {
+      % for my $object_group (@{$material->{object_group}}) {
+        <div class="well">
+        %= tag h3 => $object_group->{name}
+        % for my $object (@{$object_group->{object}}) {
+          %= include 'widgets/object', object => $object;
+        % }
+        </div>
+      % }
+    % } elsif ($key eq 'object') {
+      % for my $object (@{$material->{object}}) {
+        %= include 'widgets/object', object => $object;
+      % }
+    % }
+  % }
+% }
+
+%= tag h2 => 'event'
+
+%= tag h2 => 'directions'
+
 <pre>
-<%= dumper($recipe) %>
+<%= pretty_dumper($recipe) %>
+</pre>
+<pre>
+<%= app->xml->XMLout($recipe) %>
 </pre>
 </div>

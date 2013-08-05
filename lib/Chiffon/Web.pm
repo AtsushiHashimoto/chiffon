@@ -16,8 +16,11 @@ use JSON::XS qw(encode_json decode_json);
 use Crypt::SaltedHash;
 use Path::Class qw(file dir);
 use XML::Simple;
+use Mojo::DOM;
 
 has xml => sub { XML::Simple->new };
+has json => sub { JSON::XS->new };
+has dom => sub { Mojo::DOM->new };
 
 # This method will run once at server start
 sub startup {
@@ -34,6 +37,9 @@ sub startup {
     namespace => 'Chiffon::Web::I18N',
   );
 
+  # Static
+  unshift @{$self->static->paths}, $self->config->{recipes_dir};
+
   # helpers
   $self->helper(
     get_user => sub {
@@ -47,6 +53,16 @@ sub startup {
     }
   );
 
+  # デバッグ出力用
+  $self->helper(
+    pretty_dumper => sub {
+      my $self = shift;
+      my $arg  = shift;
+      my $json = $self->app->json;
+      return $json->pretty->allow_nonref->encode($arg);
+    }
+  );
+
   # validate hash
   $self->helper(
     csh_validate => sub {
@@ -54,8 +70,6 @@ sub startup {
       return Crypt::SaltedHash->validate($salted, $plain);
     }
   );
-
-
 
   # メッセージの管理
   # $self->add_stash_message(

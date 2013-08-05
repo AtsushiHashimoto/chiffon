@@ -1,0 +1,3 @@
+<pre>
+<%= pretty_dumper($material) %>
+</pre>
