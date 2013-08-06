@@ -10,16 +10,18 @@ use Path::Class qw(file dir);
 sub start {
   my $self = shift;
   my $logger = $self->app->log;
+  $self->clear_session_id;
 
   my $config = $self->config;
   my @pathes = dir($config->{recipes_dir})->children;
-  $logger->debug($self->dumper(\@pathes)) if DEBUG;
+  warn qq{-- } . $self->dumper(\@pathes) if DEBUG;
 
   my @recipes;
   for my $path (@pathes) {
     next unless $path->is_dir;
     push @recipes, $path;
   }
+  warn qq{-- @recipes} if DEBUG;
   $self->stash(recipes => \@recipes);
 
   $self->render(

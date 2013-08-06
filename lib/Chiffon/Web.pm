@@ -5,9 +5,10 @@ our $VERSION = "0.01";
 
 BEGIN {
   $ENV{MOJO_I18N_DEBUG} = 0;
+  $ENV{CHIFFON_WEB_DEBUG} = 1;
+  $ENV{CHIFFON_WEB_INDEX_DEBUG} = 0;
+  $ENV{CHIFFON_WEB_RECIPE_DEBUG} = 0;
   $ENV{CHIFFON_WEB_SYSTEM_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_INDEX_DEBUG} = 1;
-  $ENV{CHIFFON_WEB_RECIPE_DEBUG} = 1;
 };
 
 use Mojo::ByteStream qw(b);
@@ -16,15 +17,20 @@ use JSON::XS qw(encode_json decode_json);
 use Crypt::SaltedHash;
 use Path::Class qw(file dir);
 use XML::Simple;
-use Mojo::DOM;
+use Time::HiRes;
+use POSIX qw(strftime);
+
+use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
 has xml => sub { XML::Simple->new };
 has json => sub { JSON::XS->new };
-has dom => sub { Mojo::DOM->new };
 
 # This method will run once at server start
 sub startup {
   my $self = shift;
+
+  chdir $self->home->detect;# startupの$selfはコントローラーではなくアプリが入っている
+  warn qq{-- chdir @{[$self->home->detect]} } if DEBUG;
 
   $self->secret(b(file(__FILE__)->absolute)->sha1_sum);
 
@@ -35,21 +41,110 @@ sub startup {
   $self->plugin('config');
   $self->plugin('I18N',
     namespace => 'Chiffon::Web::I18N',
+    default => 'ja',
   );
+
+  # Log
+  $self->log->level($self->config->{log_level});
 
   # Static
   unshift @{$self->static->paths}, $self->config->{recipes_dir};
 
   # helpers
+  # ユーザー情報を取得する
   $self->helper(
     get_user => sub {
       my $self = shift;
       my $user_id = shift || $self->session('user_id');
       return unless defined $user_id;
       my $config = $self->config;
-      my $home = $self->app->home;
-      my $users = decode_json(file($home->detect, $config->{userfile})->slurp);
-      return $users->{$user_id};
+      my $users = decode_json(file($config->{userfile})->slurp);
+      my $user = +{
+        name => $user_id,
+        %{$users->{$user_id}}
+      };
+      return $user;
+    }
+  );
+
+  # time_for_navigate
+  $self->helper(
+    time_for_navigate => sub {
+      my $self = shift;
+      my ($sec, $usec) = Time::HiRes::gettimeofday;
+      my $time_for_navigate = {
+        sec => $sec,
+        usec => sprintf('%06d', $usec),
+      };
+      warn qq{-- time_for_navigate : @{[%{$time_for_navigate}]} } if DEBUG;
+      return $time_for_navigate;
+    }
+  );
+
+  # デバッグ出力用
+  $self->helper(
+    pretty_dumper => sub {
+      my $self = shift;
+      my $arg  = shift;
+      my $json = $self->app->json;
+      return $json->pretty->allow_nonref->allow_blessed(1)->convert_blessed(1)->encode($arg);
+    }
+  );
+
+  # Navigator通信用
+  # 閲覧IDリセット
+  $self->helper(
+    clear_session_id => sub {
+      my $self = shift;
+      $self->session('session_id' => undef);
+    }
+  );
+
+  # 閲覧ID生成
+  $self->helper(
+    session_id => sub {
+      my $self = shift;
+      my $session_id = $self->session('session_id');
+      return $session_id if defined $session_id;
+      my $user_name = $self->user_name;
+      my ($sec, $usec) = Time::HiRes::gettimeofday;
+      $usec = sprintf '%06d', $usec;
+      my $datetime = strftime($self->config->{datetime_format}, localtime($sec));
+      $session_id = qq{$user_name-$datetime.$usec};
+      warn qq{-- session_id : $session_id } if DEBUG;
+      $self->session(session_id => $session_id);
+      return $session_id;
+    }
+  );
+
+  # user_name
+  $self->helper(
+    user_name => sub {
+      my $self = shift;
+      my $user = $self->get_user;
+      my $user_name = $user->{name};
+      warn qq{-- user_name : $user_name } if DEBUG;
+      return $user_name;
+    }
+  );
+
+  # post_to_navigator
+  $self->helper(
+    post_to_navigator => sub {
+      my $self = shift;
+      my $args = shift // +{};
+      my $data = {
+        session_id => $self->session_id,
+        user_name => $self->user_name,
+        situation => undef,
+        operation_contents => undef,
+        time => $self->time_for_navigate,
+        log_level => uc $self->app->log->level,
+        %{$args}
+      };
+      warn qq{-- data : @{[$self->dumper($data)]} } if DEBUG;
+      my $tx = $self->ua->post($self->config->{navigator_endpoint}, json => $data);
+      return $tx->res;
     }
   );
 

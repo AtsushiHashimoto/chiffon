@@ -1,0 +1,1 @@
+<pre><%= pretty_dumper($object) %></pre>

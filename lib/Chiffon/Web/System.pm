@@ -45,7 +45,7 @@ sub login {
 
   # ユーザー情報を検証
   my $user = $self->get_user($user_id);
-  $logger->debug($self->dumper($user)) if DEBUG;
+  warn qq{-- user : $user} if DEBUG;
   return unless defined $user;
   return unless $self->csh_validate($user->{salted}, $password);
 

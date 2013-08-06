@@ -6,9 +6,12 @@
 %= link_to $recipe->{title} => url_for($recipe_xml_url);
 
 %= tag h2 => 'overview'
+<div id="overview">
 %= image url_for(qq{$name/$recipe->{overview}});
+</div>
 
 %= tag h2 => 'materials'
+<div id="materials">
 % for my $material (@{$recipe->{materials}}) {
   % for my $key (keys %{$material}) {
     % if ($key eq 'object_group') {
@@ -27,11 +30,23 @@
     % }
   % }
 % }
+</div>
 
 %= tag h2 => 'event'
-
+% for my $event (@{$recipe->{event}}) {
+  %= include 'widgets/dumper', object => $event;
+% }
 %= tag h2 => 'directions'
+<div id="guide">
+% for my $direction (@{$recipe->{directions}[0]{step}}) {
+  %= include 'widgets/dumper', object => $direction;
+% }
+</div>
 
+%= tag h1 => 'DEBUG'
+<pre>
+<%= pretty_dumper(app->json->decode($navigator_response->body)) %>
+</pre>
 <pre>
 <%= pretty_dumper($recipe) %>
 </pre>

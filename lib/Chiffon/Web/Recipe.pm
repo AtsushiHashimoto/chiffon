@@ -13,6 +13,7 @@ sub start {
 
   my $config = $self->config;
   my $name = $self->param('name');
+
   my $recipe_basename = $config->{recipe_basename};
   my $recipe_xml_url = $self->url_for(qq{$name/$recipe_basename});
   my $recipe_xml_file = file($config->{recipes_dir}, $name, $recipe_basename);
@@ -25,7 +26,7 @@ sub start {
     return $self->render(status => 403, data => '');
   }
   my $recipe_dir  = $recipe_xml_file->dir;
-  $logger->debug($recipe_xml_file) if DEBUG;
+  warn qq{-- recipe_xml_file : $recipe_xml_file} if DEBUG;
   my $xml = $self->app->xml;
   my $recipe = $xml->XMLin($recipe_xml_file->stringify,
     keyattr => [],# 属性名を省略しない
@@ -38,7 +39,18 @@ sub start {
     return $self->render_exception;
   }
 
+  # Navigator と通信
+  my $situation = 'START';
+  my $operation_contents = $recipe_xml_file->slurp;
+  my $navigator_response = $self->post_to_navigator(
+    {
+      situation => $situation,
+      operation_contents => $operation_contents
+    }
+  );
+
   $self->stash(
+    navigator_response => $navigator_response,
     recipe_xml_url => $recipe_xml_url,
     recipe => $recipe,
     name => $name,
