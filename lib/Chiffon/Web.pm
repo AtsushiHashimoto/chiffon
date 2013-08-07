@@ -92,15 +92,6 @@ sub startup {
     }
   );
 
-  # Navigator通信用
-  # 閲覧IDリセット
-  $self->helper(
-    clear_session_id => sub {
-      my $self = shift;
-      $self->session('session_id' => undef);
-    }
-  );
-
   # 閲覧ID生成
   $self->helper(
     session_id => sub {
@@ -161,29 +152,9 @@ sub startup {
         log_level => uc $self->app->log->level,
         %{$args}
       };
-      warn qq{-- data : @{[$self->dumper($data)]} } if DEBUG;
+      warn qq{-- data : @{[encode_json($data)]} } if DEBUG;
       my $tx = $self->ua->post($self->config->{navigator_endpoint}, json => $data);
       return $tx->res;
-    }
-  );
-
-  # デバッグ出力用
-  $self->helper(
-    pretty_dumper => sub {
-      my $self = shift;
-      my $arg  = shift;
-      my $json = $self->app->json;
-      return $json->pretty->allow_nonref->encode($arg);
-    }
-  );
-
-  # デバッグ出力用
-  $self->helper(
-    pretty_dumper => sub {
-      my $self = shift;
-      my $arg  = shift;
-      my $json = $self->app->json;
-      return $json->pretty->allow_nonref->allow_blessed(1)->convert_blessed(1)->encode($arg);
     }
   );
 
@@ -194,54 +165,6 @@ sub startup {
       my $self = shift;
       $self->session('session_id' => undef);
       $self->session('recipe_xml_file' => undef);
-    }
-  );
-
-  # 閲覧ID生成
-  $self->helper(
-    session_id => sub {
-      my $self = shift;
-      my $session_id = $self->session('session_id');
-      return $session_id if defined $session_id;
-      my $user_name = $self->user_name;
-      my ($sec, $usec) = Time::HiRes::gettimeofday;
-      $usec = sprintf '%06d', $usec;
-      my $datetime = strftime($self->config->{datetime_format}, localtime($sec));
-      $session_id = qq{$user_name-$datetime.$usec};
-      warn qq{-- session_id : $session_id } if DEBUG;
-      $self->session(session_id => $session_id);
-      return $session_id;
-    }
-  );
-
-  # user_name
-  $self->helper(
-    user_name => sub {
-      my $self = shift;
-      my $user = $self->get_user;
-      my $user_name = $user->{name};
-      warn qq{-- user_name : $user_name } if DEBUG;
-      return $user_name;
-    }
-  );
-
-  # post_to_navigator
-  $self->helper(
-    post_to_navigator => sub {
-      my $self = shift;
-      my $args = shift // +{};
-      my $data = {
-        session_id => $self->session_id,
-        user_name => $self->user_name,
-        situation => undef,
-        operation_contents => undef,
-        time => $self->time_for_navigate,
-        log_level => uc $self->app->log->level,
-        %{$args}
-      };
-      warn qq{-- data : @{[$self->dumper($data)]} } if DEBUG;
-      my $tx = $self->ua->post($self->config->{navigator_endpoint}, json => $data);
-      return $tx->res;
     }
   );
 
