@@ -27,3 +27,49 @@ body {
 .hidden {
   display: none;
 }
+
+.navi-step {
+  margin: 3px;
+  padding: 3px;
+}
+
+.navi-step > a[href] {
+  padding: 3px;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+}
+
+.navi-current > a[href] {
+  font-weight: bold;
+  background-color: crimson;
+  color: whitesmoke;
+}
+.navi-current:before {
+  content: "(c)";
+}
+.navi-able > a[href] {
+  font-weight: bold;
+  background-color: tomato;
+  color: whitesmoke;
+}
+.navi-able:before {
+  content: "(a)";
+}
+.navi-done > a[href] {
+  color: gray;
+}
+.navi-done:before {
+  content: "(d)";
+}
+.navi-not-yet > a[href] {
+  color: lightgrey;
+}
+.navi-not-yet:before {
+  content: "(n)";
+}
+.navi-others > a[href] {
+}
+.navi-others:before {
+  content: "(o)";
+}

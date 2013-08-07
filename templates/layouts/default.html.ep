@@ -44,11 +44,7 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
 </div>
 
 <div class="container">
-<div class="row">
-<header class="jumbotron subhead">
-  <h1 class="span9"><%= title %></h1>
-</header>
-</div>
+<h1><%= title %></h1>
 
 %= include 'widgets/alert';
 %= tag div => (class => 'row') => begin

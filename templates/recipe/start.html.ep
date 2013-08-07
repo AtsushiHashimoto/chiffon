@@ -1,5 +1,9 @@
 <div class="span12">
 
+<div id="screen" class="hidden"></div>
+
+<div id="notify"></div>
+
 <div id="overview" class="hidden">
 %= tag h2 => l('Overview')
 %= link_to l('Materials') => url_for('/navigator/materials'), class => 'btn navigate'
@@ -35,9 +39,40 @@
 %= tag h2 => l('Guide')
 %= link_to l('Overview') => url_for('/navigator/overview'), class => 'btn navigate'
 %= link_to l('Materials') => url_for('/navigator/materials'), class => 'btn navigate'
-% for my $direction (@{$recipe->{directions}[0]{step}}) {
-  %= include 'widgets/dumper', object => $direction;
+<div class="row">
+<div id="detail" class="span8">
+% for my $step (@{$recipe->{directions}[0]{step}}) {
+  %= tag div => id => $step->{id}, begin
+    %= $step->{html_contents}[0]
+    %= include 'widgets/dumper', object => $step;
+  % end
+  % for my $substep (@{$step->{substep}}) {
+    %= tag div => id => $substep->{id}, begin
+      %= $substep->{html_contents}[0]
+      %= include 'widgets/dumper', object => $substep;
+    % end
+  % }
 % }
+</div>
+<div id="navi" class="span4">
+<ul>
+% for my $step (@{$recipe->{directions}[0]{step}}) {
+  %= tag li => id => 'navi-'.$step->{id}, class => 'navi-step', begin
+    %= link_to $step->{navi_text} => url_for('/navigator/navi_menu/'.$step->{id}), class => 'navigate'
+    % if (@{$step->{substep}}) {
+      <ul>
+      % for my $substep (@{$step->{substep}}) {
+        %= tag li => id => 'navi-'.$substep->{id}, class => 'navi-step', begin
+          %= link_to $substep->{navi_text} => url_for('/navigator/navi_menu/'.$substep->{id}), class => 'substep navigate', 'data-substep' => url_for('/navigator/check/'.$substep->{id})
+        % end
+      % }
+      </ul>
+    % }
+  % end
+% }
+</ul>
+</div>
+</div>
 </div>
 
 %= link_to 'init' => url_for('/navigator/start'), class => 'hidden navigator-run'

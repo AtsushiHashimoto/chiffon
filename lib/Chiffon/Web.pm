@@ -299,8 +299,8 @@ sub startup {
   $r->route('/logout')->to('system#logout');
 
   # メニュー
-  $r->via(qw(get post))->route(qq{/:controller/:action/:id}, id => qr/\d+/)
-    ->to(controller => 'index', action => 'start', id => 0);
+  $r->via(qw(get post))->route(qq{/:controller/:action/:id})
+    ->to(controller => 'index', action => 'start', id => '');
 }
 
 1;
