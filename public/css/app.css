@@ -24,3 +24,6 @@ body {
 }
 /* end for navbar-fixed-top */
 
+.hidden {
+  display: none;
+}

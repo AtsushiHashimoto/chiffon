@@ -10,7 +10,7 @@ use Path::Class qw(file dir);
 sub start {
   my $self = shift;
   my $logger = $self->app->log;
-  $self->clear_session_id;
+  $self->clear_recipe_session;
 
   my $config = $self->config;
   my @pathes = dir($config->{recipes_dir})->children;

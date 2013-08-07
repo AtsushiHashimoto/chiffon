@@ -1,17 +1,16 @@
 <div class="span12">
 
-%= tag h1 => 'recipe'
-
-%= tag h2 => 'title'
-%= link_to $recipe->{title} => url_for($recipe_xml_url);
-
-%= tag h2 => 'overview'
-<div id="overview">
+<div id="overview" class="hidden">
+%= tag h2 => l('Overview')
+%= link_to l('Materials') => url_for('/navigator/materials'), class => 'btn navigate'
+%= link_to l('Guide') => url_for('/navigator/guide'), class => 'btn navigate'
 %= image url_for(qq{$name/$recipe->{overview}});
 </div>
 
-%= tag h2 => 'materials'
-<div id="materials">
+<div id="materials" class="hidden">
+%= tag h2 => l('Materials')
+%= link_to l('Overview') => url_for('/navigator/overview'), class => 'btn navigate'
+%= link_to l('Guide') => url_for('/navigator/guide'), class => 'btn navigate'
 % for my $material (@{$recipe->{materials}}) {
   % for my $key (keys %{$material}) {
     % if ($key eq 'object_group') {
@@ -32,25 +31,24 @@
 % }
 </div>
 
-%= tag h2 => 'event'
-% for my $event (@{$recipe->{event}}) {
-  %= include 'widgets/dumper', object => $event;
-% }
-%= tag h2 => 'directions'
-<div id="guide">
+<div id="guide" class="hidden">
+%= tag h2 => l('Guide')
+%= link_to l('Overview') => url_for('/navigator/overview'), class => 'btn navigate'
+%= link_to l('Materials') => url_for('/navigator/materials'), class => 'btn navigate'
 % for my $direction (@{$recipe->{directions}[0]{step}}) {
   %= include 'widgets/dumper', object => $direction;
 % }
 </div>
 
+%= link_to 'init' => url_for('/navigator/start'), class => 'hidden navigator-run'
+
 %= tag h1 => 'DEBUG'
 <pre>
-<%= pretty_dumper(app->json->decode($navigator_response->body)) %>
-</pre>
-<pre>
+レシピの構造
 <%= pretty_dumper($recipe) %>
 </pre>
 <pre>
+レシピのXMLを再構成
 <%= app->xml->XMLout($recipe) %>
 </pre>
 </div>

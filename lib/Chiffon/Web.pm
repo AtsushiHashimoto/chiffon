@@ -7,6 +7,7 @@ BEGIN {
   $ENV{MOJO_I18N_DEBUG} = 0;
   $ENV{CHIFFON_WEB_DEBUG} = 1;
   $ENV{CHIFFON_WEB_INDEX_DEBUG} = 0;
+  $ENV{CHIFFON_WEB_NAVIGATOR_DEBUG} = 1;
   $ENV{CHIFFON_WEB_RECIPE_DEBUG} = 0;
   $ENV{CHIFFON_WEB_SYSTEM_DEBUG} = 0;
 };
@@ -128,6 +129,24 @@ sub startup {
     }
   );
 
+  # recipe_xml_file
+  $self->helper(
+    recipe_xml_file => sub {
+      my $self = shift;
+      my $recipe_xml_file = $self->session('recipe_xml_file');
+      if (defined $recipe_xml_file) {
+        return file($recipe_xml_file);
+      }
+      my $name = shift || '';
+      return unless $name;
+      my $config = $self->config;
+      my $recipe_basename = $config->{recipe_basename};
+      $recipe_xml_file = file($config->{recipes_dir}, $name, $recipe_basename);
+      $self->session(recipe_xml_file => $recipe_xml_file->stringify);
+      return $recipe_xml_file;
+    }
+  );
+
   # post_to_navigator
   $self->helper(
     post_to_navigator => sub {
@@ -171,9 +190,10 @@ sub startup {
   # Navigator通信用
   # 閲覧IDリセット
   $self->helper(
-    clear_session_id => sub {
+    clear_recipe_session => sub {
       my $self = shift;
       $self->session('session_id' => undef);
+      $self->session('recipe_xml_file' => undef);
     }
   );
 

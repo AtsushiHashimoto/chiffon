@@ -14,10 +14,8 @@ sub start {
   my $config = $self->config;
   my $name = $self->param('name');
 
-  my $recipe_basename = $config->{recipe_basename};
-  my $recipe_xml_url = $self->url_for(qq{$name/$recipe_basename});
-  my $recipe_xml_file = file($config->{recipes_dir}, $name, $recipe_basename);
-  unless (-e $recipe_xml_file) {
+  my $recipe_xml_file = $self->recipe_xml_file($name);
+  unless ($recipe_xml_file and -f $recipe_xml_file) {
     $logger->error(qq{file not found $recipe_xml_file});
     return $self->render_not_found;
   }
@@ -39,19 +37,7 @@ sub start {
     return $self->render_exception;
   }
 
-  # Navigator と通信
-  my $situation = 'START';
-  my $operation_contents = $recipe_xml_file->slurp;
-  my $navigator_response = $self->post_to_navigator(
-    {
-      situation => $situation,
-      operation_contents => $operation_contents
-    }
-  );
-
   $self->stash(
-    navigator_response => $navigator_response,
-    recipe_xml_url => $recipe_xml_url,
     recipe => $recipe,
     name => $name,
   );
