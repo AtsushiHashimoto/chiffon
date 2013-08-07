@@ -43,12 +43,12 @@
 <div id="detail" class="span8">
 % for my $step (@{$recipe->{directions}[0]{step}}) {
   %= tag div => id => $step->{id}, begin
-    %= $step->{html_contents}[0]
+    %== $step->{html_contents}[0]
     %= include 'widgets/dumper', object => $step;
   % end
   % for my $substep (@{$step->{substep}}) {
     %= tag div => id => $substep->{id}, begin
-      %= $substep->{html_contents}[0]
+      %== $substep->{html_contents}[0]
       %= include 'widgets/dumper', object => $substep;
     % end
   % }
