@@ -8,7 +8,7 @@
 %= tag h2 => l('Overview')
 %= link_to l('Materials') => url_for('/navigator/materials'), class => 'btn navigate'
 %= link_to l('Guide') => url_for('/navigator/guide'), class => 'btn navigate'
-%= image url_for(qq{$name/$recipe->{overview}});
+%= image url_for(qq{/$name/$recipe->{overview}});
 </div>
 
 <div id="materials" class="hidden">
