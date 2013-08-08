@@ -14,9 +14,15 @@
   % $content .= join '<br />', @{$args};
   % $content .= app->xml->XMLout($hash, keyattr => [], rootname => undef);
 % }
-% if (defined $content) {
-  %= tag div => id => $object->{id}, begin
-    %== $content
-    %= include 'widgets/dumper', object => $object;
-  % end
-% }
+%= tag div => id => $object->{id}, begin
+  %== defined $content ? $content : ''
+  % if (exists $object->{notification}) {
+    %= include 'widgets/notification', object => $object->{notification};
+  % }
+  % if (exists $object->{video}) {
+    %= include 'widgets/video', object => $object->{video};
+  % }
+  % if (exists $object->{audio}) {
+    %= include 'widgets/audio', object => $object->{audio}, autoplay => $autoplay;
+  % }
+% end

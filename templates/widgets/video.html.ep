@@ -1,0 +1,10 @@
+% for my $video (@{$object}) {
+  % my $src = $video->{path} // next;
+  % $src = url_for(qq{/$name/$src});
+  %= tag video => id => $video->{id}, src => $src, preload => 'none', width => 320, height => 180, begin
+    <p>This is video. Your browser is not support.</p>
+  % end
+  <div>
+  %= link_to l('Play') => url_for, class => 'btn media-play', rel => $video->{id};
+  </div>
+% }

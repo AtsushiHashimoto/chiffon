@@ -1,0 +1,5 @@
+% for my $notification (@{$object}) {
+  %= tag div => id => $notification->{id}, class => 'hidden', begin
+    %= include 'widgets/html_contents', object => $notification, autoplay => 1;
+  % end
+% }

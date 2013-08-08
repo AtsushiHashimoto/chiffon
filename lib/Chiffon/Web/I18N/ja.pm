@@ -7,6 +7,7 @@ our %Lexicon = (
   'Materials' => '材料一覧',
   'Guide' => '詳細',
   'Overview' => '概観',
+  'Play' => '再生',
 );
 
 

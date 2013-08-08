@@ -17,6 +17,9 @@
 window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3.min.js}) %>"><\/script>');
 </script>
 %= javascript '/tb/js/bootstrap.min.js'
+%= javascript '/noty/jquery.noty.js'
+%= javascript '/noty/layouts/bottom.js'
+%= javascript '/noty/themes/default.js'
 %= javascript '/js/app.js'
 
 <div class="navbar navbar-fixed-top navbar-inverse">
