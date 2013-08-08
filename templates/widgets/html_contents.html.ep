@@ -1,0 +1,22 @@
+% my $content = $object->{html_contents}[0];
+% if (ref $content eq 'HASH') {
+  % my $hash = {%$content};
+  % $content = '';
+  % delete $hash->{br};
+  % my $args = delete $hash->{content} // [];
+  % if (ref $hash->{img} eq 'ARRAY') {
+    % for my $img (@{$hash->{img}}) {
+      % $img->{src} = url_for(qq{/$name/$img->{src}})->to_string;
+      % push @{$args}, app->xml->XMLout($img, keyattr => [], rootname => 'img');
+    % }
+    % delete $hash->{img};
+  % }
+  % $content .= join '<br />', @{$args};
+  % $content .= app->xml->XMLout($hash, keyattr => [], rootname => undef);
+% }
+% if (defined $content) {
+  %= tag div => id => $object->{id}, begin
+    %== $content
+    %= include 'widgets/dumper', object => $object;
+  % end
+% }

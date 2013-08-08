@@ -103,7 +103,7 @@ sub startup {
       $usec = sprintf '%06d', $usec;
       my $datetime = strftime($self->config->{datetime_format}, localtime($sec));
       $session_id = qq{$user_name-$datetime.$usec};
-      warn qq{-- session_id : $session_id } if DEBUG;
+      warn qq{-- create session_id : $session_id } if DEBUG;
       $self->session(session_id => $session_id);
       return $session_id;
     }
@@ -163,8 +163,10 @@ sub startup {
   $self->helper(
     clear_recipe_session => sub {
       my $self = shift;
+      warn qq{-- clear_recipe_session } if DEBUG;
       $self->session('session_id' => undef);
       $self->session('recipe_xml_file' => undef);
+      return;
     }
   );
 
