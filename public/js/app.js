@@ -1,4 +1,16 @@
 jQuery( function($){
+
+  // loading
+  $(document).ajaxStart(function() {
+    $('#loading')
+      .css("top", $(window).scrollTop() + "px")
+      .css("left", $(window).scrollLeft() + "px")
+      .show(0);
+  }).ajaxComplete(function(){
+    $('#loading')
+      .hide(0);
+  });
+
   var channels = {
     'SCREEN': 'screen',
     'OVERVIEW': 'overview',
@@ -9,8 +21,6 @@ jQuery( function($){
   var navigations = {
     'CURRENT': 'navi-current',
     'ABLE': 'navi-able',
-    'DONE': 'navi-done',
-    'NOT_YET': 'navi-not-yet',
     'OTHERS': 'navi-others'
   };
   var navigation_classes = $.map(navigations, function(value, key){ return value }).join(' ');
