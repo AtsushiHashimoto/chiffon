@@ -59,7 +59,7 @@ jQuery( function($){
           $.each(obj.NaviDraw.steps, function(i, step){
             // console.log(step);
             if ($('#navi-' + step.id).length) {
-                // step.is_finished;
+              $('#check-' + step.id).attr('checked', step.is_finished ? true : false);
               $('#navi-' + step.id)
                 .addClass(navigations[step.visual])
                 .show(0);
@@ -91,12 +91,15 @@ jQuery( function($){
     }
   };
 
+  $('.check').on('click', function(e){
+    var url = $(this).data('url');
+    $.getJSON(url)
+    .done(navigator_callback);
+  });
+
   $('.navigate').on('click', function(e){
     e.preventDefault();
     var url = $(this).attr('href');
-    if ($(this).parent().hasClass('navi-current') && $(this).hasClass('substep')) {
-      url = $(this).data('substep');
-    }
     $.getJSON(url)
     .done(navigator_callback);
   });
