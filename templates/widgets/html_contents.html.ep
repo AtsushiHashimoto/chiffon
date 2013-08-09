@@ -23,6 +23,6 @@
     %= include 'widgets/video', object => $object->{video};
   % }
   % if (exists $object->{audio}) {
-    %= include 'widgets/audio', object => $object->{audio}, autoplay => $autoplay;
+    %= include 'widgets/audio', object => $object->{audio};
   % }
 % end
