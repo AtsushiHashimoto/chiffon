@@ -6,7 +6,7 @@
   % my $args = delete $hash->{content} // [];
   % if (ref $hash->{img} eq 'ARRAY') {
     % for my $img (@{$hash->{img}}) {
-      % $img->{src} = url_for(qq{/$name/$img->{src}})->to_string;
+      % $img->{src} = url_for(qq{/$name/$img->{src}})->path->canonicalize->to_string;
       % push @{$args}, app->xml->XMLout($img, keyattr => [], rootname => 'img');
     % }
     % delete $hash->{img};

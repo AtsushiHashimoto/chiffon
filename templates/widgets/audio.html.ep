@@ -1,6 +1,6 @@
 % for my $audio (@{$object}) {
   % my $src = $audio->{path} // next;
-  % $src = url_for(qq{/$name/$src});
+  % $src = url_for(qq{/$name/$src})->path->canonicalize;
   %= tag audio => id => $audio->{id}, src => $src, preload => 'none', begin
     <p>This is audio. Your browser is not support.</p>
   % end

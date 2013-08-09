@@ -10,7 +10,7 @@
 </head>
 <body>
 <div id="loading" class="hidden">
-  %= image url_for('/images/loading.gif');
+  %= image url_for('/images/loading.gif'), alt => 'now loading...';
 </div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>
