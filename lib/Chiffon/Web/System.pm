@@ -64,7 +64,7 @@ sub login {
 # URL: (/system)?/logout
 sub logout {
   my $self = shift;
-  $self->session(user_id => '');
+  $self->session(user_id => undef);
   $self->add_stash_message(
     { type => 'info',
       msg  => qq{THANKS},

@@ -9,76 +9,58 @@ sub start {
   my $logger = $self->app->log;
   my $recipe_xml_file = $self->recipe_xml_file;
   unless ($recipe_xml_file) {
-    $logger->fatal('missing recipe_xml_file');# 必ず値があるはず
-    return $self->render_exception;
+    my $msg = 'missing recipe_xml_file';
+    $logger->fatal($msg);# 必ず値があるはず
+    return $self->render_exception($msg);
   }
 
   # Navigator と通信
-  my $situation = 'START';
-  my $operation_contents = $recipe_xml_file->slurp;
   my $navigator_response = $self->post_to_navigator(
     {
-      situation => $situation,
-      operation_contents => $operation_contents
+      situation => 'START',
+      operation_contents => scalar $recipe_xml_file->slurp,
     }
   );
   warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
-  $self->render(json => $self->app->json->decode($navigator_response->body));
+  $self->render(json => $navigator_response);
 }
 
-# URL : /navigator/overview
-sub overview {
+# URL : /navigator/channel/(overview|materials|guide)
+sub channel {
   my $self = shift;
+  my $logger = $self->app->log;
+  my $id = $self->param('id') // '';
+  if ($id eq '') {
+    my $msg = 'missing channel id';
+    $logger->fatal($msg);
+    return $self->render_exception($msg);
+  }
+  if ($id !~ /\A(overview|materials|guide)\z/) {
+    my $msg = 'unknown channel id';
+    $logger->fatal($msg);
+    return $self->render_exception($msg);
+  }
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
     {
       situation => 'CHANNEL',
-      operation_contents => 'OVERVIEW',
+      operation_contents => uc $id,
     }
   );
   warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
-  $self->render(json => $self->app->json->decode($navigator_response->body));
-}
-
-# URL : /navigator/materials
-sub materials {
-  my $self = shift;
-
-  # Navigatorと通信
-  my $navigator_response = $self->post_to_navigator(
-    {
-      situation => 'CHANNEL',
-      operation_contents => 'MATERIALS',
-    }
-  );
-  warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
-  $self->render(json => $self->app->json->decode($navigator_response->body));
-}
-
-# URL : /navigator/guide
-sub guide {
-  my $self = shift;
-
-  # Navigatorと通信
-  my $navigator_response = $self->post_to_navigator(
-    {
-      situation => 'CHANNEL',
-      operation_contents => 'GUIDE',
-    }
-  );
-  warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
-  $self->render(json => $self->app->json->decode($navigator_response->body));
+  $self->render(json => $navigator_response);
 }
 
 # URL : /navigator/navi_menu
 sub navi_menu {
   my $self = shift;
   my $logger = $self->app->log;
-  my $id = $self->param('id');
-  unless (defined $id) {
-    $logger->fatal('missin navi_menu id');
-    return $self->render_exception;
+  my $id = $self->param('id') // '';
+  if ($id eq '') {
+    my $msg = 'missing navi_menu id';
+    $logger->fatal($msg);
+    return $self->render_exception($msg);
   }
 
   # Navigatorと通信
@@ -89,17 +71,18 @@ sub navi_menu {
     }
   );
   warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
-  $self->render(json => $self->app->json->decode($navigator_response->body));
+  $self->render(json => $navigator_response);
 }
 
 # URL : /navigator/navi_menu
 sub check {
   my $self = shift;
   my $logger = $self->app->log;
-  my $id = $self->param('id');
-  unless (defined $id) {
-    $logger->fatal('missin check id');
-    return $self->render_exception;
+  my $id = $self->param('id') // '';
+  if ($id eq '') {
+    my $msg = 'missing check id';
+    $logger->fatal($msg);
+    return $self->render_exception($msg);
   }
 
   # Navigatorと通信
@@ -110,7 +93,7 @@ sub check {
     }
   );
   warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
-  $self->render(json => $self->app->json->decode($navigator_response->body));
+  $self->render(json => $navigator_response);
 }
 
 1;

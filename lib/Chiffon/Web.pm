@@ -56,8 +56,8 @@ sub startup {
   $self->helper(
     get_user => sub {
       my $self = shift;
-      my $user_id = shift || $self->session('user_id');
-      return unless defined $user_id;
+      my $user_id = shift || $self->session('user_id') // '';
+      return if $user_id eq '';
       my $config = $self->config;
       my $users = decode_json(file($config->{userfile})->slurp);
       my $user = +{
@@ -124,12 +124,14 @@ sub startup {
   $self->helper(
     recipe_xml_file => sub {
       my $self = shift;
-      my $recipe_xml_file = $self->session('recipe_xml_file');
-      if (defined $recipe_xml_file) {
+      my $recipe_xml_file = $self->session('recipe_xml_file') // '';
+      if ($recipe_xml_file ne '') {
         return file($recipe_xml_file);
       }
       my $name = shift || '';
-      return unless $name;
+      if ($name eq '') {
+        die 'recipe name required';
+      }
       my $config = $self->config;
       my $recipe_basename = $config->{recipe_basename};
       $recipe_xml_file = file($config->{recipes_dir}, $name, $recipe_basename);
@@ -154,7 +156,14 @@ sub startup {
       };
       warn qq{-- data : @{[encode_json($data)]} } if DEBUG;
       my $tx = $self->ua->post($self->config->{navigator_endpoint}, json => $data);
-      return $tx->res;
+      if (my $res = $tx->success) {
+        return decode_json($res->body);
+      }
+      else {
+        $self->app->log->error($tx->error);
+        # return +{status => scalar $tx->error};# 「Connection refused」をJSONで渡すと「61」になるのは何故だ！
+        return +{status => 'Error : ' . $tx->error};
+      }
     }
   );
 

@@ -188,6 +188,7 @@ jQuery( function($){
       });
     }
     else {
+      if (DEBUG) console.log({'-- data': data});
       error_handler(data.status);
     }
   };
