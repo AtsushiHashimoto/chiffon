@@ -4,5 +4,5 @@
   %= tag audio => id => $audio->{id}, src => $src, preload => 'none', begin
     <p>This is audio. Your browser is not support.</p>
   % end
-  %= link_to l('Play') => url_for, class => 'btn media-play', rel => $audio->{id};
+  %= link_to l('Play') => url_for, class => 'btn media-play', 'data-for' => $audio->{id};
 % }

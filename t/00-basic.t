@@ -2,6 +2,7 @@ use Mojo::Base -strict;
 
 use Test::More;
 use Test::Mojo;
+use Path::Class qw(file dir);
 
 my $t = Test::Mojo->new('Chiffon::Web');
 $t->get_ok('/')->status_is(302);
@@ -15,7 +16,11 @@ $t->post_ok('/login' => form => {
 
 $t->get_ok('/')->status_is(200)->text_like('div.alert' => qr/Welcome test/);
 
-$t->get_ok('/recipe' => form => {name => 'test_recipe'})->status_is(200)->text_like('h1' => qr/テスト用レシピ/);
+my $body = $t->get_ok('/recipe' => form => {name => 'test_recipe'})->status_is(200)
+  ->text_like('h1' => qr/テスト用レシピ/)
+  ->tx->res->body;
+
+file('var/text_recipe.html')->spew($body);
 
 $t->get_ok('/navigator')->status_is(200);
 

@@ -5,6 +5,6 @@
     <p>This is video. Your browser is not support.</p>
   % end
   <div>
-  %= link_to l('Play') => url_for, class => 'btn media-play', rel => $video->{id};
+  %= link_to l('Play') => url_for, class => 'btn media-play', 'data-for' => $video->{id};
   </div>
 % }

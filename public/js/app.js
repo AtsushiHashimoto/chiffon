@@ -4,6 +4,7 @@ jQuery( function($){
   var notification_live_sec;
   var jobs = {};
   var DEBUG = 1;
+  var seconds = 100;
 
   // loading
   $(document).ajaxStart(function() {
@@ -55,7 +56,7 @@ jQuery( function($){
     if (!notify.length) {
       warning_handler('missing recipe for notify_play : ' + id);
     }
-    var audio_id = notify.find('.media-play').attr('rel');
+    var audio_id = notify.find('.media-play').data('for');
     if (audio_id.length) {
       if (DEBUG) console.log('find media in notify : '+audio_id);
       noty({
@@ -130,14 +131,14 @@ jQuery( function($){
         else if (obj.Play) {
           if (DEBUG) console.log({'-- Play': obj.Play});
           var id = obj.Play.id;
-          var timer = setTimeout(media_play, obj.Play.delay * 1000, id);
+          var timer = setTimeout(media_play, obj.Play.delay * seconds, id);
           jobs[id] = timer;
           if (DEBUG) console.log('-- setTimeout for : '+id);
         }
         else if (obj.Notify) {
           if (DEBUG) console.log({'-- Notify': obj.Notify});
           var id = obj.Notify.id;
-          var timer = setTimeout(notify_play, obj.Notify.delay * 1000, id);
+          var timer = setTimeout(notify_play, obj.Notify.delay * seconds, id);
           jobs[id] = timer;
           if (DEBUG) console.log('-- setTimeout for : '+id);
         }
@@ -152,7 +153,7 @@ jQuery( function($){
           target.push(id);
           var audio = cancel.find('.media-play');
           if (audio.length) {
-            var audio_id = audio.attr('rel');
+            var audio_id = audio.data('for');
             target.push(audio_id);
           }
           if (DEBUG) console.log({'-- cancel for': target});
@@ -196,7 +197,7 @@ jQuery( function($){
   // play video/audio
   $('.media-play').on('click', function(e){
     e.preventDefault();
-    var id = $(this).attr('rel');
+    var id = $(this).data('for');
     media_play(id);
   });
 
@@ -234,7 +235,7 @@ jQuery( function($){
           easing: 'swing',
           speed: 400
       },
-      timeout: notification_live_sec * 1000,
+      timeout: notification_live_sec * seconds,
       force: false,
       modal: false,
       maxVisible: 5,
