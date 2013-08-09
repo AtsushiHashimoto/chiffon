@@ -37,7 +37,7 @@
 %= link_to l('Materials') => url_for('/navigator/materials'), class => 'btn navigate'
 <div class="row">
 <div id="detail" class="span8">
-% for my $directions ($recipe->{directions}) {
+% for my $directions (@{$recipe->{directions}}) {
   % for my $step (@{$directions->{step}}) {
     %= include 'widgets/html_contents', object => $step;
     % for my $substep (@{$step->{substep}}) {
@@ -49,7 +49,7 @@
 </div>
 <div id="navi" class="span4">
 <ul>
-% for my $directions ($recipe->{directions}) {
+% for my $directions (@{$recipe->{directions}}) {
   % for my $step (@{$directions->{step}}) {
     %= tag li => id => 'navi-'.$step->{id}, class => 'navi-step', begin
       %= check_box 'check-name-'.$step->{id} => 'on', id => 'check-'.$step->{id}, class => 'check', 'data-url' => url_for('navigator/check/'.$step->{id});
