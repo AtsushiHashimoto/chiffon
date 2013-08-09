@@ -1,7 +1,11 @@
+% for my $object (@{$objects}) {
 <p>
-<%= $object->{name} // '' %>
-<%= $object->{size} // '' %>
-<%= $object->{amount} // '' %>
-<%= $object->{unit} // '' %>
-<%= exists $object->{img} ? image(url_for(qq{/$name/$object->{img}})) : '' %>
+  % if ($object->{img}) {
+    %= image url_for(qq{/$name/$object->{img}}), class => 'object-icon';
+  % }
+  %= $object->{name} // '';
+  %= $object->{size} // '';
+  %= $object->{amount} // '';
+  %= $object->{unit} // '';
 </p>
+% }

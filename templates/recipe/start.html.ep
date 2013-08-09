@@ -21,15 +21,11 @@
       % for my $object_group (@{$material->{object_group}}) {
         <div class="well">
         %= tag h3 => $object_group->{name}
-        % for my $object (@{$object_group->{object}}) {
-          %= include 'widgets/object', object => $object;
-        % }
+        %= include 'widgets/object', objects => $object_group->{object};
         </div>
       % }
     % } elsif ($key eq 'object') {
-      % for my $object (@{$material->{object}}) {
-        %= include 'widgets/object', object => $object;
-      % }
+      %= include 'widgets/object', objects => $material->{object};
     % }
   % }
 % }
@@ -73,13 +69,13 @@
 
 %= link_to 'init' => url_for('/navigator/start'), class => 'hidden navigator-run', 'data-notification_live_sec' => config->{'notification_live_sec'};
 
-%= tag h1 => 'DEBUG'
-<pre>
-レシピの構造
-<%= pretty_dumper($recipe) %>
-</pre>
-<pre>
-レシピのXMLを再構成
-<%= app->xml->XMLout($recipe) %>
-</pre>
 </div>
+% if (app->mode eq 'development') {
+  <div>
+    %= tag h1 => 'DEBUG'
+    %= tag h2 => 'レシピの構造'
+    <pre><%= pretty_dumper($recipe) %></pre>
+    %= tag h2 => 'レシピのXMLを再構成'
+    <pre><%= app->xml->XMLout($recipe) %></pre>
+  </div>
+% }

@@ -25,6 +25,10 @@ body {
 /* end for navbar-fixed-top */
 
 
+.object-icon {
+  width: 64px;
+  height: 64px;
+}
 #loading {
   position: absolute;
   width: 100%;
