@@ -23,5 +23,6 @@ it under the same terms as Perl itself.
 
 # AUTHOR
 
-\* Nobutaka Wakabayashi
-\* Atsushi Hashimoto
+Nobutaka Wakabayashi
+
+Atsushi Hashimoto

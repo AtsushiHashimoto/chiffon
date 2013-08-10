@@ -12,7 +12,11 @@ sub start {
   my $logger = $self->app->log;
 
   my $config = $self->config;
-  my $name = $self->param('name');
+  my $name = $self->param('name') // '';
+  if ($name eq '') {
+    $logger->error(qq{missing recipe name});
+    return $self->render_not_found;
+  }
 
   my $recipe_xml_file = $self->recipe_xml_file($name);
   unless ($recipe_xml_file and -f $recipe_xml_file) {

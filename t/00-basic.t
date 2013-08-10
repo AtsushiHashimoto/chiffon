@@ -20,10 +20,15 @@ my $body = $t->get_ok('/recipe' => form => {name => 'test_recipe'})->status_is(2
   ->text_like('h1' => qr/テスト用レシピ/)
   ->tx->res->body;
 
-file('var/text_recipe.html')->spew($body);
+file('var/text_recipe.html')->spew($body);# 静的ファイルとして保存
+
+$t->get_ok('/recipe')->status_is(404);
+$t->get_ok('/system')->status_is(302);
+$t->get_ok('/i18n')->status_is(404);
 
 $t->get_ok('/navigator')->status_is(200);
 
+# Navigator
 $t->get_ok('/navigator/channel/guide')->status_is(200);
 $t->get_ok('/navigator/channel/materials')->status_is(200);
 $t->get_ok('/navigator/channel/overview')->status_is(200);

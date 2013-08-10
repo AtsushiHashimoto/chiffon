@@ -5,9 +5,9 @@ our $VERSION = "0.01";
 
 BEGIN {
   $ENV{MOJO_I18N_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_DEBUG} = 1;
+  $ENV{CHIFFON_WEB_DEBUG} = 0;
   $ENV{CHIFFON_WEB_INDEX_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_NAVIGATOR_DEBUG} = 1;
+  $ENV{CHIFFON_WEB_NAVIGATOR_DEBUG} = 0;
   $ENV{CHIFFON_WEB_RECIPE_DEBUG} = 0;
   $ENV{CHIFFON_WEB_SYSTEM_DEBUG} = 0;
 };
@@ -39,7 +39,7 @@ sub startup {
   $self->helper(brandname => sub { q{Chiffon Viewer} });
 
   # Plugins
-  $self->plugin('config');
+  $self->plugin('Config');
   $self->plugin('I18N',
     namespace => 'Chiffon::Web::I18N',
     default => 'ja',
@@ -267,7 +267,8 @@ it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-* Nobutaka Wakabayashi
-* Atsushi Hashimoto
+Nobutaka Wakabayashi
+
+Atsushi Hashimoto
 
 =cut
