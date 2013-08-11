@@ -1,3 +1,3 @@
 % for my $notification (@{$object}) {
-  %= include 'widgets/html_contents', object => $notification;
+  %= include 'widgets/html_contents', object => $notification, hide_play_button => 1;
 % }

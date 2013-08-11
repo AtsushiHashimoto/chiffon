@@ -23,6 +23,6 @@
     %= include 'widgets/video', object => $object->{video};
   % }
   % if (exists $object->{audio}) {
-    %= include 'widgets/audio', object => $object->{audio};
+    %= include 'widgets/audio', object => $object->{audio},  hide_play_button => stash('hide_play_button');
   % }
 % end
