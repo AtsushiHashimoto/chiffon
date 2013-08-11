@@ -75,8 +75,6 @@ sub logout {
   return $self->redirect_to('/login');
 }
 
-1;
-
 sub auth {
   my $self = shift;
 
@@ -92,6 +90,7 @@ sub auth {
   my $back_url = $self->param('back_url') || $self->req->url->to_string;
   $back_url = '/' if $back_url =~ /logout/;
   $self->flash(back_url => $back_url);
+  warn qq{-- back_url : @{[$back_url]} } if DEBUG;
 
   unless ($user) {
     $self->redirect_to('/login');

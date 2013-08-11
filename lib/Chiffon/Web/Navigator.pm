@@ -21,7 +21,7 @@ sub start {
       operation_contents => scalar $recipe_xml_file->slurp,
     }
   );
-  warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
+  warn qq{-- navigator_response : @{[$self->dumper($navigator_response)]} } if DEBUG;
   $self->render(json => $navigator_response);
 }
 
@@ -48,7 +48,7 @@ sub channel {
       operation_contents => uc $id,
     }
   );
-  warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
+  warn qq{-- navigator_response : @{[$self->dumper($navigator_response)]} } if DEBUG;
   $self->render(json => $navigator_response);
 }
 
@@ -70,7 +70,7 @@ sub navi_menu {
       operation_contents => $id,
     }
   );
-  warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
+  warn qq{-- navigator_response : @{[$self->dumper($navigator_response)]} } if DEBUG;
   $self->render(json => $navigator_response);
 }
 
@@ -94,7 +94,7 @@ sub check {
       operation_contents => $id,
     }
   );
-  warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
+  warn qq{-- navigator_response : @{[$self->dumper($navigator_response)]} } if DEBUG;
   $self->render(json => $navigator_response);
 }
 
@@ -115,7 +115,7 @@ sub external {
       operation_contents => $input,
     }
   );
-  warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
+  warn qq{-- navigator_response : @{[$self->dumper($navigator_response)]} } if DEBUG;
   $self->render(json => $navigator_response);
 }
 

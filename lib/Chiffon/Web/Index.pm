@@ -14,14 +14,14 @@ sub start {
 
   my $config = $self->config;
   my @pathes = dir($config->{recipes_dir})->children;
-  warn qq{-- @{[$self->dumper(\@pathes)]} } if DEBUG;
+  warn qq{-- pathes : @{[$self->dumper(\@pathes)]} } if DEBUG;
 
   my @recipes;
   for my $path (@pathes) {
     next unless $path->is_dir;
     push @recipes, $path;
   }
-  warn qq{-- @{[@recipes]} } if DEBUG;
+  warn qq{-- recipes : @{[@recipes]} } if DEBUG;
   $self->stash(recipes => \@recipes);
 
   $self->render(

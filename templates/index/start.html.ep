@@ -1,5 +1,4 @@
 <div class="span12">
-<%=l 'Hello World' %>
 <ul>
 % for my $recipe (@{$recipes}) {
   % my $name = $recipe->basename;

@@ -3,15 +3,6 @@ use Mojo::Base 'Mojolicious';
 
 our $VERSION = "0.01";
 
-BEGIN {
-  $ENV{MOJO_I18N_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_INDEX_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_NAVIGATOR_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_RECIPE_DEBUG} = 0;
-  $ENV{CHIFFON_WEB_SYSTEM_DEBUG} = 0;
-};
-
 use Mojo::ByteStream qw(b);
 
 use JSON::XS qw(encode_json decode_json);
@@ -26,12 +17,16 @@ use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 has xml => sub { XML::Simple->new };
 has json => sub { JSON::XS->new };
 
+sub development_mode {
+  warn qq{-- development_mode } if DEBUG;
+};
+
 # This method will run once at server start
 sub startup {
   my $self = shift;
 
   chdir $self->home->detect;# startupの$selfはコントローラーではなくアプリが入っている
-  warn qq{-- chdir @{[$self->home->detect]} } if DEBUG;
+  warn qq{-- chdir : @{[$self->home->detect]} } if DEBUG;
 
   $self->secret(b(file(__FILE__)->absolute)->sha1_sum);
 
