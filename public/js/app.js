@@ -2,21 +2,50 @@ jQuery( function($){
 
   // global variables
   var notification_live_sec;
+  var external_input_url;
+  var check_url;
   var jobs = {};
+  var record_keys = false;
+  var keys = [];
   var DEBUG = 1;
   var seconds = 100;
 
+  // keypress
+  $(document).on('keypress', function(e){
+    if (record_keys) {
+      var key = e.charCode;
+      if (key == 13) {
+        var input = keys.join('');
+        if (DEBUG) console.log(input);
+        $.getJSON(external_input_url, {'input': input})
+        .done(navigator_callback);
+        keys = [];
+        return;
+      }
+      keys.push(String.fromCharCode(key));
+    }
+    if (DEBUG) console.log(keys);
+  });
+
+  // show_notify
+  var show_notify = function(obj){
+    noty(obj);
+  };
+
   // loading
   $(document).ajaxStart(function() {
+    record_keys = false;
     $('#loading')
       .css("top", $(window).scrollTop() + "px")
       .css("left", $(window).scrollLeft() + "px")
       .show(0);
   }).ajaxComplete(function(){
+    record_keys = true;
     $('#loading')
       .hide(0);
   }).ajaxError(function(){
-    noty({
+    record_keys = true;
+    show_notify({
       type: 'error',
       text: 'AJAX ERROR'
     });
@@ -59,7 +88,7 @@ jQuery( function($){
     var audio_id = notify.find('.media-play').data('for');
     if (audio_id.length) {
       if (DEBUG) console.log('find media in notify : '+audio_id);
-      noty({
+      show_notify({
         callback: {
           onShow: function(){ media_play(audio_id) }
         },
@@ -67,13 +96,13 @@ jQuery( function($){
       });
     }
     else {
-      noty({ text:notify.html() });
+      show_notify({ text:notify.html() });
     }
   };
 
   var warning_handler = function(str){
     console.log('-- warning_handler str : '+str);
-    noty({
+    show_notify({
       type: 'warning',
       text: str
     });
@@ -81,7 +110,7 @@ jQuery( function($){
 
   var error_handler = function(str){
     console.log('-- error_handler str : '+str);
-    noty({
+    show_notify({
       type: 'error',
       text: str
     });
@@ -161,7 +190,7 @@ jQuery( function($){
             var job = jobs[v];
             if (typeof(job) == 'number') {
               clearTimeout(job);
-              noty({
+              show_notify({
                 type: 'success',
                 text: 'timer for `' + v + '` is canceled'
               });
@@ -169,7 +198,7 @@ jQuery( function($){
             }
             else if (typeof(job) == 'object') {
               job.pause();
-              noty({
+              show_notify({
                 type: 'success',
                 text: 'video/audio for `' + v + '` is paused'
               });
@@ -199,6 +228,8 @@ jQuery( function($){
     e.preventDefault();
     var id = $(this).data('for');
     media_play(id);
+    $.getJSON(check_url, {'media_play': id})
+    .done(navigator_callback);
   });
 
   // start ajax
@@ -220,6 +251,9 @@ jQuery( function($){
   $('.navigator-run').each(function(){
     var url = $(this).attr('href');
     notification_live_sec = $(this).data('notification_live_sec');
+    external_input_url = $(this).data('external_input_url');
+    check_url = $(this).data('check_url');
+    record_keys = true;
     $.getJSON(url)
     .done(navigator_callback);
     $.noty.defaults = {

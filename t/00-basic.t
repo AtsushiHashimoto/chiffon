@@ -40,6 +40,7 @@ $t->get_ok('/navigator/channel')->status_is(500);
 $t->get_ok('/navigator/channel/hoge')->status_is(500);
 $t->get_ok('/navigator/navi_menu')->status_is(500);
 $t->get_ok('/navigator/check')->status_is(500);
+$t->get_ok('/navigator/external')->status_is(500);
 
 
 done_testing();

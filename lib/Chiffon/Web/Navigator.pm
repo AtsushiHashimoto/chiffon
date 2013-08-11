@@ -79,6 +79,8 @@ sub check {
   my $self = shift;
   my $logger = $self->app->log;
   my $id = $self->param('id') // '';
+  $id ||= $self->param('media_play') // '';
+  warn qq{-- id : $id } if DEBUG;
   if ($id eq '') {
     my $msg = 'missing check id';
     $logger->fatal($msg);
@@ -90,6 +92,27 @@ sub check {
     {
       situation => 'CHECK',
       operation_contents => $id,
+    }
+  );
+  warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;
+  $self->render(json => $navigator_response);
+}
+
+# URL : /navigator/navi_menu
+sub external {
+  my $self = shift;
+  my $logger = $self->app->log;
+  my $input = $self->param('input') // '';
+  if ($input eq '') {
+    my $msg = 'missing external input';
+    $logger->fatal($msg);
+    return $self->render_exception($msg);
+  }
+  # Navigatorと通信
+  my $navigator_response = $self->post_to_navigator(
+    {
+      situation => 'EXTERNAL_INPUT',
+      operation_contents => $input,
     }
   );
   warn qq{-- @{[$self->dumper($navigator_response)]} } if DEBUG;

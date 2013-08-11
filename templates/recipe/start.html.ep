@@ -72,7 +72,7 @@
 </div>
 </div>
 
-%= link_to 'init' => url_for('/navigator'), class => 'hidden navigator-run', 'data-notification_live_sec' => config->{'notification_live_sec'};
+%= link_to 'init' => url_for('/navigator'), class => 'hidden navigator-run', 'data-notification_live_sec' => config->{'notification_live_sec'}, 'data-external_input_url' => url_for('/navigator/external'), 'data-check_url' => url_for('/navigator/check');
 
 </div>
 % if (app->mode eq 'development') {
