@@ -28,7 +28,7 @@ sub start {
     return $self->render(status => 403, data => '');
   }
   my $recipe_dir  = $recipe_xml_file->dir;
-  warn qq{-- recipe_xml_file : $recipe_xml_file} if DEBUG;
+  warn qq{-- recipe_xml_file : $recipe_xml_file } if DEBUG;
   my $xml = $self->app->xml;
   my $recipe = $xml->XMLin($recipe_xml_file->stringify,
     keyattr => [],# 属性名を省略しない
@@ -37,8 +37,7 @@ sub start {
   );
 
   unless (defined $recipe) {
-    $logger->error(qq{parse error $recipe_xml_file});
-    return $self->render_exception;
+    return $self->render_exception(qq{parse error $recipe_xml_file});
   }
 
   $self->stash(

@@ -4,11 +4,12 @@ jQuery( function($){
   var notification_live_sec;
   var external_input_url;
   var check_url;
+  var receiver_url;
   var jobs = {};
   var record_keys = false;
   var keys = [];
   var DEBUG = 1;
-  var seconds = 100;
+  var seconds = 1000;
 
   // keypress
   $(document).on('keypress', function(e){
@@ -253,9 +254,22 @@ jQuery( function($){
     notification_live_sec = $(this).data('notification_live_sec');
     external_input_url = $(this).data('external_input_url');
     check_url = $(this).data('check_url');
+    receiver_url = $(this).data('receiver_url');
+    var session_id = $(this).data('session_id');
+    var ws = new WebSocket(receiver_url);
+    ws.onmessage = function(e){
+      if (DEBUG) console.log(e);
+      if (RegExp(session_id).test(e.data)) {
+        $.getJSON(external_input_url, {input: e.data})
+          .done(navigator_callback);
+      }
+    };
+    if (DEBUG) console.log(document.cookie);
+
     record_keys = true;
+
     $.getJSON(url)
-    .done(navigator_callback);
+      .done(navigator_callback);
     $.noty.defaults = {
       layout: 'bottom',
       theme: 'defaultTheme',

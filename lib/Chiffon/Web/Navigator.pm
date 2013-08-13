@@ -1,6 +1,8 @@
 package Chiffon::Web::Navigator;
 use Mojo::Base 'Mojolicious::Controller';
 
+use JSON::XS qw(decode_json);
+
 use constant DEBUG => $ENV{CHIFFON_WEB_NAVIGATOR_DEBUG} || 0;
 
 # URL : /navigator/start
@@ -103,6 +105,19 @@ sub external {
   my $self = shift;
   my $logger = $self->app->log;
   my $input = $self->param('input') // '';
+  warn qq{-- input : @{[$self->dumper($input)]} } if DEBUG;
+
+  if ($input =~ m|\A\{|) {
+    my $data = decode_json($input);
+    my $session_id = $self->session_id;
+    warn qq{-- session_id : $session_id } if DEBUG;
+    if ($session_id ne $data->{sessionid}) {
+      $self->render(json => {status => 'success', body => []});
+      return;
+    }
+    $input = $data->{string};
+  }
+
   if ($input eq '') {
     my $msg = 'missing external input';
     $logger->fatal($msg);

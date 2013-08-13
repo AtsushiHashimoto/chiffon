@@ -72,7 +72,17 @@
 </div>
 </div>
 
-%= link_to 'init' => url_for('/navigator'), class => 'hidden navigator-run', 'data-notification_live_sec' => config->{'notification_live_sec'}, 'data-external_input_url' => url_for('/navigator/external'), 'data-check_url' => url_for('/navigator/check');
+<%=
+  link_to 'init' => url_for('/navigator'),
+    class => 'hidden navigator-run',
+    'data-notification_live_sec' => config->{'notification_live_sec'},
+    'data-external_input_url' => url_for('/navigator/external'),
+    'data-check_url' => url_for('/navigator/check'),
+    'data-receiver_url' => config->{receiver_endpoint},
+    'data-session_id' => session_id,
+%>
+
+<div id="ws_log"></div>
 
 </div>
 % if (app->mode eq 'development') {
