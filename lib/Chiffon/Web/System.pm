@@ -12,8 +12,8 @@ sub start {
 
 # URL: (/system)?/login
 sub login {
-  my $self = shift;
-  my $logger  = $self->app->log;
+  my $self   = shift;
+  my $logger = $self->app->log;
 
   $self->session(alive => 1);
   my $session_name = $self->session('user_id') || '';
@@ -23,19 +23,11 @@ sub login {
   return $self->redirect_to($back_url) if $session_name ne '';
 
   # getの場合は検証せずに表示
-  $self->add_stash_message(
-    { type => 'message',
-      msg  => 'PLEASE LOGIN'
-    }
-  );
+  $self->add_stash_message({type => 'message', msg => 'PLEASE LOGIN'});
   return if $self->req->method eq 'GET';
 
   $self->add_stash_message(
-    { type => 'error',
-      msg =>
-        'INVALID USERNAME OR PASSWORD.'
-    }
-  );
+    {type => 'error', msg => 'INVALID USERNAME OR PASSWORD.'});
 
   # フォーム入力を検証
   my $user_id  = $self->param('user_id') || '';
@@ -52,9 +44,7 @@ sub login {
   # 認証済み
   $self->reset_stash_message;
   $self->add_stash_message(
-    { type => 'success',
-      msg  => qq{Welcome ${user_id}!},
-    },
+    {type => 'success', msg => qq{Welcome ${user_id}!},},
   );
   $self->stash2flash;
   $self->session(user_id => $user_id);    # セッションにIDをセット
@@ -65,11 +55,7 @@ sub login {
 sub logout {
   my $self = shift;
   $self->session(user_id => undef);
-  $self->add_stash_message(
-    { type => 'info',
-      msg  => qq{THANKS},
-    },
-  );
+  $self->add_stash_message({type => 'info', msg => qq{THANKS},},);
   $self->stash2flash;
   $self->flash(back_url => '/',);
   return $self->redirect_to('/login');
@@ -78,13 +64,8 @@ sub logout {
 sub auth {
   my $self = shift;
 
-  $self->flash(
-    message => {
-      type => 'info',
-      msg =>
-        q{TIMEOUT. LOGIN AGAIN},
-    }
-  ) unless defined $self->session('alive');
+  $self->flash(message => {type => 'info', msg => q{TIMEOUT. LOGIN AGAIN},})
+    unless defined $self->session('alive');
   $self->session(alive => 1);
   my $user = $self->get_user;
   my $back_url = $self->param('back_url') || $self->req->url->to_string;

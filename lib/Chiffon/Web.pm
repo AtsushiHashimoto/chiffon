@@ -14,31 +14,29 @@ use POSIX qw(strftime);
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
-has xml => sub { XML::Simple->new };
+has xml  => sub { XML::Simple->new };
 has json => sub { JSON::XS->new };
 
 sub development_mode {
   warn qq{-- development_mode } if DEBUG;
-};
+}
 
 # This method will run once at server start
 sub startup {
   my $self = shift;
 
-  chdir $self->home->detect;# startupの$selfはコントローラーではなくアプリが入っている
+  chdir $self->home->detect
+    ; # startupの$selfはコントローラーではなくアプリが入っている
   warn qq{-- chdir : @{[$self->home->detect]} } if DEBUG;
 
   $self->secret(b(file(__FILE__)->absolute)->sha1_sum);
 
   # name
-  $self->helper(brandname => sub { q{Chiffon Viewer} });
+  $self->helper(brandname => sub {q{Chiffon Viewer}});
 
   # Plugins
   $self->plugin('Config');
-  $self->plugin('I18N',
-    namespace => 'Chiffon::Web::I18N',
-    default => 'ja',
-  );
+  $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja',);
 
   # Log
   $self->log->level($self->config->{log_level});
@@ -54,11 +52,8 @@ sub startup {
       my $user_id = shift || $self->session('user_id') // '';
       return if $user_id eq '';
       my $config = $self->config;
-      my $users = decode_json(file($config->{userfile})->slurp);
-      my $user = +{
-        name => $user_id,
-        %{$users->{$user_id}}
-      };
+      my $users  = decode_json(file($config->{userfile})->slurp);
+      my $user   = +{name => $user_id, %{$users->{$user_id}}};
       return $user;
     }
   );
@@ -68,10 +63,7 @@ sub startup {
     time_for_navigate => sub {
       my $self = shift;
       my ($sec, $usec) = Time::HiRes::gettimeofday;
-      my $time_for_navigate = {
-        sec => $sec,
-        usec => sprintf('%06d', $usec),
-      };
+      my $time_for_navigate = {sec => $sec, usec => sprintf('%06d', $usec),};
       warn qq{-- time_for_navigate : @{[%{$time_for_navigate}]} } if DEBUG;
       return $time_for_navigate;
     }
@@ -83,20 +75,22 @@ sub startup {
       my $self = shift;
       my $arg  = shift;
       my $json = $self->app->json;
-      return $json->pretty->allow_nonref->allow_blessed(1)->convert_blessed(1)->encode($arg);
+      return $json->pretty->allow_nonref->allow_blessed(1)->convert_blessed(1)
+        ->encode($arg);
     }
   );
 
   # 閲覧ID生成
   $self->helper(
     session_id => sub {
-      my $self = shift;
+      my $self       = shift;
       my $session_id = $self->session('session_id');
       return $session_id if defined $session_id;
       my $user_name = $self->user_name;
       my ($sec, $usec) = Time::HiRes::gettimeofday;
       $usec = sprintf '%06d', $usec;
-      my $datetime = strftime($self->config->{datetime_format}, localtime($sec));
+      my $datetime
+        = strftime($self->config->{datetime_format}, localtime($sec));
       $session_id = qq{$user_name-$datetime.$usec};
       warn qq{-- create session_id : $session_id } if DEBUG;
       $self->session(session_id => $session_id);
@@ -107,8 +101,8 @@ sub startup {
   # user_name
   $self->helper(
     user_name => sub {
-      my $self = shift;
-      my $user = $self->get_user;
+      my $self      = shift;
+      my $user      = $self->get_user;
       my $user_name = $user->{name};
       warn qq{-- user_name : $user_name } if DEBUG;
       return $user_name;
@@ -127,7 +121,7 @@ sub startup {
       if ($name eq '') {
         die 'recipe name required';
       }
-      my $config = $self->config;
+      my $config          = $self->config;
       my $recipe_basename = $config->{recipe_basename};
       $recipe_xml_file = file($config->{recipes_dir}, $name, $recipe_basename);
       $self->session(recipe_xml_file => $recipe_xml_file->stringify);
@@ -141,22 +135,24 @@ sub startup {
       my $self = shift;
       my $args = shift // +{};
       my $data = {
-        session_id => $self->session_id,
-        user_name => $self->user_name,
-        situation => undef,
+        session_id         => $self->session_id,
+        user_name          => $self->user_name,
+        situation          => undef,
         operation_contents => undef,
-        time => $self->time_for_navigate,
-        log_level => uc $self->app->log->level,
+        time               => $self->time_for_navigate,
+        log_level          => uc $self->app->log->level,
         %{$args}
       };
       warn qq{-- data : @{[encode_json($data)]} } if DEBUG;
-      my $tx = $self->ua->post($self->config->{navigator_endpoint}, json => $data);
+      my $tx
+        = $self->ua->post($self->config->{navigator_endpoint}, json => $data);
       if (my $res = $tx->success) {
         return decode_json($res->body);
       }
       else {
         $self->app->log->error($tx->error);
-        # return +{status => scalar $tx->error};# 「Connection refused」をJSONで渡すと「61」になるのは何故だ！
+
+# return +{status => scalar $tx->error};# 「Connection refused」をJSONで渡すと「61」になるのは何故だ！
         return +{status => 'Error : ' . $tx->error};
       }
     }
@@ -168,7 +164,7 @@ sub startup {
     clear_recipe_session => sub {
       my $self = shift;
       warn qq{-- clear_recipe_session } if DEBUG;
-      $self->session('session_id' => undef);
+      $self->session('session_id'      => undef);
       $self->session('recipe_xml_file' => undef);
       return;
     }

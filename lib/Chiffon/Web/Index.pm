@@ -8,7 +8,7 @@ use Path::Class qw(file dir);
 
 # URL : /
 sub start {
-  my $self = shift;
+  my $self   = shift;
   my $logger = $self->app->log;
   $self->clear_recipe_session;
 
@@ -24,10 +24,7 @@ sub start {
   warn qq{-- recipes : @{[@recipes]} } if DEBUG;
   $self->stash(recipes => \@recipes);
 
-  $self->render(
-    layout => 'default',
-    title => 'Recipe List',
-  );
+  $self->render(layout => 'default', title => 'Recipe List',);
 }
 
 1;
