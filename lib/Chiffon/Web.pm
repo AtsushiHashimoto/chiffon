@@ -11,6 +11,7 @@ use Path::Class qw(file dir);
 use XML::Simple;
 use Time::HiRes;
 use POSIX qw(strftime);
+use Time::Piece;
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
@@ -26,38 +27,37 @@ sub development_mode {
 sub startup {
   my $self = shift;
 
-  chdir $self->home->detect
-    ; # startupの$selfはコントローラーではなくアプリが入っている
+  # startupの$selfはコントローラーではなくアプリが入っている
+  chdir $self->home->detect;
   warn qq{-- chdir : @{[$self->home->detect]} } if DEBUG;
 
   $self->secret(b(file(__FILE__)->absolute)->sha1_sum);
-
-  if ($self->log->is_level('debug')) {
-
-    # ログの発生場所を追加で書き込む
-    no warnings 'redefine';
-    *Mojo::Log::format = sub {
-      my ($self, $level, @lines) = @_;
-      my @caller = caller(4)
-        ; # 4つ前がログの書き込み指定を行なっている（Mojolicious 3.44）
-      my $caller = join ' ', $caller[0], $caller[2];
-      return
-          '['
-        . localtime(time)
-        . "] [$level] [$caller] "
-        . join("\n", @lines) . "\n";
-    };
-  }
 
   # name
   $self->helper(brandname => sub {q{Chiffon Viewer}});
 
   # Plugins
   $self->plugin('Config');
-  $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja',);
+  $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
 
   # Log
   $self->log->level($self->config->{log_level});
+  my $datetime_format = $self->config->{datetime_format};
+  # ログの発生場所を追加で書き込む
+  no warnings 'redefine';
+  *Mojo::Log::format = sub {
+    my ($self, $level, @lines) = @_;
+    # 4つ前がログの書き込み指定を行なっている（Mojolicious 3.44）
+    my @caller = caller(4);
+    my $caller = join ' ', $caller[0], $caller[2];
+    my ($sec, $usec) = Time::HiRes::gettimeofday;
+    $usec = sprintf '%06d', $usec;
+    my $datetime = join '.', Time::Piece->new($sec)->strftime($datetime_format), $usec;
+    my $LEVEL = uc $level;
+    return
+        qq{[$datetime] [$LEVEL] [$caller] }
+      . join("\n", @lines) . "\n";
+  };
 
   # Static
   unshift @{$self->static->paths}, $self->config->{recipes_dir};

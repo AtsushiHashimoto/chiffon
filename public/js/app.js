@@ -1,14 +1,15 @@
 jQuery( function($){
 
   // global variables
+  var DEBUG = 1;
   var notification_live_sec;
   var external_input_url;
   var check_url;
+  var logger_url;
   var receiver_url;
   var jobs = {};
   var record_keys = false;
   var keys = [];
-  var DEBUG = 1;
   var seconds = 1000;
 
   // keypress
@@ -53,7 +54,6 @@ jQuery( function($){
   });
 
   var channels = {
-    'SCREEN': 'screen',
     'OVERVIEW': 'overview',
     'MATERIALS': 'materials',
     'GUIDE': 'guide'
@@ -67,6 +67,7 @@ jQuery( function($){
   var navigation_classes = $.map(navigations, function(value, key){ return value }).join(' ');
 
   var media_play = function(id){
+    // TODO: exists media to warning_handler
     if (DEBUG) console.log('-- media_play id : '+id);
     var media = $('#' + id);
     if (!media.length) {
@@ -102,25 +103,30 @@ jQuery( function($){
   };
 
   var warning_handler = function(str){
-    console.log('-- warning_handler str : '+str);
-    show_notify({
+    if (DEBUG) console.log({'-- warning_handler':str});
+    if (DEBUG) show_notify({
       type: 'warning',
       text: str
     });
+    $.getJSON(logger_url, {type:'warn', msg:str});
   };
 
   var error_handler = function(str){
-    console.log('-- error_handler str : '+str);
-    show_notify({
+    if (DEBUG) console.log({'-- error_handler':str});
+    if (DEBUG) show_notify({
       type: 'error',
       text: str
     });
+    $.getJSON(logger_url, {type:'error', msg:str});
   };
 
   var navigator_callback = function(data, status){
     if (data.status == 'success') {
+      var is_updated = false;
       $.each(data.body, function(i, obj){
+        is_updated = true;
         if (obj.ChannelSwitch) {
+          // ChannelSwitch
           if (DEBUG) console.log({'-- ChannelSwitch': obj.ChannelSwitch});
           $.each(channels, function(i, id){
             $('#' + id).hide(0);
@@ -132,6 +138,7 @@ jQuery( function($){
           pane.show(0);
         }
         else if (obj.DetailDraw) {
+          // DetailDraw
           if (DEBUG) console.log({'-- DetailDraw': obj.DetailDraw});
           var id = obj.DetailDraw.id;
           var pane = $('#' + id);
@@ -144,9 +151,12 @@ jQuery( function($){
           }
         }
         else if (obj.NaviDraw) {
+          // NaviDraw
           if (DEBUG) console.log({'-- NaviDraw': obj.NaviDraw});
           $('.navi-step').removeClass(navigation_classes).hide(0);
+          var finished = true;
           $.each(obj.NaviDraw.steps, function(i, step){
+            if (finished) { finished = step.is_finished ? true : false }
             if ($('#navi-' + step.id).length) {
               $('#check-' + step.id).attr('checked', step.is_finished ? true : false);
               $('#navi-' + step.id)
@@ -157,8 +167,13 @@ jQuery( function($){
               warning_handler('missing recipe for NaviDraw : ' + step.id);
             }
           });
+          if (finished) {
+            $('#finished').show(0);
+          }
         }
         else if (obj.Play) {
+          // Play
+          // TODO: substep active check
           if (DEBUG) console.log({'-- Play': obj.Play});
           var id = obj.Play.id;
           var timer = setTimeout(media_play, obj.Play.delay * seconds, id);
@@ -166,6 +181,7 @@ jQuery( function($){
           if (DEBUG) console.log('-- setTimeout for : '+id);
         }
         else if (obj.Notify) {
+          // Notify
           if (DEBUG) console.log({'-- Notify': obj.Notify});
           var id = obj.Notify.id;
           var timer = setTimeout(notify_play, obj.Notify.delay * seconds, id);
@@ -173,6 +189,7 @@ jQuery( function($){
           if (DEBUG) console.log('-- setTimeout for : '+id);
         }
         else if (obj.Cancel) {
+          // Cancel
           if (DEBUG) console.log({'-- Cancel': obj.Cancel});
           var id = obj.Cancel.id;
           var target = [];
@@ -213,10 +230,14 @@ jQuery( function($){
           if (DEBUG) console.log({'-- stack jobs': jobs});
         }
         else {
-          if (DEBUG) console.log({'-- Cancel': obj.Cancel});
+          if (DEBUG) console.log({'-- obj': obj});
           warning_handler('unknown response : ' + obj);
         }
       });
+      // 更新音の再生
+      if (is_updated) {
+        media_play('update_sound');
+      }
     }
     else {
       if (DEBUG) console.log({'-- data': data});
@@ -254,6 +275,7 @@ jQuery( function($){
     notification_live_sec = $(this).data('notification_live_sec');
     external_input_url = $(this).data('external_input_url');
     check_url = $(this).data('check_url');
+    logger_url = $(this).data('logger_url');
     receiver_url = $(this).data('receiver_url');
     var session_id = $(this).data('session_id');
     var ws = new WebSocket(receiver_url);

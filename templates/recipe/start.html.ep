@@ -1,8 +1,16 @@
 <div class="span12">
 
-<div id="screen" class="hidden"></div>
+<div id="finished" class="hidden">
+  %= link_to l('Recipe List') => url_for('/'), class => 'btn btn-primary';
+</div>
 
-<div id="notify"></div>
+% if (config->{update_sound} ne '') {
+<div class="hidden">
+  %= tag audio => id => 'update_sound', src => config->{update_sound}, preload => 'none', begin
+    <p>This is audio. Your browser is not support.</p>
+  % end
+</div>
+% }
 
 <div id="overview" class="hidden">
 %= tag h2 => l('Overview')
@@ -78,11 +86,10 @@
     'data-notification_live_sec' => config->{'notification_live_sec'},
     'data-external_input_url' => url_for('/navigator/external'),
     'data-check_url' => url_for('/navigator/check'),
+    'data-logger_url' => url_for('/logger'),
     'data-receiver_url' => url_for('/external')->to_abs->scheme('ws'),
     'data-session_id' => session_id,
 %>
-
-<div id="ws_log"></div>
 
 </div>
 % if (app->mode eq 'development') {

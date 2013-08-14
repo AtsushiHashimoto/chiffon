@@ -16,6 +16,9 @@ sub start {
     return $self->render_exception($msg);
   }
 
+  # スタートを記録
+  $logger->info('START');
+
   # Navigator と通信
   my $navigator_response = $self->post_to_navigator(
     {
@@ -43,10 +46,14 @@ sub channel {
     $logger->fatal($msg);
     return $self->render_exception($msg);
   }
+  $id = uc $id;
+
+  # ユーザーの行動をログに記録
+  $logger->info('CHANNEL : ' . $id);
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
-    {situation => 'CHANNEL', operation_contents => uc $id,});
+    {situation => 'CHANNEL', operation_contents => $id,});
   warn qq{-- navigator_response : @{[$self->dumper($navigator_response)]} }
     if DEBUG;
   $self->render(json => $navigator_response);
@@ -62,6 +69,9 @@ sub navi_menu {
     $logger->fatal($msg);
     return $self->render_exception($msg);
   }
+
+  # ユーザーの行動をログに記録
+  $logger->info('NAVI_MENU : ' . $id);
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
@@ -83,6 +93,9 @@ sub check {
     $logger->fatal($msg);
     return $self->render_exception($msg);
   }
+
+  # ユーザーの行動をログに記録
+  $logger->info('CHECK : ' . $id);
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
@@ -115,6 +128,9 @@ sub external {
     $logger->fatal($msg);
     return $self->render_exception($msg);
   }
+
+  # 外部入力をログに記録
+  $logger->info('EXTERNAL_INPUT : ' . $input);
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
