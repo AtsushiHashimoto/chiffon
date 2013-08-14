@@ -71,7 +71,7 @@ clone した状態では設定ファイルはありません。
 
 
 ## Receiver
-viewerのURLが``http://localhost:3000``の場合は，``https://localhost:3000/receiver``に対して，GETリクエストを送ると，外部入力として扱うことができます．
+viewerのURLが``http://localhost:3000``の場合は，``http://localhost:3000/receiver``に対して，GETリクエストを送ると，外部入力として扱うことができます．
 
 ### パラメーター
 - sessionid（必須）
