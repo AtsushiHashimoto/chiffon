@@ -32,6 +32,23 @@ sub startup {
 
   $self->secret(b(file(__FILE__)->absolute)->sha1_sum);
 
+  if ($self->log->is_level('debug')) {
+
+    # ログの発生場所を追加で書き込む
+    no warnings 'redefine';
+    *Mojo::Log::format = sub {
+      my ($self, $level, @lines) = @_;
+      my @caller = caller(4)
+        ; # 4つ前がログの書き込み指定を行なっている（Mojolicious 3.44）
+      my $caller = join ' ', $caller[0], $caller[2];
+      return
+          '['
+        . localtime(time)
+        . "] [$level] [$caller] "
+        . join("\n", @lines) . "\n";
+    };
+  }
+
   # name
   $self->helper(brandname => sub {q{Chiffon Viewer}});
 
