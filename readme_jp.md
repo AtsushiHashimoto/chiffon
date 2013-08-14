@@ -68,3 +68,14 @@ clone した状態では設定ファイルはありません。
 設定ファイルのひな形として「chiffon-web.conf.example」を用意していますので、「chiffon-web.conf」にリネームして使用してください。
 
 各種ファイルのPATHは、このファイルからの相対パスで書きます。
+
+
+## Receiver
+viewerのURLが``http://localhost:3000``の場合は，``https://localhost:3000/receiver``に対して，GETリクエストを送ると，外部入力として扱うことができます．
+
+### パラメーター
+- sessionid（必須）
+    - 閲覧IDを指定する
+- string（必須）
+    - 入力としたい文字列を指定する
+

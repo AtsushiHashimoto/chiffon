@@ -14,8 +14,9 @@ use POSIX qw(strftime);
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
-has xml  => sub { XML::Simple->new };
-has json => sub { JSON::XS->new };
+has xml        => sub { XML::Simple->new };
+has json       => sub { JSON::XS->new };
+has ws_clients => sub { +{} };
 
 sub development_mode {
   warn qq{-- development_mode } if DEBUG;
@@ -215,6 +216,7 @@ sub startup {
   # 認証なしでOKのルート
   # login
   $r->route('/login')->via(qw(get post))->to('system#login');
+  $r->route('/receiver')->via(qw(get))->to('receiver#start');
 
   # 認証
   $r = $r->bridge->to('system#auth');
@@ -226,6 +228,7 @@ sub startup {
   # メニュー
   $r->via(qw(get post))->route(qq{/:controller/:action/:id})
     ->to(controller => 'index', action => 'start', id => '');
+  $r->websocket('/external')->to('external#start');
 }
 
 1;

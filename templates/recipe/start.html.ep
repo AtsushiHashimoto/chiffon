@@ -78,7 +78,7 @@
     'data-notification_live_sec' => config->{'notification_live_sec'},
     'data-external_input_url' => url_for('/navigator/external'),
     'data-check_url' => url_for('/navigator/check'),
-    'data-receiver_url' => config->{receiver_endpoint},
+    'data-receiver_url' => url_for('/external')->to_abs->scheme('ws'),
     'data-session_id' => session_id,
 %>
 
