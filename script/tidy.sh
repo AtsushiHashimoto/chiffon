@@ -11,3 +11,5 @@ find . -path "./local" -prune -o -name "*.pl"   -print0 | xargs -0 perltidy -nst
 find . -path "./local" -prune -o -name "*.PL"   -print0 | xargs -0 perltidy -nst -b
 find . -path "./local" -prune -o -name "*.t"    -print0 | xargs -0 perltidy -nst -b
 find . -path "./local" -prune -o -name "*.conf" -print0 | xargs -0 perltidy -nst -b
+
+./script/chiffon_web test
