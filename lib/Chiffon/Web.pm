@@ -41,7 +41,7 @@ sub startup {
   $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
 
   # Log
-  $self->log->level($self->config->{log_level});
+  $self->log->level(lc $self->config->{log_level});
   my $datetime_format = $self->config->{datetime_format};
   # ログの発生場所を追加で書き込む
   no warnings 'redefine';

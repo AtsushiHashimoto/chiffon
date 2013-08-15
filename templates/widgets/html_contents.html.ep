@@ -14,7 +14,7 @@
   % $content .= join '<br />', @{$args};
   % $content .= app->xml->XMLout($hash, keyattr => [], rootname => undef);
 % }
-%= tag div => id => $object->{id}, class => 'hidden', begin
+%= tag div => id => $object->{id}, class => 'step hidden', begin
   %== defined $content ? $content : ''
   % if (exists $object->{notification}) {
     %= include 'widgets/notification', object => $object->{notification};

@@ -66,19 +66,51 @@ jQuery( function($){
   };
   var navigation_classes = $.map(navigations, function(value, key){ return value }).join(' ');
 
-  var media_play = function(id){
-    // TODO: exists media to warning_handler
-    if (DEBUG) console.log('-- media_play id : '+id);
-    var media = $('#' + id);
-    if (!media.length) {
-      warning_handler('missing recipe for media_play : ' + id);
-    }
-    media = document.getElementById(id);
+  var get_media = function(id){
+    // var media = $('#' + id); // こっちだとコントロールができない
+    var media = document.getElementById(id);
     if (!media) {
       warning_handler('missing media id : '+id);
+      return;
     }
+    return media;
+  }
+
+  var toggle_full_screen = function(id){
+    var media = get_media(id);
+    if (!media) return;
+    if (!document.mozFullScreen && !document.webkitFullScreen) {
+      if (media.mozRequestFullScreen) {
+        media.mozRequestFullScreen();
+      } else {
+        media.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      }
+    } else {
+      if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else {
+        document.webkitCancelFullScreen();
+      }
+    }
+  }
+
+  var media_play = function(id, force){
+    // TODO: exists media to warning_handler
+    if (DEBUG) console.log('-- media_play id : '+id);
+    var media = get_media(id);
+    if (!media) return;
     jobs[id] = media;
-    media.play();
+    var step = $(media).parent('.step');
+    if (DEBUG) console.log(step);
+    var showOrHide = step.is(':visible');
+    if (DEBUG) console.log(showOrHide);
+    if (force || showOrHide) {
+      if (DEBUG) console.log('play!');
+      media.play();
+    }
+    else {
+      warning_handler('step/substep is not active for media id : ' + id);
+    }
   };
 
   var notify_play = function(id){
@@ -92,7 +124,7 @@ jQuery( function($){
       if (DEBUG) console.log('find media in notify : '+audio_id);
       show_notify({
         callback: {
-          onShow: function(){ media_play(audio_id) }
+          onShow: function(){ media_play(audio_id, true) }
         },
         text: notify.html()
       });
@@ -224,7 +256,7 @@ jQuery( function($){
             }
             else {
               if (DEBUG) console.log({'-- jobname': job});
-              warning_handler('not exist or not support in jobs : '+v);
+              warning_handler('missing in jobs : '+v);
             }
           });
           if (DEBUG) console.log({'-- stack jobs': jobs});
@@ -236,7 +268,10 @@ jQuery( function($){
       });
       // 更新音の再生
       if (is_updated) {
-        media_play('update_sound');
+        var id = 'update_sound';
+        if ($('#' + id).length) {
+          media_play('update_sound', true);
+        }
       }
     }
     else {
@@ -245,10 +280,50 @@ jQuery( function($){
     }
   };
 
+  // 音量を上げる
+  $('.louder').on('click', function(e){
+    e.preventDefault();
+    var id = $(this).data('for');
+    var media = get_media(id);
+    if (!media) return;
+    media.volume += 0.1;
+  });
+
+  // 音量を下げる
+  $('.softer').on('click', function(e){
+    e.preventDefault();
+    var id = $(this).data('for');
+    var media = get_media(id);
+    if (!media) return;
+    media.volume -= 0.1;
+  });
+
+  // フルスクリーン
+  $('.full-screen').on('click', function(e){
+    e.preventDefault();
+    var id = $(this).data('for');
+    toggle_full_screen(id);
+  });
+
   // play video/audio
   $('.media-play').on('click', function(e){
     e.preventDefault();
     var id = $(this).data('for');
+    var media = get_media(id);
+    if (!media) return;
+    if (DEBUG) console.log(media);
+    $(media).on('ended', function(e){
+      if (DEBUG) console.log(e.type);
+    });
+    $(media).on('play', function(e){
+      if (DEBUG) console.log(e.type);
+    });
+    $(media).on('pause', function(e){
+      if (DEBUG) console.log(e);
+    });
+    $(media).on('volumechange', function(e){
+      if (DEBUG) console.log(e.type);
+    });
     media_play(id);
     $.getJSON(check_url, {'media_play': id})
     .done(navigator_callback);
@@ -286,7 +361,6 @@ jQuery( function($){
           .done(navigator_callback);
       }
     };
-    if (DEBUG) console.log(document.cookie);
 
     record_keys = true;
 

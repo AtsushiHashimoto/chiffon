@@ -6,5 +6,8 @@
   % end
   <div>
   %= link_to l('Play') => url_for, class => 'btn media-play', 'data-for' => $video->{id};
+  %= link_to l('Fullscreen') => url_for, class => 'btn full-screen', 'data-for' => $video->{id};
+  %= link_to l('Softer') => url_for, class => 'btn softer', 'data-for' => $video->{id};
+  %= link_to l('Louder') => url_for, class => 'btn louder', 'data-for' => $video->{id};
   </div>
 % }
