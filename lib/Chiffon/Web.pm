@@ -27,7 +27,7 @@ sub development_mode {
 sub startup {
   my $self = shift;
 
-  # startupの$selfはコントローラーではなくアプリが入っている
+# startupの$selfはコントローラーではなくアプリが入っている
   chdir $self->home->detect;
   warn qq{-- chdir : @{[$self->home->detect]} } if DEBUG;
 
@@ -43,20 +43,21 @@ sub startup {
   # Log
   $self->log->level(lc $self->config->{log_level});
   my $datetime_format = $self->config->{datetime_format};
+
   # ログの発生場所を追加で書き込む
   no warnings 'redefine';
   *Mojo::Log::format = sub {
     my ($self, $level, @lines) = @_;
-    # 4つ前がログの書き込み指定を行なっている（Mojolicious 3.44）
+
+# 4つ前がログの書き込み指定を行なっている（Mojolicious 3.44）
     my @caller = caller(4);
     my $caller = join ' ', $caller[0], $caller[2];
     my ($sec, $usec) = Time::HiRes::gettimeofday;
     $usec = sprintf '%06d', $usec;
-    my $datetime = join '.', Time::Piece->new($sec)->strftime($datetime_format), $usec;
+    my $datetime = join '.',
+      Time::Piece->new($sec)->strftime($datetime_format), $usec;
     my $LEVEL = uc $level;
-    return
-        qq{[$datetime] [$LEVEL] [$caller] }
-      . join("\n", @lines) . "\n";
+    return qq{[$datetime] [$LEVEL] [$caller] } . join("\n", @lines) . "\n";
   };
 
   # Static
@@ -170,8 +171,8 @@ sub startup {
       else {
         $self->app->log->error($tx->error);
 
-        # 「Connection refused」をJSONで渡すと「61」になるのは何故だ！
-        # return +{status => scalar $tx->error};
+# 「Connection refused」をJSONで渡すと「61」になるのは何故だ！
+# return +{status => scalar $tx->error};
         return +{status => 'Error : ' . $tx->error};
       }
     }

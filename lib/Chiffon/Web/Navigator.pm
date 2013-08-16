@@ -136,25 +136,23 @@ sub external {
 
 # URL : /navigator/play_control
 sub play_control {
-  my $self   = shift;
-  my $logger = $self->app->log;
-  my $json = $self->app->json;
-  my $id = $self->param('pk') // '';
+  my $self      = shift;
+  my $logger    = $self->app->log;
+  my $json      = $self->app->json;
+  my $id        = $self->param('pk') // '';
   my $operation = uc $self->param('operation') // '';
-  my $value = $self->param('value') // '';
+  my $value     = $self->param('value') // '';
 
   if ($id eq '') {
     my $msg = 'missing play_control pk(id)';
     return $self->render_exception($msg);
   }
-  if ($operation !~ /\A(PLAY|PAUSE|JUMP|TO_THE_END|FULL_SCREEN|MUTE|VOLUME)\z/) {
+  if ($operation !~ /\A(PLAY|PAUSE|JUMP|TO_THE_END|FULL_SCREEN|MUTE|VOLUME)\z/)
+  {
     my $msg = 'unknown operation : ' . $operation;
     return $self->render_exception($msg);
   }
-  my $controls = {
-    id => $id,
-    operation => $operation,
-  };
+  my $controls = {id => $id, operation => $operation,};
   if ($value ne '') {
     $controls->{value} = $value;
   }

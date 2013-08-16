@@ -8,8 +8,8 @@ use constant DEBUG => $ENV{CHIFFON_WEB_LOGGER_DEBUG} || 0;
 sub start {
   my $self   = shift;
   my $logger = $self->app->log;
-  my $type = $self->param('type') // '';
-  my $msg = $self->param('msg') // '';
+  my $type   = $self->param('type') // '';
+  my $msg    = $self->param('msg') // '';
   if ($type =~ /(debug|info|warn|error|fatal)/) {
     $logger->$type($msg);
   }
