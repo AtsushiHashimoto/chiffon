@@ -162,7 +162,7 @@ jQuery( function($){
     if (DEBUG) console.log({'-- error_handler':str});
     if (DEBUG) show_notify({
       type: 'error',
-      text: str
+      text: 'response : '+str
     });
     $.getJSON(logger_url, {type:'error', msg:str});
   };
@@ -324,7 +324,7 @@ jQuery( function($){
   var mute_status;
   var volume_timer;
   var volume_change = function(data){
-    $.getJSON(play_control_url, {id: data.id, operation: 'VOLUME', value: data.v})
+    $.getJSON(play_control_url, {pk: data.pk, operation: 'VOLUME', value: data.v})
       .done(navigator_callback);
     clearTimeout(volume_timer);
     volume_timer = '';
@@ -333,7 +333,7 @@ jQuery( function($){
   // 再生場所変更判定
   var seeked_timer;
   var time_change = function(data){
-    $.getJSON(play_control_url, {id: data.id, operation: 'JUMP', value: data.v})
+    $.getJSON(play_control_url, {pk: data.pk, operation: 'JUMP', value: data.v})
       .done(navigator_callback);
     clearTimeout(seeked_timer);
     seeked_timer = '';
@@ -357,7 +357,7 @@ jQuery( function($){
     });
     $(media).on('pause', function(e){
       if (DEBUG) console.log(e);
-      $.getJSON(play_control_url, {pk: id, operation: 'PAUSE'})
+      $.getJSON(play_control_url, {pk: id, operation: 'PAUSE', value: media.currentTime})
         .done(navigator_callback);
     });
     $(media).on('seeked', function(e){
@@ -365,7 +365,7 @@ jQuery( function($){
       if (seeked_timer) {
         clearTimeout(seeked_timer);
       }
-      seeked_timer = setTimeout(time_change, 1000, {id:id, v:media.currentTime});
+      seeked_timer = setTimeout(time_change, 1000, {pk:id, v:media.currentTime});
     });
     $(media).on('volumechange', function(e){
       if (DEBUG) console.log(e.type);
@@ -374,14 +374,14 @@ jQuery( function($){
       if (mute_status != media.muted) {
         mute_status = media.muted;
         var value = mute_status ? 'ON' : 'OFF';
-        $.getJSON(play_control_url, {id: id, operation: 'MUTE', value: value})
+        $.getJSON(play_control_url, {pk: id, operation: 'MUTE', value: value})
           .done(navigator_callback);
       }
       else {
         if (volume_timer) {
           clearTimeout(volume_timer);
         }
-        volume_timer = setTimeout(volume_change, 1000, {id:id, v:media.volume});
+        volume_timer = setTimeout(volume_change, 1000, {pk:id, v:media.volume});
       }
     });
   })

@@ -12,7 +12,6 @@ sub start {
   my $recipe_xml_file = $self->recipe_xml_file;
   unless ($recipe_xml_file) {
     my $msg = 'missing recipe_xml_file';
-    $logger->fatal($msg);    # 必ず値があるはず
     return $self->render_exception($msg);
   }
 
@@ -38,12 +37,10 @@ sub channel {
   my $id     = $self->param('id') // '';
   if ($id eq '') {
     my $msg = 'missing channel id';
-    $logger->fatal($msg);
     return $self->render_exception($msg);
   }
   if ($id !~ /\A(overview|materials|guide)\z/) {
-    my $msg = 'unknown channel id';
-    $logger->fatal($msg);
+    my $msg = 'unknown channel id : ' . $id;
     return $self->render_exception($msg);
   }
   $id = uc $id;
@@ -66,7 +63,6 @@ sub navi_menu {
   my $id     = $self->param('id') // '';
   if ($id eq '') {
     my $msg = 'missing navi_menu id';
-    $logger->fatal($msg);
     return $self->render_exception($msg);
   }
 
@@ -90,7 +86,6 @@ sub check {
   warn qq{-- id : $id } if DEBUG;
   if ($id eq '') {
     my $msg = 'missing check id';
-    $logger->fatal($msg);
     return $self->render_exception($msg);
   }
 
@@ -125,7 +120,6 @@ sub external {
 
   if ($input eq '') {
     my $msg = 'missing external input';
-    $logger->fatal($msg);
     return $self->render_exception($msg);
   }
 
@@ -146,25 +140,20 @@ sub play_control {
   my $logger = $self->app->log;
   my $json = $self->app->json;
   my $id = $self->param('pk') // '';
-  my $operation = $self->param('operation') // '';
+  my $operation = uc $self->param('operation') // '';
   my $value = $self->param('value') // '';
 
   if ($id eq '') {
     my $msg = 'missing play_control pk(id)';
-    $logger->fatal($msg);
     return $self->render_exception($msg);
   }
-  # PLAY, 済
-  # STOP, 不可
-  # PAUSE, 済
-  # JUMP,
-  # TO_THE_END, 済
-  # FULL_SCREEN, 済
-  # MUTE, 済
-  # VOLUME, 済
+  if ($operation !~ /\A(PLAY|PAUSE|JUMP|TO_THE_END|FULL_SCREEN|MUTE|VOLUME)\z/) {
+    my $msg = 'unknown operation : ' . $operation;
+    return $self->render_exception($msg);
+  }
   my $controls = {
     id => $id,
-    operation => uc $operation,
+    operation => $operation,
   };
   if ($value ne '') {
     $controls->{value} = $value;

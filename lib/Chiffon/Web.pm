@@ -170,7 +170,8 @@ sub startup {
       else {
         $self->app->log->error($tx->error);
 
-# return +{status => scalar $tx->error};# 「Connection refused」をJSONで渡すと「61」になるのは何故だ！
+        # 「Connection refused」をJSONで渡すと「61」になるのは何故だ！
+        # return +{status => scalar $tx->error};
         return +{status => 'Error : ' . $tx->error};
       }
     }
