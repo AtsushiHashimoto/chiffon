@@ -12,6 +12,7 @@ jQuery( function($){
   var record_keys = false;
   var keys = [];
   var seconds = 1000;
+  var media_controls = {};
 
   // keypress
   $(document).on('keypress', function(e){
@@ -89,6 +90,7 @@ jQuery( function($){
     if (DEBUG) console.log({fullscreenstate: $(':-webkit-full-screen').length ? true : false});
     var value = $(':-webkit-full-screen').length ? 'ON' : 'OFF';
     if (DEBUG) console.log(e);
+    if (DEBUG) console.log('-- send FULL_SCREEN');
     $.getJSON(play_control_url, {pk: e.srcElement.id, operation: 'FULL_SCREEN', value: value})
       .done(navigator_callback);
   });
@@ -117,8 +119,8 @@ jQuery( function($){
     var showOrHide = step.is(':visible');
     if (DEBUG) console.log(showOrHide);
     if (force || showOrHide) {
-      if (DEBUG) console.log('play!');
       media.play();
+      if (DEBUG) console.log('play!');
     }
     else {
       warning_handler('step/substep is not active for media id : ' + id);
@@ -134,6 +136,7 @@ jQuery( function($){
     }
     var audio_id = notify.find('.media-play').data('for');
     if (audio_id.length) {
+      media_controls[audio_id].send_control = false;
       if (DEBUG) console.log('find media in notify : '+audio_id);
       show_notify({
         callback: {
@@ -152,7 +155,7 @@ jQuery( function($){
     if (DEBUG) console.log({'-- warning_handler':str});
     if (DEBUG) show_notify({
       type: 'warning',
-      text: str
+      text: 'WARNING : ' + str
     });
     $.getJSON(logger_url, {type:'warn', msg:str});
   };
@@ -162,7 +165,7 @@ jQuery( function($){
     if (DEBUG) console.log({'-- error_handler':str});
     if (DEBUG) show_notify({
       type: 'error',
-      text: 'response : '+str
+      text: 'ERROR : ' + str
     });
     $.getJSON(logger_url, {type:'error', msg:str});
   };
@@ -223,6 +226,7 @@ jQuery( function($){
           // Play
           if (DEBUG) console.log({'-- Play': obj.Play});
           var id = obj.Play.id;
+          media_controls[id] = {send_control: false};
           var timer = setTimeout(media_play, obj.Play.delay * seconds, id);
           jobs[id] = timer;
           if (DEBUG) console.log('-- setTimeout for : '+id);
@@ -262,6 +266,7 @@ jQuery( function($){
               delete jobs[v];
             }
             else if (typeof(job) == 'object') {
+              media_controls[v] = {send_control: false};
               job.pause();
               show_notify({
                 type: 'success',
@@ -285,6 +290,7 @@ jQuery( function($){
       if (is_updated) {
         var id = 'update_sound';
         if ($('#' + id).length) {
+          media_controls['update_sound'] = {send_control: false};
           media_play('update_sound', true);
         }
       }
@@ -301,6 +307,7 @@ jQuery( function($){
     var id = $(this).data('for');
     var media = get_media(id);
     if (!media) return;
+    media_controls[id] = {send_control: true};
     media.volume += 0.1;
   });
 
@@ -310,6 +317,7 @@ jQuery( function($){
     var id = $(this).data('for');
     var media = get_media(id);
     if (!media) return;
+    media_controls[id] = {send_control: true};
     media.volume -= 0.1;
   });
 
@@ -317,6 +325,7 @@ jQuery( function($){
   $('.full-screen').on('click', function(e){
     e.preventDefault();
     var id = $(this).data('for');
+    media_controls[id] = {send_control: true};
     request_full_screen(id);
   });
 
@@ -324,6 +333,9 @@ jQuery( function($){
   var mute_status;
   var volume_timer;
   var volume_change = function(data){
+    if (DEBUG) console.log(data);
+    media_controls[data.pk] = {send_control: true};
+    if (DEBUG) console.log('-- send VOLUME');
     $.getJSON(play_control_url, {pk: data.pk, operation: 'VOLUME', value: data.v})
       .done(navigator_callback);
     clearTimeout(volume_timer);
@@ -333,6 +345,9 @@ jQuery( function($){
   // 再生場所変更判定
   var seeked_timer;
   var time_change = function(data){
+    if (DEBUG) console.log(data);
+    media_controls[data.pk] = {send_control: true};
+    if (DEBUG) console.log('-- send JUMP');
     $.getJSON(play_control_url, {pk: data.pk, operation: 'JUMP', value: data.v})
       .done(navigator_callback);
     clearTimeout(seeked_timer);
@@ -346,34 +361,44 @@ jQuery( function($){
     if (!media) return;
     if (DEBUG) console.log(media);
     $(media).on('ended', function(e){
-      if (DEBUG) console.log(e.type);
+      if (DEBUG) console.log({ended:e});
+      if (!media_controls[id].send_control) return;
+      if (DEBUG) console.log('-- send TO_THE_END');
       $.getJSON(play_control_url, {pk: id, operation: 'TO_THE_END'})
         .done(navigator_callback);
     });
     $(media).on('play', function(e){
-      if (DEBUG) console.log(e.type);
+      if (DEBUG) console.log({play:e});
+      if (!media_controls[id].send_control) return;
+      if (DEBUG) console.log('-- send PLAY');
       $.getJSON(play_control_url, {pk: id, operation: 'PLAY'})
         .done(navigator_callback);
     });
     $(media).on('pause', function(e){
-      if (DEBUG) console.log(e);
+      if (DEBUG) console.log({pause:e});
+      if (media.currentTime == media.duration) return;
+      if (!media_controls[id].send_control) return;
+      if (DEBUG) console.log('-- send PAUSE');
       $.getJSON(play_control_url, {pk: id, operation: 'PAUSE', value: media.currentTime})
         .done(navigator_callback);
     });
     $(media).on('seeked', function(e){
-      if (DEBUG) console.log(e.type);
+      if (DEBUG) console.log({seeked:e});
+      media_controls[id].send_control = true;// 触ったので変更
       if (seeked_timer) {
         clearTimeout(seeked_timer);
       }
       seeked_timer = setTimeout(time_change, 1000, {pk:id, v:media.currentTime});
     });
     $(media).on('volumechange', function(e){
-      if (DEBUG) console.log(e.type);
+      if (DEBUG) console.log({volumechange:e});
+      media_controls[id].send_control = true;// 触ったので変更
       if (DEBUG) console.log(media.volume);
       if (DEBUG) console.log(media.muted);
       if (mute_status != media.muted) {
         mute_status = media.muted;
         var value = mute_status ? 'ON' : 'OFF';
+        if (DEBUG) console.log('-- send MUTE');
         $.getJSON(play_control_url, {pk: id, operation: 'MUTE', value: value})
           .done(navigator_callback);
       }
@@ -390,6 +415,7 @@ jQuery( function($){
     var id = $(this).data('for');
     var media = get_media(id);
     if (!media) return;
+    media_controls[id].send_control = true;// 触ったので変更
     mute_status = media.muted;
     media_play(id);
   });
