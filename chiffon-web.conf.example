@@ -8,4 +8,6 @@
   datetime_format       => '%Y.%m.%d_%H.%M.%S',
   notification_live_sec => 5,
   update_sound          => '',
+  video_width           => 320,
+  video_height          => 180,
 }
