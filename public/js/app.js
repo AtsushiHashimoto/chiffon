@@ -5,6 +5,7 @@ jQuery( function($){
   var notification_live_sec;
   var external_input_url;
   var check_url;
+  var play_control_url;
   var logger_url;
   var receiver_url;
   var jobs = {};
@@ -19,8 +20,8 @@ jQuery( function($){
       if (key == 13) {
         var input = keys.join('');
         if (DEBUG) console.log(input);
-        $.getJSON(external_input_url, {'input': input})
-        .done(navigator_callback);
+        $.getJSON(external_input_url, {input: input})
+          .done(navigator_callback);
         keys = [];
         return;
       }
@@ -53,19 +54,24 @@ jQuery( function($){
     });
   });
 
+  // チャンネルの定義テーブル
   var channels = {
     'OVERVIEW': 'overview',
     'MATERIALS': 'materials',
     'GUIDE': 'guide'
   };
 
+  // メニューの表示切り替えテーブル
   var navigations = {
     'CURRENT': 'navi-current',
     'ABLE': 'navi-able',
     'OTHERS': 'navi-others'
   };
+
+  // メニュー初期化用クラス名
   var navigation_classes = $.map(navigations, function(value, key){ return value }).join(' ');
 
+  // 音声・動画のDOM要素を取得
   var get_media = function(id){
     // var media = $('#' + id); // こっちだとコントロールができない
     var media = document.getElementById(id);
@@ -76,26 +82,32 @@ jQuery( function($){
     return media;
   }
 
-  var toggle_full_screen = function(id){
+  // フルスクリーンイベント
+  $(document).on('webkitfullscreenchange', function(e){
+    // 残念ながら取得できない（フルスクリーン時でもfalse）
+    // if (DEBUG) console.log({fullscreen: document.webkitFullScreen ? true : false});
+    if (DEBUG) console.log({fullscreenstate: $(':-webkit-full-screen').length ? true : false});
+    var value = $(':-webkit-full-screen').length ? 'ON' : 'OFF';
+    if (DEBUG) console.log(e);
+    $.getJSON(play_control_url, {pk: e.srcElement.id, operation: 'FULL_SCREEN', value: value})
+      .done(navigator_callback);
+  });
+
+  // フルスクリーンにする
+  var request_full_screen = function(id){
     var media = get_media(id);
     if (!media) return;
-    if (!document.mozFullScreen && !document.webkitFullScreen) {
-      if (media.mozRequestFullScreen) {
-        media.mozRequestFullScreen();
-      } else {
-        media.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-      }
+    if (!$(':-webkit-full-screen').length) {
+      // 大きく表示されない（CSSで可能？）
+      // $(media).parent('.step').get(0).webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      media.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
     } else {
-      if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else {
-        document.webkitCancelFullScreen();
-      }
+      document.webkitCancelFullScreen();
     }
   }
 
+  // 音声・動画を再生する
   var media_play = function(id, force){
-    // TODO: exists media to warning_handler
     if (DEBUG) console.log('-- media_play id : '+id);
     var media = get_media(id);
     if (!media) return;
@@ -113,6 +125,7 @@ jQuery( function($){
     }
   };
 
+  // お知らせを表示する
   var notify_play = function(id){
     console.log('-- notify_play id : '+id);
     var notify = $('#' + id);
@@ -134,6 +147,7 @@ jQuery( function($){
     }
   };
 
+  // 警告を表示し，サーバーへログを送信する
   var warning_handler = function(str){
     if (DEBUG) console.log({'-- warning_handler':str});
     if (DEBUG) show_notify({
@@ -143,6 +157,7 @@ jQuery( function($){
     $.getJSON(logger_url, {type:'warn', msg:str});
   };
 
+  // エラーを表示し，サーバーへログを送信する
   var error_handler = function(str){
     if (DEBUG) console.log({'-- error_handler':str});
     if (DEBUG) show_notify({
@@ -152,6 +167,7 @@ jQuery( function($){
     $.getJSON(logger_url, {type:'error', msg:str});
   };
 
+  // Navigator呼び出し後のコールバック関数
   var navigator_callback = function(data, status){
     if (data.status == 'success') {
       var is_updated = false;
@@ -205,7 +221,6 @@ jQuery( function($){
         }
         else if (obj.Play) {
           // Play
-          // TODO: substep active check
           if (DEBUG) console.log({'-- Play': obj.Play});
           var id = obj.Play.id;
           var timer = setTimeout(media_play, obj.Play.delay * seconds, id);
@@ -280,7 +295,7 @@ jQuery( function($){
     }
   };
 
-  // 音量を上げる
+  // 音量を上げるボタン
   $('.louder').on('click', function(e){
     e.preventDefault();
     var id = $(this).data('for');
@@ -289,7 +304,7 @@ jQuery( function($){
     media.volume += 0.1;
   });
 
-  // 音量を下げる
+  // 音量を下げるボタン
   $('.softer').on('click', function(e){
     e.preventDefault();
     var id = $(this).data('for');
@@ -298,45 +313,95 @@ jQuery( function($){
     media.volume -= 0.1;
   });
 
-  // フルスクリーン
+  // フルスクリーンにするボタン
   $('.full-screen').on('click', function(e){
     e.preventDefault();
     var id = $(this).data('for');
-    toggle_full_screen(id);
+    request_full_screen(id);
   });
 
-  // play video/audio
-  $('.media-play').on('click', function(e){
-    e.preventDefault();
+  // 音量変更，ミュート判定
+  var mute_status;
+  var volume_timer;
+  var volume_change = function(data){
+    $.getJSON(play_control_url, {id: data.id, operation: 'VOLUME', value: data.v})
+      .done(navigator_callback);
+    clearTimeout(volume_timer);
+    volume_timer = '';
+  }
+
+  // 再生場所変更判定
+  var seeked_timer;
+  var time_change = function(data){
+    $.getJSON(play_control_url, {id: data.id, operation: 'JUMP', value: data.v})
+      .done(navigator_callback);
+    clearTimeout(seeked_timer);
+    seeked_timer = '';
+  }
+
+  // 音声・動画を再生するボタン
+  $('.media-play').each(function(){
     var id = $(this).data('for');
     var media = get_media(id);
     if (!media) return;
     if (DEBUG) console.log(media);
     $(media).on('ended', function(e){
       if (DEBUG) console.log(e.type);
+      $.getJSON(play_control_url, {pk: id, operation: 'TO_THE_END'})
+        .done(navigator_callback);
     });
     $(media).on('play', function(e){
       if (DEBUG) console.log(e.type);
+      $.getJSON(play_control_url, {pk: id, operation: 'PLAY'})
+        .done(navigator_callback);
     });
     $(media).on('pause', function(e){
       if (DEBUG) console.log(e);
+      $.getJSON(play_control_url, {pk: id, operation: 'PAUSE'})
+        .done(navigator_callback);
+    });
+    $(media).on('seeked', function(e){
+      if (DEBUG) console.log(e.type);
+      if (seeked_timer) {
+        clearTimeout(seeked_timer);
+      }
+      seeked_timer = setTimeout(time_change, 1000, {id:id, v:media.currentTime});
     });
     $(media).on('volumechange', function(e){
       if (DEBUG) console.log(e.type);
+      if (DEBUG) console.log(media.volume);
+      if (DEBUG) console.log(media.muted);
+      if (mute_status != media.muted) {
+        mute_status = media.muted;
+        var value = mute_status ? 'ON' : 'OFF';
+        $.getJSON(play_control_url, {id: id, operation: 'MUTE', value: value})
+          .done(navigator_callback);
+      }
+      else {
+        if (volume_timer) {
+          clearTimeout(volume_timer);
+        }
+        volume_timer = setTimeout(volume_change, 1000, {id:id, v:media.volume});
+      }
     });
+  })
+  .on('click', function(e){
+    e.preventDefault();
+    var id = $(this).data('for');
+    var media = get_media(id);
+    if (!media) return;
+    mute_status = media.muted;
     media_play(id);
-    $.getJSON(check_url, {'media_play': id})
-    .done(navigator_callback);
   });
 
-  // start ajax
+  // 済ボタン
   $('.check').on('click', function(e){
     var url = $(this).data('url');
     $.getJSON(url)
     .done(navigator_callback);
   });
 
-  // start ajax
+  // ナビボタン
   $('.navigate').on('click', function(e){
     e.preventDefault();
     var url = $(this).attr('href');
@@ -344,12 +409,13 @@ jQuery( function($){
     .done(navigator_callback);
   });
 
-  // init
+  // 初期設定および動作
   $('.navigator-run').each(function(){
     var url = $(this).attr('href');
     notification_live_sec = $(this).data('notification_live_sec');
     external_input_url = $(this).data('external_input_url');
     check_url = $(this).data('check_url');
+    play_control_url = $(this).data('play_control_url');
     logger_url = $(this).data('logger_url');
     receiver_url = $(this).data('receiver_url');
     var session_id = $(this).data('session_id');

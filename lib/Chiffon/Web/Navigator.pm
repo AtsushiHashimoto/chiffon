@@ -140,4 +140,45 @@ sub external {
   $self->render(json => $navigator_response);
 }
 
+# URL : /navigator/play_control
+sub play_control {
+  my $self   = shift;
+  my $logger = $self->app->log;
+  my $json = $self->app->json;
+  my $id = $self->param('pk') // '';
+  my $operation = $self->param('operation') // '';
+  my $value = $self->param('value') // '';
+
+  if ($id eq '') {
+    my $msg = 'missing play_control pk(id)';
+    $logger->fatal($msg);
+    return $self->render_exception($msg);
+  }
+  # PLAY, 済
+  # STOP, 不可
+  # PAUSE, 済
+  # JUMP,
+  # TO_THE_END, 済
+  # FULL_SCREEN, 済
+  # MUTE, 済
+  # VOLUME, 済
+  my $controls = {
+    id => $id,
+    operation => uc $operation,
+  };
+  if ($value ne '') {
+    $controls->{value} = $value;
+  }
+
+  # ユーザーの行動をログに記録
+  $logger->info('PLAY_CONTROL : ' . $json->encode($controls));
+
+  # Navigatorと通信
+  my $navigator_response = $self->post_to_navigator(
+    {situation => 'PLAY_CONTROL', operation_contents => $controls});
+  warn qq{-- navigator_response : @{[$self->dumper($navigator_response)]} }
+    if DEBUG;
+  $self->render(json => $navigator_response);
+}
+
 1;

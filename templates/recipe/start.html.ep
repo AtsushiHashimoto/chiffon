@@ -86,6 +86,7 @@
     'data-notification_live_sec' => config->{'notification_live_sec'},
     'data-external_input_url' => url_for('/navigator/external'),
     'data-check_url' => url_for('/navigator/check'),
+    'data-play_control_url' => url_for('/navigator/play_control'),
     'data-logger_url' => url_for('/logger'),
     'data-receiver_url' => url_for('/external')->to_abs->scheme('ws'),
     'data-session_id' => session_id,

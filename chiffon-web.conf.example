@@ -5,6 +5,6 @@
     hmml_dtd_file         => 'var/hmml.dtd',
     log_level             => 'info',
     datetime_format       => '%Y.%m.%d_%H.%M.%S',
-    notification_live_sec => 8,
+    notification_live_sec => 5,
     update_sound          => '',
 }
