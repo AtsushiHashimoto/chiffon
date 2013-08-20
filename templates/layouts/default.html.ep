@@ -53,6 +53,7 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
 %= tag div => (class => 'row') => begin
   %= content
 % end
+%= include 'widgets/development';
 
 <footer id="copyright" class="footer">
   <small>&copy; <%= brandname %> Powered by <a href="http://www.nishimiyahara.net">IT Office 西宮原</a></small>

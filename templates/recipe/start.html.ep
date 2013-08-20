@@ -1,7 +1,7 @@
 <div class="span12">
 
 <div id="finished" class="hidden">
-  %= link_to l('Recipe List') => url_for('/'), class => 'btn btn-primary';
+  %= link_to l('Recipe List') => url_for('/'), class => 'btn btn-primary navigator-end', 'data-url' => url_for('/navigator/end');
 </div>
 
 % if (config->{update_sound} ne '') {
@@ -94,7 +94,7 @@
 
 </div>
 % if (app->mode eq 'development') {
-  <div>
+  <div class="span12">
     %= tag h1 => 'DEBUG'
     %= tag h2 => 'レシピの構造'
     <pre><%= pretty_dumper($recipe) %></pre>

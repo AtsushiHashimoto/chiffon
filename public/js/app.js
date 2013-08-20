@@ -435,6 +435,18 @@ jQuery( function($){
     .done(navigator_callback);
   });
 
+  // 終了ボタン
+  $('.navigator-end').on('click', function(e){
+    e.preventDefault();
+    var url = $(this).data('url');
+    var list_url = $(this).attr('href');
+    $.getJSON(url)
+    .done(function(){
+      navigator_callback;
+      document.location = list_url;
+    });
+  });
+
   // 初期設定および動作
   $('.navigator-run').each(function(){
     var url = $(this).attr('href');
