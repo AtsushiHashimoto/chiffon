@@ -1,0 +1,3 @@
+% if (app->mode eq 'development') {
+<pre><%= pretty_dumper($object) %></pre>
+% }

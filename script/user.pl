@@ -2,7 +2,7 @@
 use utf8;
 use Mojo::Base -strict;
 use Path::Class qw(file dir);
-use Mojo::JSON;
+use JSON::XS qw(encode_json decode_json);
 use FindBin;
 use lib qq{$FindBin::Bin/../lib};
 use Mojo::Log;
@@ -18,19 +18,17 @@ binmode STDERR => ":encoding($encoding)";
 
 use Term::ReadKey;
 
-
 our $logger   = Mojo::Log->new();
 our $base_dir = file(__FILE__)->dir->parent->resolve;
-our $pw_file  = file($base_dir, 'var', 'userfile');
+my $config_file = file($base_dir, 'chiffon-web.conf');
+our $config = require $config_file;
+our $pw_file = file($base_dir, $config->{userfile});
 
 App::Rad->run;
 
 sub setup {
   my $c = shift;
-  $c->register_commands(
-    { add => 'ユーザーを作成します',
-    }
-  );
+  $c->register_commands({add => 'ユーザーを作成します',});
 }
 
 # init
@@ -60,35 +58,35 @@ sub add {
     return 'Passwordが正しくありません';
   }
 
-
-  my @users;
-  @users = $pw_file->slurp(chomp => 1) if -f $pw_file;
-  for my $line (@users) {
-    my ($user, undef) = split /\t/, $line;
-    if ($user eq $name) {
-      return join('', 'ユーザー「',$name,'」は既に存在しています');
-    }
+  # 記録する
+  my $users;
+  $users = decode_json($pw_file->slurp) if -f $pw_file;
+  if (defined $users and $users->{$name}) {
+    return
+      join('', 'ユーザー「', $name, '」は既に存在しています');
   }
   my $csh = plain2csh($pw);
-  push @users, join("\t", $name, $csh);
-  $pw_file->spew(join "\n", @users);
+  $users->{$name} = +{salted => $csh};
+  $pw_file->spew(encode_json($users));
 
-  return join('', 'ユーザー「',$name,'」を追加しました');
+  return join('', 'ユーザー「', $name, '」を追加しました');
 }
 
 # 名前の正当性を確認する
 sub validate_name {
   my $name = shift;
-  return if length $name < 3;# 3文字未満なら拒否
-  return if $name =~ m!\W!ms;# 半角英数とアンダーバーのみ有効
+  return if length $name < 3;   # 3文字未満なら拒否
+  return if $name =~ m!\W!ms;   # 半角英数とアンダーバーのみ有効
   return 1;
 }
 
 # パスワードの正当性を確認する
 sub validate_pw {
   my $pw = shift;
-  return if length $pw < 4;# 4文字未満なら拒否
-  return if $pw =~ m!\s!ms;# 空白相当文字（スペース、改行、タブ）が含まれていたら拒否
+  return if length $pw < 4;     # 4文字未満なら拒否
+  return
+    if $pw =~ m!\s!ms
+    ; # 空白相当文字（スペース、改行、タブ）が含まれていたら拒否
   return 1;
 }
 

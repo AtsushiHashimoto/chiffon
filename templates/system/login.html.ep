@@ -1,0 +1,25 @@
+% layout 'default';
+% title 'LOGIN';
+% my $login_url = url_for('/login')->to_abs->scheme( app->mode eq 'production' ? 'https' : 'http' );
+%= tag div => (class => 'span12') => begin
+  %= form_for $login_url => (method => 'post') => (class => 'form-horizontal') => begin
+    %= tag fieldset => begin
+      %= tag div => (class => 'control-group') => begin
+        %= tag label => (class => 'control-label') => 'USERNAME'
+        %= tag div => (class => 'controls') => begin
+          %= input_tag user_id => (type => 'text', autofocus => 'autofocus')
+        % end
+      % end
+      %= tag div => (class => 'control-group') => begin
+        %= tag label => (class => 'control-label') => 'PASSWORD'
+        %= tag div => (class => 'controls') => begin
+          %= password_field 'pw'
+        % end
+      % end
+      %= hidden_field back_url => flash('back_url')
+      %= tag div => (class => 'form-actions') => begin
+        %= submit_button 'LOGIN' => ( class => 'btn btn-primary' )
+      % end
+    % end
+  % end
+% end

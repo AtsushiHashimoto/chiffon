@@ -20,5 +20,11 @@ pm_to_blib
 /Build
 !META.json
 !LICENSE
-/var
+/var/*
+/log/*
 !.gitkeep
+
+/local/
+/.carton/
+chiffon-web.conf
+*.bak

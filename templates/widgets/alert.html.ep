@@ -1,0 +1,24 @@
+% my @messages = ();
+% my $flash_message = flash 'message';
+% if ( defined $flash_message ) {
+  % $flash_message = [$flash_message] unless ref $flash_message eq 'ARRAY';
+  % push @messages, @{$flash_message};
+% }
+% my $stash_message = stash 'message';
+% if ( defined $stash_message ) {
+  % $stash_message = [$stash_message] unless ref $stash_message eq 'ARRAY';
+  % push @messages, @{$stash_message};
+% }
+% if (@messages) {
+  %= tag div => (class => 'row') => begin
+    %= tag div => (class => 'span12') => begin
+      % for my $mes ( @messages ) {
+        % $mes->{type} ||= 'message';
+        %= t div => (class => q{global fade in alert alert-}.$mes->{type}) => begin
+          <a class="close" data-dismiss="alert" href="#">&times;</a>
+          %= $mes->{msg}
+        % end
+      % }
+    % end
+  % end
+% }
