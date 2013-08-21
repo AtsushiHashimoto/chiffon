@@ -170,19 +170,15 @@ sub play_control {
 
 # URL : /navigator/end
 sub end {
-  my $self            = shift;
-  my $logger          = $self->app->log;
+  my $self   = shift;
+  my $logger = $self->app->log;
 
   # 終了を記録
   $logger->info('END');
 
   # Navigator と通信
   my $navigator_response = $self->post_to_navigator(
-    {
-      situation          => 'END',
-      operation_contents => '',
-    }
-  );
+    {situation => 'END', operation_contents => '',});
   warn qq{-- navigator_response : @{[$self->dumper($navigator_response)]} }
     if DEBUG;
   $self->render(json => $navigator_response);
