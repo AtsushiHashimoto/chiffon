@@ -470,7 +470,9 @@ jQuery(function ($) {
                     if (DEBUG) console.log({
                         seeked: e
                     });
-                    media_controls[id].send_control = true; // 触ったので変更
+                    media_controls[id] = {
+                        send_control: true
+                    };
                     if (seeked_timer) {
                         clearTimeout(seeked_timer);
                     }
@@ -484,7 +486,9 @@ jQuery(function ($) {
                     if (DEBUG) console.log({
                         volumechange: e
                     });
-                    media_controls[id].send_control = true; // 触ったので変更
+                    media_controls[id] = {
+                        send_control: true
+                    };
                     if (DEBUG) console.log(media.volume);
                     if (DEBUG) console.log(media.muted);
                     if (mute_status != media.muted) {
@@ -514,7 +518,9 @@ jQuery(function ($) {
                 .data('for');
             var media = get_media(id);
             if (!media) return;
-            media_controls[id].send_control = true; // 触ったので変更
+            media_controls[id] = {
+                send_control: true
+            };
             mute_status = media.muted;
             media_play(id);
         });
