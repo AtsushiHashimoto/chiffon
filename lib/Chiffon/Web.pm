@@ -23,6 +23,10 @@ sub development_mode {
   warn qq{-- development_mode } if DEBUG;
 }
 
+sub production_mode {
+  warn qq{-- production_mode } if DEBUG;
+}
+
 # This method will run once at server start
 sub startup {
   my $self = shift;
