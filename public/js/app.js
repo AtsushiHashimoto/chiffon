@@ -9,27 +9,8 @@ jQuery( function($){
   var logger_url;
   var receiver_url;
   var jobs = {};
-  var record_keys = false;
-  var keys = [];
   var seconds = 1000;
   var media_controls = {};
-
-  // keypress
-  $(document).on('keypress', function(e){
-    if (record_keys) {
-      var key = e.charCode;
-      if (key == 13) {
-        var input = keys.join('');
-        if (DEBUG) console.log(input);
-        $.getJSON(external_input_url, {input: input})
-          .done(navigator_callback);
-        keys = [];
-        return;
-      }
-      keys.push(String.fromCharCode(key));
-    }
-    if (DEBUG) console.log(keys);
-  });
 
   // show_notify
   var show_notify = function(obj){
@@ -38,17 +19,14 @@ jQuery( function($){
 
   // loading
   $(document).ajaxStart(function() {
-    record_keys = false;
     $('#loading')
       .css("top", $(window).scrollTop() + "px")
       .css("left", $(window).scrollLeft() + "px")
       .show(0);
   }).ajaxComplete(function(){
-    record_keys = true;
     $('#loading')
       .hide(0);
   }).ajaxError(function(){
-    record_keys = true;
     show_notify({
       type: 'error',
       text: 'AJAX ERROR'
@@ -465,9 +443,6 @@ jQuery( function($){
           .done(navigator_callback);
       }
     };
-
-    record_keys = true;
-
     $.getJSON(url)
       .done(navigator_callback);
     $.noty.defaults = {
