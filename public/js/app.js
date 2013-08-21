@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     // global variables
-    var DEBUG = 1;
+    var DEBUG = 0;
     var notification_live_sec;
     var external_input_url;
     var check_url;
