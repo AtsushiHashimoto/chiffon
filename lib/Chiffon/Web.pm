@@ -41,7 +41,22 @@ sub startup {
   $self->helper(brandname => sub {q{Chiffon Viewer}});
 
   # Plugins
-  $self->plugin('Config');
+  $self->plugin('Config' => {
+    default => {
+      userfile              => 'var/userfile',
+      recipe_basename       => 'recipe.xml',
+      recipes_dir           => 'var/recipes',
+      navigator_endpoint    => 'http://localhost:4567/navi/default',
+      hmml_dtd_file         => 'var/hmml.dtd',
+      log_level             => 'info',
+      datetime_format       => '%Y.%m.%d_%H.%M.%S',
+      notification_live_sec => 5,
+      update_sound          => '',
+      video_width           => 320,
+      video_height          => 180,
+    },
+    file => 'chiffon-web.conf',
+    });
   $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
 
   # Log
