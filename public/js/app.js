@@ -133,7 +133,7 @@ jQuery(function ($) {
         var audio_id = notify.find('.media-play')
             .data('for');
         if (audio_id.length) {
-            media_controls[audio_id].send_control = false;
+            media_controls[audio_id] = { send_control: false };
             if (DEBUG) console.log('find media in notify : ' + audio_id);
             show_notify({
                 callback: {
