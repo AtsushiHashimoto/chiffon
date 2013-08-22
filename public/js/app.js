@@ -133,7 +133,7 @@ jQuery(function ($) {
         var audio_id = notify.find('.media-play')
             .data('for');
         if (audio_id.length) {
-            media_controls[audio_id].send_control = false;
+            media_controls[audio_id] = { send_control: false };
             if (DEBUG) console.log('find media in notify : ' + audio_id);
             show_notify({
                 callback: {
@@ -429,7 +429,7 @@ jQuery(function ($) {
                     if (DEBUG) console.log({
                         ended: e
                     });
-                    if (!media_controls[id].send_control) return;
+                    // TO_THE_ENDは常に送る
                     if (DEBUG) console.log('-- send TO_THE_END');
                     $.getJSON(play_control_url, {
                         pk: id,

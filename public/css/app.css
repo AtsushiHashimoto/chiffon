@@ -66,6 +66,8 @@ body {
   font-weight: bold;
   background-color: crimson;
   color: whitesmoke;
+  cursor: default;
+  text-decoration: none;
 }
 .navi-current:before {
   content: "(c)";

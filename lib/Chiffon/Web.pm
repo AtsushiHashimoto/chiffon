@@ -1,7 +1,7 @@
 package Chiffon::Web;
 use Mojo::Base 'Mojolicious';
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use Mojo::ByteStream qw(b);
 
@@ -21,6 +21,10 @@ has ws_clients => sub { +{} };
 
 sub development_mode {
   warn qq{-- development_mode } if DEBUG;
+}
+
+sub production_mode {
+  warn qq{-- production_mode } if DEBUG;
 }
 
 # This method will run once at server start
