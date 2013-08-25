@@ -9,9 +9,13 @@ use JSON::XS qw(encode_json decode_json);
 use Crypt::SaltedHash;
 use Path::Class qw(file dir);
 use XML::Simple;
+use XML::LibXML;
 use Time::HiRes;
 use POSIX qw(strftime);
 use Time::Piece;
+use Try::Tiny;
+use Capture::Tiny qw(capture);
+
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
@@ -47,7 +51,7 @@ sub startup {
       recipe_basename       => 'recipe.xml',
       recipes_dir           => 'var/recipes',
       navigator_endpoint    => 'http://localhost:4567/navi/default',
-      hmml_dtd_file         => 'var/hmml.dtd',
+      relax_ng_file => 'var/hmml-basic.rng',
       log_level             => 'info',
       datetime_format       => '%Y.%m.%d_%H.%M.%S',
       notification_live_sec => 5,
@@ -166,6 +170,24 @@ sub startup {
       return $recipe_xml_file;
     }
   );
+
+  # validate
+  $self->helper(
+    hmml_validate => sub {
+      my $self = shift;
+      my $hmml_file = shift or die 'recipe file required';
+      my $config = $self->config;
+      my $hmml_doc = XML::LibXML->new->parse_file($hmml_file);
+      my $rngschema = XML::LibXML::RelaxNG->new( location => file($config->{relax_ng_file})->stringify );
+      my $err;
+      my ($stdout, $stderr) = capture {
+        $rngschema->validate($hmml_doc);
+      };
+      warn qq{-- result : @{[$stdout, $stderr]} } if DEBUG;
+      return $stdout, $stderr;
+    }
+  );
+
 
   # post_to_navigator
   $self->helper(
