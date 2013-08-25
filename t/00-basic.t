@@ -32,7 +32,8 @@ $t->post_ok('/login' => form => {user_id => 'test', pw => 'test'})
 $t->get_ok('/')->status_is(200)->text_like('div.alert' => qr/Welcome test/);
 
 $t->get_ok('/recipe' => form => {name => 'test_recipe'})->status_is(200)
-  ->text_like('h1' => qr/テスト用レシピ/)->or(sub {diag explain $t->tx->res->body});
+  ->text_like('h1' => qr/テスト用レシピ/)
+  ->or(sub { diag explain $t->tx->res->body });
 
 $t->get_ok('/recipe')->status_is(404);
 $t->get_ok('/system')->status_is(302);

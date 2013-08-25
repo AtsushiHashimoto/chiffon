@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # このファイルの場所を $SHELL_HOME に格納
 SHELL_HOME=$(cd $(dirname $0);pwd)
