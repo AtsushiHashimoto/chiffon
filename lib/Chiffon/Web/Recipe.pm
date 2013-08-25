@@ -24,6 +24,7 @@ sub start {
     $logger->error(qq{file not found $recipe_xml_file});
     return $self->render_not_found;
   }
+
   # file readable check
   unless (-r $recipe_xml_file) {
     $logger->error(qq{permission denied $recipe_xml_file});
@@ -48,7 +49,8 @@ sub start {
   # validate
   (undef, my $err) = $self->hmml_validate($recipe_xml_file);
   if ($err) {
-    return $self->render_exception(qq{invalid hmml document `$recipe_xml_file` : $err});
+    return $self->render_exception(
+      qq{invalid hmml document `$recipe_xml_file` : $err});
   }
 
   $self->stash(recipe => $recipe, name => $name,);

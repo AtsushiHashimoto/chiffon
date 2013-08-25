@@ -11,17 +11,18 @@
 			<object name="食材6" id="food6" size="小" amount="3" unit="g" />
 			<object name="食材7" id="food7" />
 		</object_group>
-		<object name="画像あり食材" id="food_image" size="小" amount="10" unit="箱" img="./image/material_image.png" />
-		<object name="食材1" id="food1" size="中" />
-		<object name="食材2" id="food2" amount="5" />
-		<object name="食材3" id="food3" size="小" amount="6" />
-		<object name="食材4" id="food4" size="大" unit="個"></object>
-		<object name="食材5" id="food5" amount="3" unit="本" />
-		<object name="食材6" id="food6" size="小" amount="3" unit="g" />
-		<object name="食材7" id="food7" />
+		<object name="画像あり食材" id="food_image2" size="小" amount="10" unit="箱" img="./image/material_image.png" />
+		<object name="食材8" id="food8" size="中" />
+		<object name="食材9" id="food9" amount="5" />
+		<object name="食材10" id="food10" size="小" amount="6" />
+		<object name="食材11" id="food11" size="大" unit="個"></object>
+		<object name="食材12" id="food12" amount="3" unit="本" />
+		<object name="食材13" id="food13" size="小" amount="3" unit="g" />
+		<object name="食材14" id="food14" />
 	</materials>
 	<directions>
 		<step id="step01" priority="10" navi_text="任意タイミングで取り組めるステップ">
+			<trigger timing="start" ref="event_extra" delay="0" />
 			<substep navi_text="テキストのみ" order="1" id="substep01_01">
 				<html_contents>substep01_01です．<br />テキストのみが表示されます．</html_contents>
 			</substep>
@@ -37,7 +38,8 @@
 				</notification>
 			</substep>
 			<substep navi_text="音声のみ" order="3" id="substep01_03">
-				<html_contents />
+				<html_contents><br/></html_contents>
+
 				<audio path="./audio/audio01_03.webm" id="audio01_03">
 					<trigger timing="start" ref="event01_03" delay="10" />
 				</audio>
@@ -57,7 +59,6 @@
 					<trigger timing="start" ref="event01_05" delay="10" />
 				</audio>
 			</substep>
-			<trigger timing="start" ref="event_extra" delay="0" />
 		</step>
 		<step id="step02" priority="9" navi_text="任意タイミングで取り組めるステップ">
 			<substep navi_text="画像のみ" order="1" id="substep02_01">
@@ -98,7 +99,7 @@
 				</notification>
 			</substep>
 			<substep navi_text="画像+notification" order="2" id="substep03_02">
-				<html_contents><img src="./image/image03_02.png" width="300" height="230" /></html_contents>
+				<html_contents><img alt="no image" src="./image/image03_02.png" width="300" height="230" /></html_contents>
 				<trigger timing="start" ref="event03_02" delay="0" />
 				<notification id="notification03_02">
 					<html_contents>substep03_02におけるnotificationです．<br />音声も同時に流れます．</html_contents>
@@ -107,19 +108,19 @@
 				</notification>
 			</substep>
 			<substep navi_text="画像+音声" order="3" id="substep03_03">
-				<html_contents><img src="./image/image03_03.png" width="300" height="230" /></html_contents>
+				<html_contents><img alt="no image" src="./image/image03_03.png" width="300" height="230" /></html_contents>
 				<audio path="./audio/audio03_03.webm" id="audio03_03">
 					<trigger timing="start" ref="event03_03" delay="10" />
 				</audio>
 			</substep>
 			<substep navi_text="画像+動画" order="4" id="substep03_04">
-				<html_contents><img src="./image/image03_04.png" width="300" height="230" /></html_contents>
+				<html_contents><img alt="no image" src="./image/image03_04.png" width="300" height="230" /></html_contents>
 				<video path="./video/video03_04.webm" title="テスト用動画" id="video03_04">
 					<trigger timing="start" ref="event03_04" delay="10" />
 				</video>
 			</substep>
 			<substep navi_text="画像+音声+動画" order="5" id="substep03_05">
-				<html_contents><img src="./image/image03_05.png" width="300" height="230" /></html_contents>
+				<html_contents><img alt="no image" src="./image/image03_05.png" width="300" height="230" /></html_contents>
 				<video path="./video/video03_05.webm" title="テスト用動画" id="video03_05">
 					<trigger timing="start" ref="event03_05" delay="10" />
 				</video>
@@ -128,13 +129,12 @@
 				</audio>
 			</substep>
 		</step>
-		<step id="step04" priority="7" navi_text="step01,02,03後に取り組めるステップ">
-			<parent ref="step01 step02 step03" />
+		<step id="step04" priority="7" navi_text="step01,02,03後に取り組めるステップ" parent="step01 step02 step03">
 			<substep navi_text="テキスト+画像" order="1" id="substep04_01">
-				<html_contents>substep04_01です．<br />テキストと画像が表示されます．<br /><img src="./image/image04_01.png" width="300" height="230" /></html_contents>
+				<html_contents>substep04_01です．<br />テキストと画像が表示されます．<br /><img alt="no image" src="./image/image04_01.png" width="300" height="230" /></html_contents>
 			</substep>
 			<substep navi_text="テキスト+画像+notification" order="2" id="substep04_02">
-				<html_contents>substep04_02です．<br />テキストと画像が表示され，10秒後にnotificationが表示されます．<br /><img src="./image/image04_02.png" width="300" height="230" /></html_contents>
+				<html_contents>substep04_02です．<br />テキストと画像が表示され，10秒後にnotificationが表示されます．<br /><img alt="no image" src="./image/image04_02.png" width="300" height="230" /></html_contents>
 				<trigger timing="start" ref="event04_02" delay="0" />
 				<notification id="notification04_02">
 					<html_contents>substep04_02におけるnotificationです．<br />音声も同時に流れます．</html_contents>
@@ -163,8 +163,7 @@
 				</video>
 				<trigger timing="start" ref="event04_04" delay="0" />
 				<notification id="notification04_04">
-					<html_contents>substep04_04におけるnotificationです．<br />音声も同時に流れます．</html_contents>
-					<audio path="./notification/notification04_04.webm" id="notification_audio04_04"></audio>
+					<audio path="./notification/notification04_04.webm" id="notification_audio04_04"></audio>					<html_contents>substep04_04におけるnotificationです．<br />音声も同時に流れます．</html_contents>
 					<trigger timing="start" ref="event04_04" delay="120" />
 				</notification>
 			</substep>
@@ -186,7 +185,7 @@
 		</step>
 		<step id="step05" priority="6" navi_text="任意タイミングで取り組めるステップ">
 			<substep navi_text="画像+音声+notification" order="1" id="substep05_01">
-				<html_contents><img src="./image/image05_01.png" width="300" height="230" /></html_contents>
+				<html_contents><img alt="no image" src="./image/image05_01.png" width="300" height="230" /></html_contents>
 				<audio path="./audio/audio05_01.webm" id="audio05_01">
 					<trigger timing="start" ref="event05_01" delay="10" />
 				</audio>
@@ -212,19 +211,19 @@
 				</notification>
 			</substep>
 			<substep navi_text="テキスト+画像+音声" order="3" id="substep05_03">
-				<html_contents>substeo05_03です．<br />テキストと画像が表示され，5秒後に音声が再生されます．<br /><img src="./image/image05_03.png" width="300" height="230" /></html_contents>
+				<html_contents>substeo05_03です．<br />テキストと画像が表示され，5秒後に音声が再生されます．<br /><img alt="no image" src="./image/image05_03.png" width="300" height="230" /></html_contents>
 				<audio path="./audio/audio05_03.webm" id="audio05_03">
 					<trigger timing="start" ref="event05_03" delay="10" />
 				</audio>
 			</substep>
 			<substep navi_text="テキスト+画像+動画" order="4" id="substep05_04">
-				<html_contents>substep05_04です．<br />テキストと画像が表示され，5秒後に動画が再生されます．<br /><img src="./image/image05_04.png" width="300" height="230" /></html_contents>
+				<html_contents>substep05_04です．<br />テキストと画像が表示され，5秒後に動画が再生されます．<br /><img alt="no image" src="./image/image05_04.png" width="300" height="230" /></html_contents>
 				<video path="./video/video05_04.webm" title="テスト用動画" id="video05_04">
 					<trigger timing="start" ref="event05_04" delay="10" />
 				</video>
 			</substep>
 			<substep navi_text="画像+音声+動画+notification" order="5" id="substep05_05">
-				<html_contents><img src="./image/image05_05.png" width="300" height="230" /></html_contents>
+				<html_contents><img alt="no image" src="./image/image05_05.png" width="300" height="230" /></html_contents>
 				<video path="./video/video05_05.webm" title="テスト用動画" id="video05_05">
 					<trigger timing="start" ref="event05_05" delay="10" />
 				</video>
@@ -239,8 +238,7 @@
 				</notification>
 			</substep>
 		</step>
-		<step id="step06" chain="step05" priority="5" navi_text="step05の直後に取り組むべきステップ">
-			<parent ref="step05" />
+		<step id="step06" chain="step05" priority="5" navi_text="step05の直後に取り組むべきステップ" parent="step05">
 			<substep navi_text="テキスト+動画+notification" order="1" id="substep06_01">
 				<html_contents>substep06_01です．<br />テキストが表示され，5秒後に動画が，10秒後にnotificationが再生されます．</html_contents>
 				<video path="./video/video06_01.webm" title="テスト用動画" id="video06_01">
@@ -254,7 +252,7 @@
 				</notification>
 			</substep>
 			<substep navi_text="テキスト+画像+音声+notification" order="2" id="substep06_02">
-				<html_contents>substep06_02です．<br />テキストと画像が表示され，5秒後に音声が，10秒後にnotificationが再生されます．<br /><img src="./image/image06_02.png" width="300" height="230" /></html_contents>
+				<html_contents>substep06_02です．<br />テキストと画像が表示され，5秒後に音声が，10秒後にnotificationが再生されます．<br /><img alt="no image" src="./image/image06_02.png" width="300" height="230" /></html_contents>
 				<audio path="./audio/audio06_02.webm" id="audio06_02">
 					<trigger timing="start" ref="event06_02" delay="10" />
 				</audio>
@@ -266,7 +264,7 @@
 				</notification>
 			</substep>
 			<substep navi_text="テキスト+画像+音声+動画" order="3" id="substep06_03">
-				<html_contents>substep06_03です．<br />テキストと画像が表示され，5秒後に音声と動画が再生されます．<br /><img src="./image/image06_03.png" width="300" height="230" /></html_contents>
+				<html_contents>substep06_03です．<br />テキストと画像が表示され，5秒後に音声と動画が再生されます．<br /><img alt="no image" src="./image/image06_03.png" width="300" height="230" /></html_contents>
 				<video path="./video/video06_03.webm" title="テスト用動画" id="video06_03">
 					<trigger timing="start" ref="event06_03" delay="10" />
 				</video>
@@ -275,7 +273,7 @@
 				</audio>
 			</substep>
 			<substep navi_text="テキスト+画像+動画+notification" order="4" id="substep06_04">
-				<html_contents>substep06_04です．<br />テキストと画像が表示され，5秒後に動画が，10秒後にnotificationが再生されます．<br /><img src="./image/image06_04.png" width="300" height="230" /></html_contents>
+				<html_contents>substep06_04です．<br />テキストと画像が表示され，5秒後に動画が，10秒後にnotificationが再生されます．<br /><img alt="no image" src="./image/image06_04.png" width="300" height="230" /></html_contents>
 				<video path="./video/video06_04.webm" title="テスト用動画" id="video06_04">
 					<trigger timing="start" ref="event06_04" delay="10" />
 				</video>
@@ -287,7 +285,7 @@
 				</notification>
 			</substep>
 			<substep navi_text="テキスト+画像+音声+動画+notification" order="5" id="substep06_05">
-				<html_contents>substep06_05です．<br />テキストと画像が表示され，5秒後に音声と動画が，10秒後にnotificationが再生されます．<br /><img src="./image/image06_05.png" width="300" height="230" /></html_contents>
+				<html_contents>substep06_05です．<br />テキストと画像が表示され，5秒後に音声と動画が，10秒後にnotificationが再生されます．<br /><img alt="no image" src="./image/image06_05.png" width="300" height="230" /></html_contents>
 				<video path="./video/video06_05.webm" title="テスト用動画" id="video06_05">
 					<trigger timing="start" ref="event06_05" delay="10" />
 				</video>
@@ -304,8 +302,7 @@
 				</notification>
 			</substep>
 		</step>
-		<step id="step07" priority="4" navi_text="step04,06後に取り組めるステップ">
-			<parent ref="step04 step06" />
+		<step id="step07" priority="4" navi_text="step04,06後に取り組めるステップ" parent="step04 step06">
 			<substep navi_text="テキスト+音声+動画+notification" order="1" id="substep07_01">
 				<html_contents>substep07_01です．<br />テキストが表示され，5秒後に音声と動画が，10秒後にnotificationが再生されます．</html_contents>
 				<video path="./video/video07_01.webm" title="テスト用動画" id="video07_01">
@@ -324,7 +321,7 @@
 				</notification>
 			</substep>
 			<substep navi_text="画像+動画+notification" order="2" id="substep07_02">
-				<html_contents><img src="./image/image07_02.png" width="300" height="230" /></html_contents>
+				<html_contents><img alt="no image" src="./image/image07_02.png" width="300" height="230" /></html_contents>
 				<video path="./video/video07_02.webm" title="テスト用動画" id="video07_02">
 					<trigger timing="start" ref="event07_02" delay="10" />
 				</video>
@@ -348,22 +345,33 @@
 		<trigger timing="start" ref="event_extra_2" delay="120" />
 	</notification>
 	<event id="event01_02" />
+	<event id="event01_03" />
+	<event id="event01_04" />
+	<event id="event01_05" />
 	<event id="event02_02" />
 	<event id="event03_01" />
 	<event id="event03_02" />
+	<event id="event03_03" />
+	<event id="event03_04" />
+	<event id="event03_05" />
 	<event id="event04_02" />
 	<event id="event04_03" />
 	<event id="event04_04" />
 	<event id="event04_05" />
 	<event id="event05_01" />
 	<event id="event05_02" />
+	<event id="event05_03" />
+	<event id="event05_04" />
 	<event id="event05_05" />
 	<event id="event06_01" />
 	<event id="event06_02" />
+	<event id="event06_03" />
 	<event id="event06_04" />
 	<event id="event06_05" />
 	<event id="event07_01" />
 	<event id="event07_02" />
+	<event id="event07_03" />
+	<event id="event_extra" />
 	<event id="event_extra_1" />
 	<event id="event_extra_2" />
 </recipe>

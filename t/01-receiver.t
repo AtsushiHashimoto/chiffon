@@ -8,10 +8,11 @@ use File::Temp ();
 my $t = Test::Mojo->new('Chiffon::Web');
 
 my $userfile = File::Temp->new;
-file($userfile)->spew(q!{"test":{"salted":"{SSHA}TmaNl3aFim19ZQbhqWwat3eZafyaysFo"}}!);
+file($userfile)
+  ->spew(q!{"test":{"salted":"{SSHA}TmaNl3aFim19ZQbhqWwat3eZafyaysFo"}}!);
 my $recipes_dir = File::Temp->newdir;
-my $config = $t->app->config;
-$config->{userfile} = $userfile;
+my $config      = $t->app->config;
+$config->{userfile}    = $userfile;
 $config->{recipes_dir} = $recipes_dir;
 
 $t->get_ok('/receiver')->status_is(500);

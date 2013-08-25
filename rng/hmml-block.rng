@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- レシピの要素を順不同にするためのモデルの定義 -->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+<define name="Recipe.Optional.class">
+  <zeroOrMore>
+    <choice>
+      <ref name="notification"/>
+      <ref name="event"/>
+    </choice>
+  </zeroOrMore>
+</define>
+
+<define name="Recipe.md.class">
+  <ref name="Recipe.Optional.class"/>
+  <optional>
+    <ref name="materials"/>
+  </optional>
+  <ref name="Recipe.Optional.class"/>
+  <ref name="directions"/>
+  <ref name="Recipe.Optional.class"/>
+</define>
+
+<define name="Recipe.dm.class">
+  <ref name="Recipe.Optional.class"/>
+  <ref name="directions"/>
+  <ref name="Recipe.Optional.class"/>
+  <optional>
+    <ref name="materials"/>
+  </optional>
+  <ref name="Recipe.Optional.class"/>
+</define>
+
+<!-- <recipe>タグ内の要素を順不同にするモデル -->
+<define name="Recipe.model">
+  <choice>
+    <ref name="Recipe.md.class"/>
+    <ref name="Recipe.dm.class"/> 
+  </choice>
+</define>
+
+<define name="Substep.Optional.class">
+  <zeroOrMore>
+    <choice>
+      <ref name="trigger"/>
+      <ref name="notification"/>
+    </choice>
+  </zeroOrMore>
+</define>
+
+<define name="Substep.Video.class">
+  <ref name="Substep.Optional.class"/>
+  <optional>
+   <ref name="video"/>
+  </optional>
+</define>
+
+<define name="Substep.Audio.class">
+  <ref name="Substep.Optional.class"/>
+  <optional>
+   <ref name="audio"/>
+  </optional>
+</define>
+
+<define name="Substep.HTML.class">
+  <ref name="Substep.Optional.class"/>
+  <ref name="html_contents"/>
+</define>
+
+<define name="Substep.avh.class">
+  <ref name="Substep.Audio.class"/>
+  <ref name="Substep.Video.class"/>
+  <ref name="html_contents"/>  
+  <ref name="Substep.Optional.class"/>
+</define>
+
+<define name="Substep.ahv.class">
+  <ref name="Substep.Video.class"/>
+  <ref name="html_contents"/>  
+  <ref name="Substep.Audio.class"/>
+  <ref name="Substep.Optional.class"/>
+</define>
+
+<define name="Substep.vah.class">
+  <ref name="Substep.Video.class"/>
+  <ref name="Substep.Audio.class"/>
+  <ref name="html_contents"/>  
+  <ref name="Substep.Optional.class"/>
+</define>
+
+<define name="Substep.vha.class">
+  <ref name="Substep.Video.class"/>
+  <ref name="html_contents"/>  
+  <ref name="Substep.Audio.class"/>
+  <ref name="Substep.Optional.class"/>
+</define>
+
+<define name="Substep.hav.class">
+  <ref name="html_contents"/>  
+  <ref name="Substep.Video.class"/>
+  <ref name="Substep.Audio.class"/>
+  <ref name="Substep.Optional.class"/>
+</define>
+
+<define name="Substep.hva.class">
+  <ref name="html_contents"/>  
+  <ref name="Substep.Audio.class"/>
+  <ref name="Substep.Video.class"/>
+  <ref name="Substep.Optional.class"/>
+</define>
+
+<!-- <substep>タグ内の要素を順不同にするモデル -->
+<define name="Substep.model">
+  <choice>
+    <ref name="Substep.avh.class"/>
+    <ref name="Substep.ahv.class"/>
+    <ref name="Substep.vah.class"/>
+    <ref name="Substep.vha.class"/>
+    <ref name="Substep.hav.class"/>
+    <ref name="Substep.hva.class"/>
+  </choice>
+</define>
+
+
+<define name="Notification.Optional.class">
+  <zeroOrMore>
+    <choice>
+      <ref name="trigger"/>
+    </choice>
+  </zeroOrMore>
+</define>
+
+<define name="Notification.ah.class">
+  <ref name="Notification.Optional.class"/>
+  <optional>
+    <ref name="audio"/>
+  </optional>
+  <ref name="Notification.Optional.class"/>
+  <ref name="html_contents"/>
+  <ref name="Notification.Optional.class"/>
+</define>
+
+<define name="Notification.ha.class">
+  <ref name="Notification.Optional.class"/>
+  <ref name="html_contents"/>
+  <ref name="Notification.Optional.class"/>
+  <optional>
+    <ref name="audio"/>
+  </optional>
+  <ref name="Notification.Optional.class"/>
+</define>
+
+<!-- <notification>タグ内の要素を順不同にするモデル-->
+<define name="Notification.model">
+  <choice>
+    <ref name="Notification.ah.class"/>
+    <ref name="Notification.ha.class"/>
+  </choice>
+</define>
+
+</grammar>

@@ -45,22 +45,24 @@ sub startup {
   $self->helper(brandname => sub {q{Chiffon Viewer}});
 
   # Plugins
-  $self->plugin('Config' => {
-    default => {
-      userfile              => 'var/userfile',
-      recipe_basename       => 'recipe.xml',
-      recipes_dir           => 'var/recipes',
-      navigator_endpoint    => 'http://localhost:4567/navi/default',
-      relax_ng_file => 'var/hmml-basic.rng',
-      log_level             => 'info',
-      datetime_format       => '%Y.%m.%d_%H.%M.%S',
-      notification_live_sec => 5,
-      update_sound          => '',
-      video_width           => 320,
-      video_height          => 180,
-    },
-    file => 'chiffon-web.conf',
-    });
+  $self->plugin(
+    'Config' => {
+      default => {
+        userfile              => 'var/userfile',
+        recipe_basename       => 'recipe.xml',
+        recipes_dir           => 'var/recipes',
+        navigator_endpoint    => 'http://localhost:4567/navi/default',
+        relax_ng_file         => 'rng/hmml-basic.rng',
+        log_level             => 'info',
+        datetime_format       => '%Y.%m.%d_%H.%M.%S',
+        notification_live_sec => 5,
+        update_sound          => '',
+        video_width           => 320,
+        video_height          => 180,
+      },
+      file => 'chiffon-web.conf',
+    }
+  );
   $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
 
   # Log
@@ -174,11 +176,12 @@ sub startup {
   # validate
   $self->helper(
     hmml_validate => sub {
-      my $self = shift;
+      my $self      = shift;
       my $hmml_file = shift or die 'recipe file required';
-      my $config = $self->config;
-      my $hmml_doc = XML::LibXML->new->parse_file($hmml_file);
-      my $rngschema = XML::LibXML::RelaxNG->new( location => file($config->{relax_ng_file})->stringify );
+      my $config    = $self->config;
+      my $hmml_doc  = XML::LibXML->new->parse_file($hmml_file);
+      my $rngschema = XML::LibXML::RelaxNG->new(
+        location => file($config->{relax_ng_file})->stringify);
       my $err;
       my ($stdout, $stderr) = capture {
         $rngschema->validate($hmml_doc);

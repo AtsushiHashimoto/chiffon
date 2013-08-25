@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- レシピを記述するXML形式の文書型定義 -->
+
+
+<!-- ルート要素はrecipe -->
+<grammar
+   xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+   xmlns="http://relaxng.org/ns/structure/1.0"
+   datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+  <include href="xhtml-secure.rng"/>
+  <include href="hmml-block.rng"/>
+
+  <define name="recipe">
+    <element name="recipe">
+      <ref name="attlist.recipe"/>
+      <ref name="Recipe.model"/>
+    </element>
+  </define>
+  <define name="attlist.recipe" combine="interleave">
+    <attribute name="title"/>
+  </define>
+  <!-- レシピのタイトルを記述する属性 -->
+
+  <define name="attlist.recipe" combine="interleave">
+    <optional>
+		<attribute name="overview">
+			<data type="anyURI"/>
+		</attribute>
+    </optional>
+  </define>
+  <!-- レシピの概要を示したファイルを指定する属性 -->
+
+  <define name="attlist.recipe" combine="interleave">
+    <optional>
+      <attribute name="id"/>
+    </optional>
+  </define>
+  <!-- レシピの管理用ID -->
+
+  <!-- 材料表に表示する内容を記述するタグ -->
+  <define name="materials">
+    <element name="materials">
+      <ref name="attlist.materials"/>
+      <oneOrMore>
+        <choice>
+          <ref name="object"/>
+          <ref name="object_group"/>
+        </choice>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="attlist.materials" combine="interleave">
+    <empty/>
+  </define>
+  <!-- 物体を記述するタグ．名前，ID，大きさ(大匙．卵のサイズなど), 単位(杯，g, mlなど), 量(数字データ)を指定できる． -->
+
+  <define name="object">
+    <element name="object">
+      <ref name="attlist.object"/>
+      <empty/>
+    </element>
+  </define>
+
+  <define name="attlist.object" combine="interleave">
+    <attribute name="name"/>
+  </define>
+  <!-- 材料表に表示する食材名 -->
+
+  <define name="attlist.object" combine="interleave">
+    <optional>
+      <attribute name="id">
+        <data type="ID"/>
+      </attribute>
+    </optional>
+  </define>
+
+  <!-- 【イベント】として食材を指定するためのID属性 -->
+  <define name="attlist.object" combine="interleave">
+    <optional>
+      <attribute name="size"/>
+    </optional>
+  </define>
+  <!-- 大匙，S/M/Lなどの大きさを指定する属性 -->
+
+  <define name="attlist.object" combine="interleave">
+    <optional>
+      <attribute name="amount" a:defaultValue="適量"/>
+    </optional>
+  </define>
+  <!-- 分量（数字）を指定する属性 -->
+
+  <define name="attlist.object" combine="interleave">
+    <optional>
+      <attribute name="unit"/>
+    </optional>
+  </define>
+  <!-- 杯，個などの単位を指定する属性 -->
+
+  <define name="attlist.object" combine="interleave">
+    <optional>
+		<attribute name="img">
+			<data type="anyURI"/>
+		</attribute>
+    </optional>
+  </define>
+  <!-- その物体を表すアイコンがあれば指定する -->
+  <!-- 材料表にはsize,amount,unitの順で表示することを想定(例: 砂糖 大匙 2杯, 卵 M 1個, 竹串 10cm程度 4本) -->
+  <!-- 複数のobjectの1個以上の組合せ -->
+  <define name="object_group">
+    <element name="object_group">
+      <ref name="attlist.object_group"/>
+      <oneOrMore>
+        <ref name="object"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="attlist.object_group" combine="interleave">
+    <attribute name="name"/>
+  </define>
+  <define name="attlist.object_group" combine="interleave">
+    <optional>
+      <attribute name="id">
+        <data type="ID"/>
+      </attribute>
+    </optional>
+  </define>
+  <!-- 材料表ここまで -->
+
+  <!-- navigator用に支援コンテンツの再生等のきっかけとなるイベントを表すタグ -->
+  <define name="event">
+    <element name="event">
+      <ref name="attlist.event"/>
+      <empty/>
+    </element>
+  </define>
+
+  <define name="attlist.event" combine="interleave">
+    <attribute name="id">
+      <data type="ID"/>
+    </attribute>
+  </define>
+
+  <!-- navigator用に，各要素の表示・再生タイミングを示すTrigger -->
+  <define name="trigger">
+    <element name="trigger">
+      <ref name="attlist.trigger"/>
+      <empty/>
+    </element>
+  </define>
+  <define name="attlist.trigger" combine="interleave">
+    <optional>
+      <attribute name="timing" a:defaultValue="start">
+        <choice>
+          <value>start</value>
+          <value>end</value>
+        </choice>
+      </attribute>
+    </optional>
+  </define>
+  <!-- start/endに応じて@eventで指定した要素の開始/終了を基準に(delay秒後に)コンテンツを提示する -->
+
+  <define name="attlist.trigger" combine="interleave">
+    <attribute name="ref">
+      <data type="IDREFS"/>
+    </attribute>
+  </define>
+  <!-- timingが開始・終了の基準となるイベント/物体があれば，それを参照する．triggerの列挙でor，単一trigger内でのid列挙でandを表現． -->
+
+  <define name="attlist.trigger" combine="interleave">
+    <optional>
+      <attribute name="delay" a:defaultValue="0"/>
+    </optional>
+  </define>
+  <!-- timingを基準として何秒後に知らせるかを指定 -->
+
+  <!-- 支援用コンテンツのタグ -->
+  <define name="video">
+    <element name="video">
+      <ref name="attlist.video"/>
+      <zeroOrMore>
+        <ref name="trigger"/>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <!-- 動画ファイルを指定するタグ, Triggerがなければ再生はユーザの操作を待つ -->
+
+  <define name="attlist.video" combine="interleave">
+	  <attribute name="path">
+		  <data type="anyURI"/>
+	  </attribute>
+  </define>
+  <!-- 動画ファイルへのパスを指定 -->
+
+  <define name="attlist.video" combine="interleave">
+    <optional>
+      <attribute name="title"/>
+    </optional>
+  </define>
+  <!-- 動画のタイトルを指定, guideの描画時に動画タイトルとして利用 -->
+
+  <define name="attlist.video" combine="interleave">
+    <optional>
+      <attribute name="id">
+        <data type="ID"/>
+      </attribute>
+    </optional>
+  </define>
+
+  <!-- Navigatorからの再生指示用 -->
+  <define name="audio">
+    <element name="audio">
+      <ref name="attlist.audio"/>
+      <zeroOrMore>
+        <ref name="trigger"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <!-- 音声ファイルを指定するタグ, Triggerがなければsubstepの表示時に自動再生 -->
+
+  <define name="attlist.audio" combine="interleave">
+	  <attribute name="path">
+		  <data type="anyURI"/>
+	  </attribute>
+  </define>
+  <!-- 音声ファイルへのパスを指定 -->
+
+  <define name="attlist.audio" combine="interleave">
+    <optional>
+      <attribute name="id">
+        <data type="ID"/>
+      </attribute>
+    </optional>
+  </define>
+  <!-- Navigatorからの再生指示用 -->
+
+  <define name="html_contents">
+    <element name="html_contents">
+      <ref name="attlist.html_contents"/>
+	  <ref name="Flow.model"/>
+    </element>
+  </define>
+
+
+  <define name="attlist.html_contents" combine="interleave">
+    <empty/>
+  </define>
+  <!-- xhtmlによるコンテンツを指定するタグ -->
+
+
+  <!-- 調理の支援内容を記述するタグ -->
+  <define name="directions">
+    <element name="directions">
+      <ref name="attlist.directions"/>
+      <choice>
+	<ref name="step.class"/>
+	<ref name="substep.class"/>
+      </choice>
+    </element>
+  </define>
+
+  <define name="step.class">
+    <oneOrMore>
+      <ref name="step"/>
+    </oneOrMore>
+  </define>
+
+  <define name="substep.class">
+    <oneOrMore>
+      <ref name="substep"/>
+    </oneOrMore>
+  </define>
+
+  <define name="attlist.directions" combine="interleave">
+    <empty/>
+  </define>
+  <!-- STEP(一つの手順)を記述するタグ -->
+  <define name="step">
+    <element name="step">
+      <ref name="attlist.step"/>
+      <zeroOrMore>
+        <ref name="trigger"/>
+      </zeroOrMore>
+      <ref name="substep.class"/>
+      <zeroOrMore>
+        <ref name="trigger"/>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="attlist.step" combine="interleave">
+    <optional>
+      <attribute name="id">
+        <data type="ID"/>
+      </attribute>
+    </optional>
+  </define>
+  <!-- stepを一意に特定するためのID -->
+
+  <define name="attlist.step" combine="interleave">
+    <optional>
+      <attribute name="parent">
+        <data type="IDREFS"/>
+      </attribute>
+    </optional>
+  </define>
+  <!-- 完了しているべきstepを指定する属性 -->
+
+ <define name="attlist.step" combine="interleave">
+    <optional>
+      <attribute name="chain">
+        <data type="IDREF"/>
+      </attribute>
+    </optional>
+  </define>
+  <!-- 直前に行われるべきstepを指定する属性(このstepはchained stepに引き続いて連続して行われるべき) -->
+
+
+  <define name="attlist.step" combine="interleave">
+    <optional>
+		<attribute name="priority">
+			<data type="nonNegativeInteger"/>
+		</attribute>
+    </optional>
+  </define>
+  <!--  このステップが行われる優先度を示す．優先度が大きいものから順にナビゲーションされる -->
+
+  <define name="attlist.step" combine="interleave">
+    <attribute name="navi_text"/>
+  </define>
+  <!-- このステップを端的に表す短いテキスト -->
+
+  <define name="substep">
+    <element name="substep">
+      <ref name="attlist.substep"/>
+      <ref name="Substep.model"/>
+    </element>
+  </define>
+  <!-- videoとaudioはそれぞれ高々一個まで -->
+
+  <define name="attlist.substep" combine="interleave">
+    <attribute name="navi_text"/>
+  </define>
+
+  <!-- このサブステップを端的に表す短いテキスト -->
+  <define name="attlist.substep" combine="interleave">
+    <optional>
+		<attribute name="order">
+			<data type="positiveInteger"/>
+		</attribute>
+    </optional>
+  </define>
+  <!-- 通常はXML内での記述順を実行順として良いと思われるが，substepの順序を明示するために利用する． -->
+
+  <define name="attlist.substep" combine="interleave">
+    <optional>
+      <attribute name="id">
+        <data type="ID"/>
+      </attribute>
+    </optional>
+  </define>
+  <!-- 提示するguidanceをnavigatorがviewerに伝えるために利用 -->
+  <!-- STEP ここまで -->
+
+  <define name="notification">
+    <element name="notification">
+      <ref name="attlist.notification"/>
+      <ref name="Notification.model"/>
+    </element>
+  </define>
+
+  <define name="attlist.notification" combine="interleave">
+    <optional>
+      <attribute name="id">
+        <data type="ID"/>
+      </attribute>
+    </optional>
+  </define>
+
+  <start>
+    <choice>
+      <ref name="recipe"/>
+    </choice>
+  </start>
+
+</grammar>
