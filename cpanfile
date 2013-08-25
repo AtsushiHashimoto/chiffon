@@ -8,6 +8,7 @@ requires 'Term::Encoding'            => 0;
 requires 'Term::ReadKey'             => 0;
 requires 'JSON::XS'                  => 0;
 requires 'XML::Simple'               => 0;
+requires 'XML::LibXML'               => 0;
 
 
 on 'test' => sub {
