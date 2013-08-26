@@ -19,7 +19,10 @@ use Capture::Tiny qw(capture);
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
-has xml        => sub { XML::Simple->new };
+has xml        => sub {
+  $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
+  XML::Simple->new;
+};
 has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
