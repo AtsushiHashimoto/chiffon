@@ -18,11 +18,14 @@ sub start {
     return $self->render_not_found;
   }
 
+  # file exists check
   my $recipe_xml_file = $self->recipe_xml_file($name);
   unless ($recipe_xml_file and -f $recipe_xml_file) {
     $logger->error(qq{file not found $recipe_xml_file});
     return $self->render_not_found;
   }
+
+  # file readable check
   unless (-r $recipe_xml_file) {
     $logger->error(qq{permission denied $recipe_xml_file});
     return $self->render(status => 403, data => '');
@@ -38,8 +41,16 @@ sub start {
     SuppressEmpty => '',    # 空の要素を空文字列にする
   );
 
+  # parse check
   unless (defined $recipe) {
     return $self->render_exception(qq{parse error $recipe_xml_file});
+  }
+
+  # validate
+  (undef, my $err) = $self->hmml_validate($recipe_xml_file);
+  if ($err) {
+    return $self->render_exception(
+      qq{invalid hmml document `$recipe_xml_file` : $err});
   }
 
   $self->stash(recipe => $recipe, name => $name,);

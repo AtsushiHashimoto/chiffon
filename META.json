@@ -50,6 +50,7 @@
             "Path::Class" : "0",
             "Term::Encoding" : "0",
             "Term::ReadKey" : "0",
+            "XML::LibXML" : "0",
             "XML::Simple" : "0",
             "perl" : "5.012"
          }
@@ -71,7 +72,7 @@
          "web" : "https://github.com/AtsushiHashimoto/chiffon-viewer"
       }
    },
-   "version" : "0.03",
+   "version" : "0.04",
    "x_contributors" : [
       "Atsushi Hashimoto <ahasimoto@mm.media.kyoto-u.ac.jp>",
       "ueda hiroto <cobanlab@gmil.com>",

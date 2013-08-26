@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     // global variables
-    var DEBUG = 0;
+    var DEBUG = 1;
     var notification_live_sec;
     var external_input_url;
     var check_url;
@@ -132,7 +132,7 @@ jQuery(function ($) {
         }
         var audio_id = notify.find('.media-play')
             .data('for');
-        if (audio_id.length) {
+        if (audio_id) {
             media_controls[audio_id] = { send_control: false };
             if (DEBUG) console.log('find media in notify : ' + audio_id);
             show_notify({

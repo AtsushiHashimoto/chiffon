@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<recipe title="テスト用レシピ" overview="./image/overview.png">
+	<materials>
+		<object_group name="グループ1" id="group1">
+			<object name="画像あり食材" id="food_image" size="大" amount="10" unit="個" img="./image/material_image.png" />
+			<object name="食材1" id="food1" size="中" />
+			<object name="食材2" id="food2" amount="5" />
+			<object name="食材3" id="food3" size="小" amount="6" />
+			<object name="食材4" id="food4" size="大" unit="個"></object>
+			<object name="食材5" id="food5" amount="3" unit="本" />
+			<object name="食材6" id="food6" size="小" amount="3" unit="g" />
+			<object name="食材7" id="food7" />
+		</object_group>
+		<object name="画像あり食材" id="food_image2" size="小" amount="10" unit="箱" img="./image/material_image.png" />
+		<object name="食材8" id="food8" size="中" />
+		<object name="食材9" id="food9" amount="5" />
+		<object name="食材10" id="food10" size="小" amount="6" />
+		<object name="食材11" id="food11" size="大" unit="個"></object>
+		<object name="食材12" id="food12" amount="3" unit="本" />
+		<object name="食材13" id="food13" size="小" amount="3" unit="g" />
+		<object name="食材14" id="food14" />
+	</materials>
+	<directions>
+		<step id="step01" priority="10" navi_text="任意タイミングで取り組めるステップ">
+			<trigger timing="start" ref="event_extra" delay="0" />
+			<substep navi_text="テキストのみ" order="1" id="substep01_01">
+				<html_contents>substep01_01です．<br />テキストのみが表示されます．</html_contents>
+			</substep>
+			<substep navi_text="notificationのみ" order="2" id="substep01_02">
+				<html_contents></html_contents>
+				<trigger timing="start" ref="event01_02" delay="0" />
+				<notification id="notification01_02">
+					<html_contents>substep01_02におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification01_02.webm" id="notification_audio01_02">
+						<trigger timing="start" ref="event01_02" delay="120" />
+					</audio>
+					<trigger timing="start" ref="event01_02" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="音声のみ" order="3" id="substep01_03">
+				<html_contents><br/></html_contents>
+
+				<audio path="./audio/audio01_03.webm" id="audio01_03">
+					<trigger timing="start" ref="event01_03" delay="10" />
+				</audio>
+			</substep>
+			<substep navi_text="動画のみ" order="4" id="substep01_04">
+				<html_contents />
+				<video path="./video/video01_04.webm" title="テスト用動画" id="video01_04">
+					<trigger timing="start" ref="event01_04" delay="10" />
+				</video>
+			</substep>
+			<substep navi_text="音声+動画" order="5" id="substep01_05">
+				<html_contents />
+				<video path="./video/video01_05.webm" title="テスト用動画" id="video01_05">
+					<trigger timing="start" ref="event01_05" delay="10" />
+				</video>
+				<audio path="./audio/audio01_05.webm" id="audio01_05">
+					<trigger timing="start" ref="event01_05" delay="10" />
+				</audio>
+			</substep>
+		</step>
+		<step id="step02" priority="9" navi_text="任意タイミングで取り組めるステップ">
+			<substep navi_text="画像のみ" order="1" id="substep02_01">
+				<html_contents><img src="./image/image02_01.png" width="300" height="230" /></html_contents>
+			</substep>
+			<substep navi_text="テキスト+notification" order="2" id="substep02_02">
+				<html_contents>substep02_02です．<br />テキストが表示され，10秒後に音声ありのnotificationが表示されます．</html_contents>
+				<trigger timing="start" ref="event02_02" delay="0" />
+				<notification id="notification02_02">
+					<html_contents>substep02_02におけるnotificationです．<br />音声も同時に再生されます．</html_contents>
+					<audio path="./notification/notification02_02.webm" id="notification_audio02_02">
+						<trigger timing="start" ref="event02_02" delay="120" />
+					</audio>
+					<trigger timing="start" ref="event02_02" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="テキスト+音声" order="3" id="substep02_03">
+				<html_contents>substep02_03です．<br />テキストが表示されますが，音声はトリガーを持たず，ユーザの操作を待ちます．</html_contents>
+				<audio path="./audio/audio02_03.webm" id="audio02_03"></audio>
+			</substep>
+			<substep navi_text="テキスト+動画" order="4" id="substep02_04">
+				<html_contents>substep02_04です．<br />テキストが表示されますが，動画はトリガーを持たず，ユーザの操作を待ちます．</html_contents>
+				<video path="./video/video02_04.webm" title="テスト用動画" id="video02_04"></video>
+			</substep>
+			<substep navi_text="テキスト+音声+動画" order="5" id="substep02_05">
+				<html_contents>substep02_05です．<br />テキストが表示されますが，音声と動画はトリガーを持たず，ユーザの操作を待ちます．</html_contents>
+				<video path="./video/video02_05.webm" title="テスト用動画" id="video02_05"></video>
+				<audio path="./audio/audio02_05.webm" id="audio02_05"></audio>
+			</substep>
+		</step>
+		<step id="step03" priority="8" navi_text="任意タイミングで取り組めるステップ">
+			<substep navi_text="（音声なしな）notificationのみ" order="1" id="substep03_01">
+				<html_contents />
+				<trigger timing="start" ref="event03_01" delay="0" />
+				<notification id="notification03_01">
+					<html_contents>substep03_01におけるnotificationです．<br />音声は再生されません．</html_contents>
+					<trigger timing="start" ref="event03_01" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="画像+notification" order="2" id="substep03_02">
+				<html_contents><img alt="no image" src="./image/image03_02.png" width="300" height="230" /></html_contents>
+				<trigger timing="start" ref="event03_02" delay="0" />
+				<notification id="notification03_02">
+					<html_contents>substep03_02におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification03_02.webm" id="notification_audio03_02"></audio>
+					<trigger timing="start" ref="event03_02" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="画像+音声" order="3" id="substep03_03">
+				<html_contents><img alt="no image" src="./image/image03_03.png" width="300" height="230" /></html_contents>
+				<audio path="./audio/audio03_03.webm" id="audio03_03">
+					<trigger timing="start" ref="event03_03" delay="10" />
+				</audio>
+			</substep>
+			<substep navi_text="画像+動画" order="4" id="substep03_04">
+				<html_contents><img alt="no image" src="./image/image03_04.png" width="300" height="230" /></html_contents>
+				<video path="./video/video03_04.webm" title="テスト用動画" id="video03_04">
+					<trigger timing="start" ref="event03_04" delay="10" />
+				</video>
+			</substep>
+			<substep navi_text="画像+音声+動画" order="5" id="substep03_05">
+				<html_contents><img alt="no image" src="./image/image03_05.png" width="300" height="230" /></html_contents>
+				<video path="./video/video03_05.webm" title="テスト用動画" id="video03_05">
+					<trigger timing="start" ref="event03_05" delay="10" />
+				</video>
+				<audio path="./audio/audio03_05.webm" id="audio03_05">
+					<trigger timing="start" ref="event03_05" delay="10" />
+				</audio>
+			</substep>
+		</step>
+		<step id="step04" priority="7" navi_text="step01,02,03後に取り組めるステップ" parent="step01 step02 step03">
+			<substep navi_text="テキスト+画像" order="1" id="substep04_01">
+				<html_contents>substep04_01です．<br />テキストと画像が表示されます．<br /><img alt="no image" src="./image/image04_01.png" width="300" height="230" /></html_contents>
+			</substep>
+			<substep navi_text="テキスト+画像+notification" order="2" id="substep04_02">
+				<html_contents>substep04_02です．<br />テキストと画像が表示され，10秒後にnotificationが表示されます．<br /><img alt="no image" src="./image/image04_02.png" width="300" height="230" /></html_contents>
+				<trigger timing="start" ref="event04_02" delay="0" />
+				<notification id="notification04_02">
+					<html_contents>substep04_02におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification04_02.webm" id="notification_audio04_02">
+						<trigger timing="start" ref="event04_02" delay="120" />
+					</audio>
+					<trigger timing="start" ref="event04_02" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="音声+notification" order="3" id="substep04_03">
+				<html_contents />
+				<audio path="./audio/audio04_03.webm" id="audio04_03">
+					<trigger timing="start" ref="event04_03" delay="10" />
+				</audio>
+				<trigger timing="start" ref="event04_03" delay="0" />
+				<notification id="notification04_03">
+					<html_contents>substep04_03におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification04_03.webm" id="notification_audio04_03"></audio>
+					<trigger timing="start" ref="event04_03" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="動画+notification" order="4" id="substep04_04">
+				<html_contents />
+				<video path="./video/video04_04.webm" title="テスト用動画" id="video04_04">
+					<trigger timing="start" ref="event04_04" delay="10" />
+				</video>
+				<trigger timing="start" ref="event04_04" delay="0" />
+				<notification id="notification04_04">
+					<audio path="./notification/notification04_04.webm" id="notification_audio04_04"></audio>					<html_contents>substep04_04におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<trigger timing="start" ref="event04_04" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="音声+動画+notification" order="5" id="substep04_05">
+				<html_contents />
+				<video path="./video/video04_05.webm" title="テスト用動画" id="video04_05">
+					<trigger timing="start" ref="event04_05" delay="10" />
+				</video>
+				<audio path="./audio/audio04_05.webm" id="audio04_05">
+					<trigger timing="start" ref="event04_05" delay="10" />
+				</audio>
+				<trigger timing="start" ref="event04_05" delay="0" />
+				<notification id="notification04_05">
+					<html_contents>substep04_05におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification04_05.webm" id="notification_audio04_05"></audio>
+					<trigger timing="start" ref="event04_05" delay="120" />
+				</notification>
+			</substep>
+		</step>
+		<step id="step05" priority="6" navi_text="任意タイミングで取り組めるステップ">
+			<substep navi_text="画像+音声+notification" order="1" id="substep05_01">
+				<html_contents><img alt="no image" src="./image/image05_01.png" width="300" height="230" /></html_contents>
+				<audio path="./audio/audio05_01.webm" id="audio05_01">
+					<trigger timing="start" ref="event05_01" delay="10" />
+				</audio>
+				<trigger timing="start" ref="event05_01" delay="0" />
+				<notification id="notification05_01">
+					<html_contents>substep05_01におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification05_01.webm" id="notification_audio05_01"></audio>
+					<trigger timing="start" ref="event05_01" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="テキスト+音声+notification" order="2" id="substep05_02">
+				<html_contents>substeo05_02です．<br />テキストが表示され，5秒後に音声が，10秒後にnotificationが再生されます．</html_contents>
+				<audio path="./audio/audio05_02.webm" id="audio05_02">
+					<trigger timing="start" ref="event05_02" delay="10" />
+				</audio>
+				<trigger timing="start" ref="event05_02" delay="0" />
+				<notification id="notification05_02">
+					<html_contents>substep05_02におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification05_02.webm" id="notification_audio05_02">
+						<trigger timing="start" ref="event05_02" delay="120" />
+					</audio>
+					<trigger timing="start" ref="event05_02" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="テキスト+画像+音声" order="3" id="substep05_03">
+				<html_contents>substeo05_03です．<br />テキストと画像が表示され，5秒後に音声が再生されます．<br /><img alt="no image" src="./image/image05_03.png" width="300" height="230" /></html_contents>
+				<audio path="./audio/audio05_03.webm" id="audio05_03">
+					<trigger timing="start" ref="event05_03" delay="10" />
+				</audio>
+			</substep>
+			<substep navi_text="テキスト+画像+動画" order="4" id="substep05_04">
+				<html_contents>substep05_04です．<br />テキストと画像が表示され，5秒後に動画が再生されます．<br /><img alt="no image" src="./image/image05_04.png" width="300" height="230" /></html_contents>
+				<video path="./video/video05_04.webm" title="テスト用動画" id="video05_04">
+					<trigger timing="start" ref="event05_04" delay="10" />
+				</video>
+			</substep>
+			<substep navi_text="画像+音声+動画+notification" order="5" id="substep05_05">
+				<html_contents><img alt="no image" src="./image/image05_05.png" width="300" height="230" /></html_contents>
+				<video path="./video/video05_05.webm" title="テスト用動画" id="video05_05">
+					<trigger timing="start" ref="event05_05" delay="10" />
+				</video>
+				<audio path="./audio/audio05_05.webm" id="audio05_05">
+					<trigger timing="start" ref="event05_05" delay="10" />
+				</audio>
+				<trigger timing="start" ref="event05_05" delay="0" />
+				<notification id="notification05_05">
+					<html_contents>substep05_05におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification05_05.webm" id="notification_audio05_05"></audio>
+					<trigger timing="start" ref="event05_05" delay="120" />
+				</notification>
+			</substep>
+		</step>
+		<step id="step06" chain="step05" priority="5" navi_text="step05の直後に取り組むべきステップ" parent="step05">
+			<substep navi_text="テキスト+動画+notification" order="1" id="substep06_01">
+				<html_contents>substep06_01です．<br />テキストが表示され，5秒後に動画が，10秒後にnotificationが再生されます．</html_contents>
+				<video path="./video/video06_01.webm" title="テスト用動画" id="video06_01">
+					<trigger timing="start" ref="event06_01" delay="10" />
+				</video>
+				<trigger timing="start" ref="event06_01" delay="0" />
+				<notification id="notification06_01">
+					<html_contents>substep06_01におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification06_01.webm" id="notification_audio06_01"></audio>
+					<trigger timing="start" ref="event06_01" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="テキスト+画像+音声+notification" order="2" id="substep06_02">
+				<html_contents>substep06_02です．<br />テキストと画像が表示され，5秒後に音声が，10秒後にnotificationが再生されます．<br /><img alt="no image" src="./image/image06_02.png" width="300" height="230" /></html_contents>
+				<audio path="./audio/audio06_02.webm" id="audio06_02">
+					<trigger timing="start" ref="event06_02" delay="10" />
+				</audio>
+				<trigger timing="start" ref="event06_02" delay="0" />
+				<notification id="notification06_02">
+					<html_contents>substep06_02におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification06_02.webm" id="notification_audio06_02"></audio>
+					<trigger timing="start" ref="event06_02" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="テキスト+画像+音声+動画" order="3" id="substep06_03">
+				<html_contents>substep06_03です．<br />テキストと画像が表示され，5秒後に音声と動画が再生されます．<br /><img alt="no image" src="./image/image06_03.png" width="300" height="230" /></html_contents>
+				<video path="./video/video06_03.webm" title="テスト用動画" id="video06_03">
+					<trigger timing="start" ref="event06_03" delay="10" />
+				</video>
+				<audio path="./audio/audio06_03.webm" id="audio06_03">
+					<trigger timing="start" ref="event06_03" delay="10" />
+				</audio>
+			</substep>
+			<substep navi_text="テキスト+画像+動画+notification" order="4" id="substep06_04">
+				<html_contents>substep06_04です．<br />テキストと画像が表示され，5秒後に動画が，10秒後にnotificationが再生されます．<br /><img alt="no image" src="./image/image06_04.png" width="300" height="230" /></html_contents>
+				<video path="./video/video06_04.webm" title="テスト用動画" id="video06_04">
+					<trigger timing="start" ref="event06_04" delay="10" />
+				</video>
+				<trigger timing="start" ref="event06_04" delay="0" />
+				<notification id="notification06_04">
+					<html_contents>substep06_04におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification06_04.webm" id="notification_audio06_04"></audio>
+					<trigger timing="start" ref="event06_04" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="テキスト+画像+音声+動画+notification" order="5" id="substep06_05">
+				<html_contents>substep06_05です．<br />テキストと画像が表示され，5秒後に音声と動画が，10秒後にnotificationが再生されます．<br /><img alt="no image" src="./image/image06_05.png" width="300" height="230" /></html_contents>
+				<video path="./video/video06_05.webm" title="テスト用動画" id="video06_05">
+					<trigger timing="start" ref="event06_05" delay="10" />
+				</video>
+				<audio path="./audio/audio06_05.webm" id="audio06_05">
+					<trigger timing="start" ref="event06_05" delay="10" />
+				</audio>
+				<trigger timing="start" ref="event06_05" delay="0" />
+				<notification id="notification06_05">
+					<html_contents>substep06_05におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification06_05.webm" id="notification_audio06_05">
+						<trigger timing="start" ref="event06_05" delay="120" />
+					</audio>
+					<trigger timing="start" ref="event06_05" delay="120" />
+				</notification>
+			</substep>
+		</step>
+		<step id="step07" priority="4" navi_text="step04,06後に取り組めるステップ" parent="step04 step06">
+			<substep navi_text="テキスト+音声+動画+notification" order="1" id="substep07_01">
+				<html_contents>substep07_01です．<br />テキストが表示され，5秒後に音声と動画が，10秒後にnotificationが再生されます．</html_contents>
+				<video path="./video/video07_01.webm" title="テスト用動画" id="video07_01">
+					<trigger timing="start" ref="event07_01" delay="10" />
+				</video>
+				<audio path="./audio/audio07_01.webm" id="audio07_01">
+					<trigger timing="start" ref="event07_01" delay="10" />
+				</audio>
+				<trigger timing="start" ref="event07_01" delay="0" />
+				<notification id="notification07_01">
+					<html_contents>substep07_01におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification07_01.webm" id="notification_audio07_01">
+						<trigger timing="start" ref="event07_01" delay="120" />
+					</audio>
+					<trigger timing="start" ref="event07_01" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="画像+動画+notification" order="2" id="substep07_02">
+				<html_contents><img alt="no image" src="./image/image07_02.png" width="300" height="230" /></html_contents>
+				<video path="./video/video07_02.webm" title="テスト用動画" id="video07_02">
+					<trigger timing="start" ref="event07_02" delay="10" />
+				</video>
+				<trigger timing="start" ref="event07_02" delay="0" />
+				<notification id="notification07_02">
+					<html_contents>substep07_02におけるnotificationです．<br />音声も同時に流れます．</html_contents>
+					<audio path="./notification/notification07_02.webm" id="notification_audio07_02"></audio>
+					<trigger timing="start" ref="event07_02" delay="120" />
+				</notification>
+			</substep>
+			<substep navi_text="何もなし" order="3" id="substep07_03">
+				<html_contents />
+				<trigger timing="start" ref="event07_03" delay="0" />
+			</substep>
+		</step>
+	</directions>
+	<notification id="notification_extra">
+		<html_contents>extraにおけるnotificationです．<br />音声も同時に流れます．</html_contents>
+		<audio path="./notification/notification_extra.webm" id="notification_audio_extra"></audio>
+		<trigger timing="start" ref="event_extra_1" delay="120" />
+		<trigger timing="start" ref="event_extra_2" delay="120" />
+	</notification>
+	<event id="event01_02" />
+	<event id="event01_03" />
+	<event id="event01_04" />
+	<event id="event01_05" />
+	<event id="event02_02" />
+	<event id="event03_01" />
+	<event id="event03_02" />
+	<event id="event03_03" />
+	<event id="event03_04" />
+	<event id="event03_05" />
+	<event id="event04_02" />
+	<event id="event04_03" />
+	<event id="event04_04" />
+	<event id="event04_05" />
+	<event id="event05_01" />
+	<event id="event05_02" />
+	<event id="event05_03" />
+	<event id="event05_04" />
+	<event id="event05_05" />
+	<event id="event06_01" />
+	<event id="event06_02" />
+	<event id="event06_03" />
+	<event id="event06_04" />
+	<event id="event06_05" />
+	<event id="event07_01" />
+	<event id="event07_02" />
+	<event id="event07_03" />
+	<event id="event_extra" />
+	<event id="event_extra_1" />
+	<event id="event_extra_2" />
+</recipe>

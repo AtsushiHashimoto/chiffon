@@ -1,7 +1,7 @@
 package Chiffon::Web;
 use Mojo::Base 'Mojolicious';
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Mojo::ByteStream qw(b);
 
@@ -9,13 +9,20 @@ use JSON::XS qw(encode_json decode_json);
 use Crypt::SaltedHash;
 use Path::Class qw(file dir);
 use XML::Simple;
+use XML::LibXML;
 use Time::HiRes;
 use POSIX qw(strftime);
 use Time::Piece;
+use Try::Tiny;
+use Capture::Tiny qw(capture);
+
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
-has xml        => sub { XML::Simple->new };
+has xml        => sub {
+  $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
+  XML::Simple->new;
+};
 has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
@@ -41,7 +48,24 @@ sub startup {
   $self->helper(brandname => sub {q{Chiffon Viewer}});
 
   # Plugins
-  $self->plugin('Config');
+  $self->plugin(
+    'Config' => {
+      default => {
+        userfile              => 'var/userfile',
+        recipe_basename       => 'recipe.xml',
+        recipes_dir           => 'var/recipes',
+        navigator_endpoint    => 'http://localhost:4567/navi/default',
+        relax_ng_file         => 'rng/hmml-basic.rng',
+        log_level             => 'info',
+        datetime_format       => '%Y.%m.%d_%H.%M.%S',
+        notification_live_sec => 5,
+        update_sound          => '',
+        video_width           => 320,
+        video_height          => 180,
+      },
+      file => 'chiffon-web.conf',
+    }
+  );
   $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
 
   # Log
@@ -151,6 +175,25 @@ sub startup {
       return $recipe_xml_file;
     }
   );
+
+  # validate
+  $self->helper(
+    hmml_validate => sub {
+      my $self      = shift;
+      my $hmml_file = shift or die 'recipe file required';
+      my $config    = $self->config;
+      my $hmml_doc  = XML::LibXML->new->parse_file($hmml_file);
+      my $rngschema = XML::LibXML::RelaxNG->new(
+        location => file($config->{relax_ng_file})->stringify);
+      my $err;
+      my ($stdout, $stderr) = capture {
+        $rngschema->validate($hmml_doc);
+      };
+      warn qq{-- result : @{[$stdout, $stderr]} } if DEBUG;
+      return $stdout, $stderr;
+    }
+  );
+
 
   # post_to_navigator
   $self->helper(
