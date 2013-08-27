@@ -317,7 +317,7 @@ jQuery(function ($) {
                     if (DEBUG) console.log({
                         '-- obj': obj
                     });
-                    warning_handler('unknown response : ' + obj);
+                    warning_handler('unknown response : ' + JSON.stringify(obj));
                 }
             });
             // 更新音の再生
@@ -415,6 +415,104 @@ jQuery(function ($) {
         clearTimeout(seeked_timer);
         seeked_timer = '';
     }
+
+    // 済ボタン
+    $('.check')
+        .on('click', function (e) {
+            var url = $(this)
+                .data('url');
+            $.getJSON(url)
+                .done(navigator_callback);
+        });
+
+    // ナビボタン
+    $('.navigate')
+        .on('click', function (e) {
+            e.preventDefault();
+            var url = $(this)
+                .attr('href');
+            $.getJSON(url)
+                .done(navigator_callback);
+        });
+
+    // 終了ボタン
+    $('.navigator-end')
+        .on('click', function (e) {
+            e.preventDefault();
+            var url = $(this)
+                .data('url');
+            var list_url = $(this)
+                .attr('href');
+            $.getJSON(url)
+                .done(function () {
+                    navigator_callback;
+                    document.location = list_url;
+                });
+        });
+
+    // 初期設定および動作
+    $('.navigator-run')
+        .each(function () {
+            var url = $(this)
+                .attr('href');
+            notification_live_sec = $(this)
+                .data('notification_live_sec');
+            external_input_url = $(this)
+                .data('external_input_url');
+            check_url = $(this)
+                .data('check_url');
+            play_control_url = $(this)
+                .data('play_control_url');
+            logger_url = $(this)
+                .data('logger_url');
+            receiver_url = $(this)
+                .data('receiver_url');
+            var session_id = $(this)
+                .data('session_id');
+            var ws = new WebSocket(receiver_url);
+            ws.onmessage = function (e) {
+                if (DEBUG) console.log(e);
+                if (RegExp(session_id)
+                    .test(e.data)) {
+                    $.getJSON(external_input_url, {
+                        input: e.data
+                    })
+                        .done(navigator_callback);
+                }
+            };
+            $.getJSON(url)
+                .done(navigator_callback);
+            $.noty.defaults = {
+                layout: 'bottom',
+                theme: 'defaultTheme',
+                type: 'alert',
+                text: '',
+                dismissQueue: true,
+                template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+                animation: {
+                    open: {
+                        height: 'toggle'
+                    },
+                    close: {
+                        height: 'toggle'
+                    },
+                    easing: 'swing',
+                    speed: 400
+                },
+                timeout: notification_live_sec * seconds,
+                force: false,
+                modal: false,
+                maxVisible: 5,
+                closeWith: ['click'],
+                callback: {
+                    onShow: function () {},
+                    afterShow: function () {},
+                    onClose: function () {},
+                    afterClose: function () {}
+                },
+                buttons: false // an array of buttons
+            };
+        });
 
     // 音声・動画を再生するボタン
     $('.media-play')
@@ -523,104 +621,6 @@ jQuery(function ($) {
             };
             mute_status = media.muted;
             media_play(id);
-        });
-
-    // 済ボタン
-    $('.check')
-        .on('click', function (e) {
-            var url = $(this)
-                .data('url');
-            $.getJSON(url)
-                .done(navigator_callback);
-        });
-
-    // ナビボタン
-    $('.navigate')
-        .on('click', function (e) {
-            e.preventDefault();
-            var url = $(this)
-                .attr('href');
-            $.getJSON(url)
-                .done(navigator_callback);
-        });
-
-    // 終了ボタン
-    $('.navigator-end')
-        .on('click', function (e) {
-            e.preventDefault();
-            var url = $(this)
-                .data('url');
-            var list_url = $(this)
-                .attr('href');
-            $.getJSON(url)
-                .done(function () {
-                    navigator_callback;
-                    document.location = list_url;
-                });
-        });
-
-    // 初期設定および動作
-    $('.navigator-run')
-        .each(function () {
-            var url = $(this)
-                .attr('href');
-            notification_live_sec = $(this)
-                .data('notification_live_sec');
-            external_input_url = $(this)
-                .data('external_input_url');
-            check_url = $(this)
-                .data('check_url');
-            play_control_url = $(this)
-                .data('play_control_url');
-            logger_url = $(this)
-                .data('logger_url');
-            receiver_url = $(this)
-                .data('receiver_url');
-            var session_id = $(this)
-                .data('session_id');
-            var ws = new WebSocket(receiver_url);
-            ws.onmessage = function (e) {
-                if (DEBUG) console.log(e);
-                if (RegExp(session_id)
-                    .test(e.data)) {
-                    $.getJSON(external_input_url, {
-                        input: e.data
-                    })
-                        .done(navigator_callback);
-                }
-            };
-            $.getJSON(url)
-                .done(navigator_callback);
-            $.noty.defaults = {
-                layout: 'bottom',
-                theme: 'defaultTheme',
-                type: 'alert',
-                text: '',
-                dismissQueue: true,
-                template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
-                animation: {
-                    open: {
-                        height: 'toggle'
-                    },
-                    close: {
-                        height: 'toggle'
-                    },
-                    easing: 'swing',
-                    speed: 400
-                },
-                timeout: notification_live_sec * seconds,
-                force: false,
-                modal: false,
-                maxVisible: 5,
-                closeWith: ['click'],
-                callback: {
-                    onShow: function () {},
-                    afterShow: function () {},
-                    onClose: function () {},
-                    afterClose: function () {}
-                },
-                buttons: false // an array of buttons
-            };
         });
 });
 
