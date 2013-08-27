@@ -196,7 +196,7 @@ jQuery(function ($) {
                             .hide(0);
                     });
                     var pane = $('#' + channels[obj.ChannelSwitch.channel]);
-                    if (!pane) {
+                    if (!pane.length) {
                         warning_handler('unknown channel : ' + obj.ChannelSwitch.channel);
                     }
                     pane.show(0);
