@@ -28,10 +28,14 @@ has ws_clients => sub { +{} };
 
 sub development_mode {
   warn qq{-- development_mode\n} if DEBUG;
+  # Sessionをsecureにする場合は，1を設定する
+  $self->app->sessions->secure(0);
 }
 
 sub production_mode {
   warn qq{-- production_mode\n} if DEBUG;
+  # Sessionをsecureに（httpsでログイン）する場合は，1を設定する
+  $self->app->sessions->secure(0);
 }
 
 # This method will run once at server start
@@ -62,7 +66,6 @@ sub startup {
         update_sound          => '',
         video_width           => 320,
         video_height          => 180,
-        use_secure_sessions   => 0,
       },
       file => 'chiffon-web.conf',
     }
@@ -74,8 +77,7 @@ sub startup {
   my $datetime_format = $self->config->{datetime_format};
 
   # Sessions
-  $self->app->sessions->secure($self->config->{use_secure_sessions} ? 1 : 0)
-  ->cookie_path('/')->default_expiration(3600);
+  $self->app->sessions->cookie_path('/')->default_expiration(3600);
 
   # ログの発生場所を追加で書き込む
   no warnings 'redefine';
