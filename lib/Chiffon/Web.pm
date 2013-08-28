@@ -59,6 +59,7 @@ sub startup {
   $self->plugin(
     'Config' => {
       default => {
+        hypnotoad => {listen => ['http://*:8080'], workers => 2, proxy => 1},
         userfile               => 'var/userfile',
         recipe_basename        => 'recipe.xml',
         recipes_dir            => 'var/recipes',
