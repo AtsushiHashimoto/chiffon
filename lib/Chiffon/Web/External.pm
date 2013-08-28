@@ -15,8 +15,6 @@ sub start {
   warn qq{-- id : $id } if DEBUG;
   $ws_clients->{$id} = $self->tx;
 
-  # warn qq{-- tx : @{[$self->dumper($self->tx)]} } if DEBUG;
-
   # JSONのメッセージ
   $self->on(
     json => sub {
