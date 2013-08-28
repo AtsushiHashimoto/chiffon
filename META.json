@@ -34,6 +34,7 @@
       },
       "develop" : {
          "requires" : {
+            "Perl::Tidy" : "0",
             "Test::CPAN::Meta" : "0",
             "Test::MinimumVersion" : "0.10108",
             "Test::Pod" : "1.41",
@@ -41,6 +42,11 @@
          }
       },
       "runtime" : {
+         "recommends" : {
+            "EV" : "4",
+            "IO::Socket::IP" : "0.16",
+            "IO::Socket::SSL" : "1.75"
+         },
          "requires" : {
             "App::Rad" : "0",
             "Crypt::SaltedHash" : "0",
@@ -72,7 +78,7 @@
          "web" : "https://github.com/AtsushiHashimoto/chiffon-viewer"
       }
    },
-   "version" : "0.04",
+   "version" : "0.06",
    "x_contributors" : [
       "Atsushi Hashimoto <ahasimoto@mm.media.kyoto-u.ac.jp>",
       "ueda hiroto <cobanlab@gmil.com>",
