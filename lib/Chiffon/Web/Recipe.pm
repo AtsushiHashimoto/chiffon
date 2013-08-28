@@ -4,6 +4,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use constant DEBUG => $ENV{CHIFFON_WEB_RECIPE_DEBUG} || 0;
 
 use Path::Class qw(file dir);
+use Mojo::DOM;
 
 
 # URL : /recipe
@@ -30,21 +31,6 @@ sub start {
     $logger->error(qq{permission denied $recipe_xml_file});
     return $self->render(status => 403, data => '');
   }
-  my $recipe_dir = $recipe_xml_file->dir;
-  warn qq{-- recipe_xml_file : $recipe_xml_file } if DEBUG;
-  my $xml    = $self->app->xml;
-  my $recipe = $xml->XMLin(
-    $recipe_xml_file->stringify,
-    keyattr => [],    # 属性名を省略しない
-    forceArray =>
-      1,    # 複数要素でなくても配列のリファレンスにする
-    SuppressEmpty => '',    # 空の要素を空文字列にする
-  );
-
-  # parse check
-  unless (defined $recipe) {
-    return $self->render_exception(qq{parse error $recipe_xml_file});
-  }
 
   # validate
   (undef, my $err) = $self->hmml_validate($recipe_xml_file);
@@ -52,6 +38,61 @@ sub start {
     return $self->render_exception(
       qq{invalid hmml document `$recipe_xml_file` : $err});
   }
+
+  # id complement
+  # optionalなidを含む要素を定義
+  my @complement_targets = qw(
+    object
+    object_group
+    video
+    audio
+    step
+    substep
+    notification
+  );
+
+  my $content = file($recipe_xml_file)->slurp;
+  my $dom = Mojo::DOM->new($content);
+  my %ids;
+  for my $element_name (@complement_targets) {
+    $dom->find($element_name)->each(sub {
+      my $elm = shift;
+      return if exists $elm->{id};
+      my $id;
+      while (1) {
+        $id = sprintf qq{$element_name%03d}, ++$ids{-counter}{$element_name};
+        last unless $ids{$id}++;
+      }
+      $elm->{id} = $id;
+      say $elm->{id};
+    });
+  }
+
+  my $complement_recipe_file = file($config->{complement_recipes_dir}, $self->session_id, $config->{recipe_basename});
+  $complement_recipe_file->dir->mkpath;
+  $complement_recipe_file->spew($dom->to_xml);
+
+  warn qq{-- recipe_xml_file : $complement_recipe_file } if DEBUG;
+  my $recipe = $self->app->xml->XMLin(
+    $complement_recipe_file->stringify,
+    # 属性名を省略しない
+    keyattr => [],
+      # 複数要素でなくても配列のリファレンスにする
+    forceArray =>      1,
+    # 空の要素を空文字列にする
+    SuppressEmpty => '',
+  );
+
+  # parse check
+  unless (defined $recipe) {
+    return $self->render_exception(qq{parse error $complement_recipe_file});
+  }
+
+  # update recipe_xml_file
+  $self->session(recipe_xml_file => $complement_recipe_file->stringify);
+
+  # overview check
+  # TODO:
 
   $self->stash(recipe => $recipe, name => $name,);
 

@@ -27,12 +27,14 @@ has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
 sub development_mode {
+  my $self = shift;
   warn qq{-- development_mode\n} if DEBUG;
   # Sessionをsecureにする場合は，1を設定する
   $self->app->sessions->secure(0);
 }
 
 sub production_mode {
+  my $self = shift;
   warn qq{-- production_mode\n} if DEBUG;
   # Sessionをsecureに（httpsでログイン）する場合は，1を設定する
   $self->app->sessions->secure(0);
@@ -66,6 +68,7 @@ sub startup {
         update_sound          => '',
         video_width           => 320,
         video_height          => 180,
+        complement_recipes_dir => 'var/complement_recipes',
       },
       file => 'chiffon-web.conf',
     }
