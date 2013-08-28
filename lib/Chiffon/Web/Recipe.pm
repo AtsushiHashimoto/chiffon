@@ -98,7 +98,11 @@ sub start {
   $self->session(recipe_xml_file => $complement_recipe_file->stringify);
 
   # overview check
-  # TODO:
+  my $overview
+    = file($config->{recipes_dir}, $name, $recipe->{overview})->cleanup;
+  unless ($overview and -f $overview) {
+    return $self->render_exception(qq{overview not found $overview});
+  }
 
   $self->stash(recipe => $recipe, name => $name,);
 

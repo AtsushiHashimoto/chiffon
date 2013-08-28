@@ -1,7 +1,7 @@
 package Chiffon::Web;
 use Mojo::Base 'Mojolicious';
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Mojo::ByteStream qw(b);
 
@@ -59,6 +59,7 @@ sub startup {
   $self->plugin(
     'Config' => {
       default => {
+        hypnotoad => {listen => ['http://*:8080'], workers => 2, proxy => 1},
         userfile               => 'var/userfile',
         recipe_basename        => 'recipe.xml',
         recipes_dir            => 'var/recipes',
