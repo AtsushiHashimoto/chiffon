@@ -172,8 +172,8 @@ DISTRIBUTIONS
     requirements:
       ExtUtils::MakeMaker 0
       perl 5.006002
-  Mojolicious-4.26
-    pathname: A/AM/AMS/Mojolicious-4.26.tar.gz
+  Mojolicious-4.27
+    pathname: S/SR/SRI/Mojolicious-4.27.tar.gz
     provides:
       Mojo undef
       Mojo::Asset undef
@@ -234,7 +234,7 @@ DISTRIBUTIONS
       Mojo::UserAgent::CookieJar undef
       Mojo::UserAgent::Transactor undef
       Mojo::Util undef
-      Mojolicious 4.26
+      Mojolicious 4.27
       Mojolicious::Command undef
       Mojolicious::Command::cgi undef
       Mojolicious::Command::cpanify undef
@@ -330,6 +330,20 @@ DISTRIBUTIONS
       overload 0
       strict 0
       warnings 0
+  Perl-Tidy-20130806
+    pathname: S/SH/SHANCOCK/Perl-Tidy-20130806.tar.gz
+    provides:
+      Perl::Tidy 20130806
+      Perl::Tidy::DevNull 20130806
+      Perl::Tidy::Diagnostics 20130806
+      Perl::Tidy::HtmlWriter 20130806
+      Perl::Tidy::IOScalar 20130806
+      Perl::Tidy::IOScalarArray 20130806
+      Perl::Tidy::LineSink 20130806
+      Perl::Tidy::LineSource 20130806
+      Perl::Tidy::Logger 20130806
+    requirements:
+      ExtUtils::MakeMaker 0
   Term-Encoding-0.02
     pathname: M/MI/MIYAGAWA/Term-Encoding-0.02.tar.gz
     provides:

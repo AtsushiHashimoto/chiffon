@@ -30,12 +30,12 @@ Perlを管理するツール（plenv）と、Perl本体、パッケージ管理�
 
 上記のようにインストールした場合のインストール方法です。
 
-システムのPerlを使う場合は、モジュールのインストール時にroot権限が必要になります。
+（システムのPerlを使う場合は、モジュールのインストール時にroot権限が必要になります。）
 
     $ git clone https://github.com/AtsushiHashimoto/chiffon-viewer.git
     $ cd chiffon-viewer
     $ git checkout develop
-    $ cpanm --installdeps .
+    $ cpanm --installdeps --with-recommends .
 
 ## 起動
 
