@@ -1,7 +1,7 @@
-requires 'perl'                      => '5.012';
-requires 'Mojolicious'               => '4.16';
-recommends 'EV' => 4;
-recommends 'IO::Socket::IP' => 0.16;
+requires 'perl'              => '5.012';
+requires 'Mojolicious'       => '4.16';
+recommends 'EV'              => 4;
+recommends 'IO::Socket::IP'  => 0.16;
 recommends 'IO::Socket::SSL' => 1.75;
 
 requires 'Mojolicious::Plugin::I18N' => 0;

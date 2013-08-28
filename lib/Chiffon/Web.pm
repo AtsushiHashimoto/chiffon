@@ -29,6 +29,7 @@ has ws_clients => sub { +{} };
 sub development_mode {
   my $self = shift;
   warn qq{-- development_mode\n} if DEBUG;
+
   # Sessionをsecureにする場合は，1を設定する
   $self->app->sessions->secure(0);
 }
@@ -36,7 +37,8 @@ sub development_mode {
 sub production_mode {
   my $self = shift;
   warn qq{-- production_mode\n} if DEBUG;
-  # Sessionをsecureに（httpsでログイン）する場合は，1を設定する
+
+# Sessionをsecureに（httpsでログイン）する場合は，1を設定する
   $self->app->sessions->secure(0);
 }
 
@@ -57,17 +59,17 @@ sub startup {
   $self->plugin(
     'Config' => {
       default => {
-        userfile              => 'var/userfile',
-        recipe_basename       => 'recipe.xml',
-        recipes_dir           => 'var/recipes',
-        navigator_endpoint    => 'http://localhost:4567/navi/default',
-        relax_ng_file         => 'rng/hmml-basic.rng',
-        log_level             => 'info',
-        datetime_format       => '%Y.%m.%d_%H.%M.%S',
-        notification_live_sec => 5,
-        update_sound          => '',
-        video_width           => 320,
-        video_height          => 180,
+        userfile               => 'var/userfile',
+        recipe_basename        => 'recipe.xml',
+        recipes_dir            => 'var/recipes',
+        navigator_endpoint     => 'http://localhost:4567/navi/default',
+        relax_ng_file          => 'rng/hmml-basic.rng',
+        log_level              => 'info',
+        datetime_format        => '%Y.%m.%d_%H.%M.%S',
+        notification_live_sec  => 5,
+        update_sound           => '',
+        video_width            => 320,
+        video_height           => 180,
         complement_recipes_dir => 'var/complement_recipes',
       },
       file => 'chiffon-web.conf',

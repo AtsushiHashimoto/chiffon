@@ -52,33 +52,39 @@ sub start {
   );
 
   my $content = file($recipe_xml_file)->slurp;
-  my $dom = Mojo::DOM->new($content);
+  my $dom     = Mojo::DOM->new($content);
   my %ids;
   for my $element_name (@complement_targets) {
-    $dom->find($element_name)->each(sub {
-      my $elm = shift;
-      return if exists $elm->{id};
-      my $id;
-      while (1) {
-        $id = sprintf qq{$element_name%03d}, ++$ids{-counter}{$element_name};
-        last unless $ids{$id}++;
+    $dom->find($element_name)->each(
+      sub {
+        my $elm = shift;
+        return if exists $elm->{id};
+        my $id;
+        while (1) {
+          $id = sprintf qq{$element_name%03d}, ++$ids{-counter}{$element_name};
+          last unless $ids{$id}++;
+        }
+        $elm->{id} = $id;
+        say $elm->{id};
       }
-      $elm->{id} = $id;
-      say $elm->{id};
-    });
+    );
   }
 
-  my $complement_recipe_file = file($config->{complement_recipes_dir}, $self->session_id, $config->{recipe_basename});
+  my $complement_recipe_file = file($config->{complement_recipes_dir},
+    $self->session_id, $config->{recipe_basename});
   $complement_recipe_file->dir->mkpath;
   $complement_recipe_file->spew($dom->to_xml);
 
   warn qq{-- recipe_xml_file : $complement_recipe_file } if DEBUG;
   my $recipe = $self->app->xml->XMLin(
     $complement_recipe_file->stringify,
+
     # 属性名を省略しない
     keyattr => [],
-      # 複数要素でなくても配列のリファレンスにする
-    forceArray =>      1,
+
+    # 複数要素でなくても配列のリファレンスにする
+    forceArray => 1,
+
     # 空の要素を空文字列にする
     SuppressEmpty => '',
   );
