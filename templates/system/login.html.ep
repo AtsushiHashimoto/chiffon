@@ -1,6 +1,6 @@
 % layout 'default';
 % title 'LOGIN';
-% my $login_url = url_for('/login')->to_abs->scheme( app->mode eq 'production' ? 'https' : 'http' );
+% my $login_url = url_for('/login')->to_abs->scheme( app->sessions->secure ? 'https' : 'http' );
 %= tag div => (class => 'span12') => begin
   %= form_for $login_url => (method => 'post') => (class => 'form-horizontal') => begin
     %= tag fieldset => begin

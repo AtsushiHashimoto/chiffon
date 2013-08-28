@@ -27,11 +27,11 @@ has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
 sub development_mode {
-  warn qq{-- development_mode } if DEBUG;
+  warn qq{-- development_mode\n} if DEBUG;
 }
 
 sub production_mode {
-  warn qq{-- production_mode } if DEBUG;
+  warn qq{-- production_mode\n} if DEBUG;
 }
 
 # This method will run once at server start
@@ -62,6 +62,7 @@ sub startup {
         update_sound          => '',
         video_width           => 320,
         video_height          => 180,
+        use_secure_sessions   => 0,
       },
       file => 'chiffon-web.conf',
     }
@@ -71,6 +72,10 @@ sub startup {
   # Log
   $self->log->level(lc $self->config->{log_level});
   my $datetime_format = $self->config->{datetime_format};
+
+  # Sessions
+  $self->app->sessions->secure($self->config->{use_secure_sessions} ? 1 : 0)
+  ->cookie_path('/')->default_expiration(3600);
 
   # ログの発生場所を追加で書き込む
   no warnings 'redefine';
