@@ -78,11 +78,7 @@
          "web" : "https://github.com/AtsushiHashimoto/chiffon-viewer"
       }
    },
-<<<<<<< HEAD
-   "version" : "0.06",
-=======
    "version" : "0.07",
->>>>>>> hotfix/0.07
    "x_contributors" : [
       "Atsushi Hashimoto <ahasimoto@mm.media.kyoto-u.ac.jp>",
       "ueda hiroto <cobanlab@gmil.com>",
