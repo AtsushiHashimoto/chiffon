@@ -21,6 +21,10 @@ my $test_recipe_content = file(file(__FILE__)->dir, 'recipe.xml')->slurp;
 $test_recipe->dir->mkpath;
 $test_recipe->spew($test_recipe_content);
 
+my $overview = file($test_recipe->dir, 'image', 'overview.png');
+$overview->dir->mkpath;
+$overview->touch;
+
 $t->get_ok('/')->status_is(302);
 
 $t->get_ok('/login')->status_is(200)->content_like(qr/Chiffon Viewer/);
