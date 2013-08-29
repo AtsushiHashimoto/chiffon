@@ -28,6 +28,7 @@ sub start {
     finish => sub {
       my ($self, $code, $reason) = @_;
       warn qq{-- fired : finish } if DEBUG;
+      return unless $self;
       my $id = sprintf '%s', $self->tx;
       warn qq{-- id : $id } if DEBUG;
       my $ws_clients = $self->app->ws_clients;

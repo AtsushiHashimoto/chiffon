@@ -1,28 +1,11 @@
-% my $content = $object->{html_contents}[0];
-% if (ref $content eq 'HASH') {
-  % my $hash = {%$content};
-  % $content = '';
-  % delete $hash->{br};
-  % my $args = delete $hash->{content} // [];
-  % if (ref $hash->{img} eq 'ARRAY') {
-    % for my $img (@{$hash->{img}}) {
-      % $img->{src} = url_for(qq{/$name/$img->{src}})->path->canonicalize->to_string;
-      % push @{$args}, app->xml->XMLout($img, keyattr => [], rootname => 'img');
-    % }
-    % delete $hash->{img};
-  % }
-  % $content .= join '<br />', @{$args};
-  % $content .= app->xml->XMLout($hash, keyattr => [], rootname => undef);
-% }
 %= tag div => id => $object->{id}, class => 'step hidden', begin
-  %== defined $content ? $content : ''
-  % if (exists $object->{notification}) {
-    %= include 'widgets/notification', object => $object->{notification};
+  % for my $content ($object->children('html_contents')->each) {
+    %== $content->content_xml;
   % }
-  % if (exists $object->{video}) {
-    %= include 'widgets/video', object => $object->{video};
+  % for my $video ($object->children('video')->each) {
+    %= include 'widgets/video', video => $video;
   % }
-  % if (exists $object->{audio}) {
-    %= include 'widgets/audio', object => $object->{audio},  hide_play_button => stash('hide_play_button');
+  % for my $audio ($object->children('audio')->each) {
+    %= include 'widgets/audio', audio => $audio,  hide_play_button => stash('hide_play_button');
   % }
 % end
