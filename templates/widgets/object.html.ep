@@ -1,4 +1,3 @@
-% for my $object (@{$objects}) {
 <p>
   % if ($object->{img}) {
     %= image url_for(qq{/$name/$object->{img}})->path->canonicalize, class => 'object-icon';
@@ -8,4 +7,3 @@
   %= $object->{amount} // '';
   %= $object->{unit} // '';
 </p>
-% }

@@ -8,7 +8,6 @@ use Mojo::ByteStream qw(b);
 use JSON::XS qw(encode_json decode_json);
 use Crypt::SaltedHash;
 use Path::Class qw(file dir);
-use XML::Simple;
 use XML::LibXML;
 use Time::HiRes;
 use POSIX qw(strftime);
@@ -19,10 +18,6 @@ use Capture::Tiny qw(capture);
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
-has xml => sub {
-  $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
-  XML::Simple->new;
-};
 has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
