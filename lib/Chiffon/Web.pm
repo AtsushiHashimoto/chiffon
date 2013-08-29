@@ -73,9 +73,13 @@ sub startup {
   );
   $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
 
+  # Config check
+  my $datetime_format = $self->config->{datetime_format};
+  my $check = Time::Piece->new->strftime($datetime_format);
+  die 'invalid character in datetime_format. You use `-` or `.` or `_`' unless $check =~ /\A[-\.\_\w]+\z/ms;
+
   # Log
   $self->log->level(lc $self->config->{log_level});
-  my $datetime_format = $self->config->{datetime_format};
 
   # Sessions
   $self->app->sessions->cookie_path('/')->default_expiration(3600);
