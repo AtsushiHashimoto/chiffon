@@ -123,6 +123,14 @@ jQuery(function ($) {
         }
     };
 
+    // 音声・動画を一時停止する
+    var media_pause = function (id) {
+        if (DEBUG) console.log('-- media_pause id : ' + id);
+        var media = get_media(id);
+        if (!media) return;
+        media.pause();
+    };
+
     // お知らせを表示する
     var notify_play = function (id) {
         console.log('-- notify_play id : ' + id);
@@ -621,6 +629,15 @@ jQuery(function ($) {
             };
             mute_status = media.muted;
             media_play(id);
+        });
+
+    // 音声・動画を一時停止するボタン
+    $('.media-pause')
+        .on('click', function(e){
+            e.preventDefault();
+            var id = $(this)
+                .data('for');
+            media_pause(id);
         });
 });
 
