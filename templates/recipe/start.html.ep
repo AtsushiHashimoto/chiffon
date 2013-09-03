@@ -12,6 +12,10 @@
 </div>
 % }
 
+% for my $img ($recipe->find('img')->each) {
+  % $img->{src} = url_for(qq{/$name/$img->{src}})->path->canonicalize;
+% }
+
 <div id="overview" class="hidden">
 %= tag h2 => l('Overview')
 %= link_to l('Materials') => url_for('/navigator/channel/materials'), class => 'btn navigate'
@@ -23,18 +27,16 @@
 %= tag h2 => l('Materials')
 %= link_to l('Overview') => url_for('/navigator/channel/overview'), class => 'btn navigate'
 %= link_to l('Guide') => url_for('/navigator/channel/guide'), class => 'btn navigate'
-% for my $material (@{$recipe->{materials}}) {
-  % for my $key (keys %{$material}) {
-    % if ($key eq 'object_group') {
-      % for my $object_group (@{$material->{object_group}}) {
-        <div class="well">
-        %= tag h3 => $object_group->{name}
-        %= include 'widgets/object', objects => $object_group->{object};
-        </div>
-      % }
-    % } elsif ($key eq 'object') {
-      %= include 'widgets/object', objects => $material->{object};
-    % }
+% for my $material ($recipe->materials->children->each) {
+  % if ($material->type eq 'object_group') {
+    <div class="well">
+    %= tag h3 => $material->{name}
+    % for my $object ($material->children->each){
+      %= include 'widgets/object', object => $object;
+    % };
+    </div>
+  % } elsif ($material->type eq 'object') {
+    %= include 'widgets/object', object => $material;
   % }
 % }
 </div>
@@ -45,26 +47,23 @@
 %= link_to l('Materials') => url_for('/navigator/channel/materials'), class => 'btn navigate'
 <div class="row">
 <div id="detail" class="span8">
-% for my $directions (@{$recipe->{directions}}) {
-  % for my $step (@{$directions->{step}}) {
-    %= include 'widgets/html_contents', object => $step;
-    % for my $substep (@{$step->{substep}}) {
-      %= include 'widgets/html_contents', object => $substep;
-    % }
-  % }
+% for my $substep ($recipe->find('substep')->each) {
+  %= include 'widgets/html_contents', object => $substep;
 % }
-%= include 'widgets/notification', object => $recipe->{notification};
+% for my $notification ($recipe->find('notification')->each) {
+  %= include 'widgets/html_contents', object => $notification, hide_play_button => 1;
+% }
 </div>
 <div id="navi" class="span4">
 <ul>
-% for my $directions (@{$recipe->{directions}}) {
-  % for my $step (@{$directions->{step}}) {
+% for my $step ($recipe->find('step')->each) {
     %= tag li => id => 'navi-'.$step->{id}, class => 'navi-step', begin
       %= check_box 'check-name-'.$step->{id} => 'on', id => 'check-'.$step->{id}, class => 'check', 'data-url' => url_for('navigator/check/'.$step->{id});
       %= link_to $step->{navi_text} => url_for('/navigator/navi_menu/'.$step->{id}), class => 'navigate'
-      % if (@{$step->{substep}}) {
+      % my @substeps = $step->find('substep')->each;
+      % if (@substeps) {
         <ul>
-        % for my $substep (@{$step->{substep}}) {
+        % for my $substep (@substeps) {
           %= tag li => id => 'navi-'.$substep->{id}, class => 'navi-step', begin
             %= check_box 'check-name-'.$substep->{id} => 'on', id => 'check-'.$substep->{id}, class => 'check', 'data-url' => url_for('/navigator/check/'.$substep->{id});
             %= link_to $substep->{navi_text} => url_for('/navigator/navi_menu/'.$substep->{id}), class => 'navigate';
@@ -73,7 +72,6 @@
         </ul>
       % }
     % end
-  % }
 % }
 </ul>
 </div>
@@ -93,12 +91,3 @@
 %>
 
 </div>
-% if (app->mode eq 'development') {
-  <div class="span12">
-    %= tag h1 => 'DEBUG'
-    %= tag h2 => 'レシピの構造'
-    <pre><%= pretty_dumper($recipe) %></pre>
-    %= tag h2 => 'レシピのXMLを再構成'
-    <pre><%= app->xml->XMLout($recipe) %></pre>
-  </div>
-% }

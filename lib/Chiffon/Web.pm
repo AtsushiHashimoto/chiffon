@@ -1,14 +1,13 @@
 package Chiffon::Web;
 use Mojo::Base 'Mojolicious';
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 use Mojo::ByteStream qw(b);
 
 use JSON::XS qw(encode_json decode_json);
 use Crypt::SaltedHash;
 use Path::Class qw(file dir);
-use XML::Simple;
 use XML::LibXML;
 use Time::HiRes;
 use POSIX qw(strftime);
@@ -19,10 +18,6 @@ use Capture::Tiny qw(capture);
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
-has xml => sub {
-  $XML::Simple::PREFERRED_PARSER = 'XML::Parser';
-  XML::Simple->new;
-};
 has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
@@ -78,9 +73,13 @@ sub startup {
   );
   $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
 
+  # Config check
+  my $datetime_format = $self->config->{datetime_format};
+  my $check = Time::Piece->new->strftime($datetime_format);
+  die 'invalid character in datetime_format. You use `-` or `.` or `_`' unless $check =~ /\A[-\.\_\w]+\z/ms;
+
   # Log
   $self->log->level(lc $self->config->{log_level});
-  my $datetime_format = $self->config->{datetime_format};
 
   # Sessions
   $self->app->sessions->cookie_path('/')->default_expiration(3600);
