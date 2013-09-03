@@ -16,30 +16,31 @@ use CPAN::Meta;
 use CPAN::Meta::Prereqs;
 
 my %args = (
-  license        => 'perl',
-  dynamic_config => 0,
+    license              => 'perl',
+    dynamic_config       => 0,
 
-  configure_requires => {'Module::Build' => 0.38,},
+    configure_requires => {
+        'Module::Build' => 0.38,
+    },
 
-  name           => 'Chiffon-Web',
-  module_name    => 'Chiffon::Web',
-  allow_pureperl => 0,
+    name            => 'Chiffon-Web',
+    module_name     => 'Chiffon::Web',
+    allow_pureperl => 0,
 
-  script_files => [glob('script/*'), glob('bin/*')],
-  c_source     => [qw()],
+    script_files => [glob('script/*'), glob('bin/*')],
+    c_source     => [qw()],
+    PL_files => {},
 
-  test_files => ((-d '.git' || $ENV{RELEASE_TESTING}) && -d 'xt')
-  ? 't/ xt/'
-  : 't/',
-  recursive_test_files => 1,
+    test_files           => ((-d '.git' || $ENV{RELEASE_TESTING}) && -d 'xt') ? 't/ xt/' : 't/',
+    recursive_test_files => 1,
 );
 if (-d 'share') {
-  $args{share_dir} = 'share';
+    $args{share_dir} = 'share';
 }
 
 my $builder = Module::Build->subclass(
-  class => 'MyBuilder',
-  code  => q{
+    class => 'MyBuilder',
+    code => q{
         sub ACTION_distmeta {
             die "Do not run distmeta. Install Minilla and `minil install` instead.\n";
         }
@@ -51,13 +52,19 @@ my $builder = Module::Build->subclass(
 $builder->create_build_script();
 
 my $mbmeta = CPAN::Meta->load_file('MYMETA.json');
-my $meta   = CPAN::Meta->load_file('META.json');
-my $prereqs_hash
-  = CPAN::Meta::Prereqs->new($meta->prereqs)
-  ->with_merged_prereqs(CPAN::Meta::Prereqs->new($mbmeta->prereqs))
-  ->as_string_hash;
-my $mymeta = CPAN::Meta->new({%{$meta->as_struct}, prereqs => $prereqs_hash});
+my $meta = CPAN::Meta->load_file('META.json');
+my $prereqs_hash = CPAN::Meta::Prereqs->new(
+    $meta->prereqs
+)->with_merged_prereqs(
+    CPAN::Meta::Prereqs->new($mbmeta->prereqs)
+)->as_string_hash;
+my $mymeta = CPAN::Meta->new(
+    {
+        %{$meta->as_struct},
+        prereqs => $prereqs_hash
+    }
+);
 print "Merging cpanfile prereqs to MYMETA.yml\n";
-$mymeta->save('MYMETA.yml', {version => 1.4});
+$mymeta->save('MYMETA.yml', { version => 1.4 });
 print "Merging cpanfile prereqs to MYMETA.json\n";
-$mymeta->save('MYMETA.json', {version => 2});
+$mymeta->save('MYMETA.json', { version => 2 });
