@@ -54,6 +54,7 @@ sub start {
 
   my $content = b(file($recipe_xml_file)->slurp)->decode;
   my $dom     = Mojo::DOM->new($content);
+
   # parse check
   unless (defined $dom) {
     return $self->render_exception(qq{parse error $recipe_xml_file});
