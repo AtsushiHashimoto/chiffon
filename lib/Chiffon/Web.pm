@@ -21,37 +21,32 @@ use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
-sub development_mode {
-  my $self = shift;
-  warn qq{-- development_mode\n} if DEBUG;
-
-  # Sessionをsecureにする場合は，1を設定する
-  $self->app->sessions->secure(0);
-}
-
-sub production_mode {
-  my $self = shift;
-  warn qq{-- production_mode\n} if DEBUG;
-
-# Sessionをsecureに（httpsでログイン）する場合は，1を設定する
-  $self->app->sessions->secure(0);
-}
-
-# This method will run once at server start
 sub startup {
-  my $self = shift;
+  my $app = shift;
 
-# startupの$selfはコントローラーではなくアプリが入っている
-  chdir $self->home->detect;
-  warn qq{-- chdir : @{[$self->home->detect]} } if DEBUG;
+  chdir $app->home->detect;
+  warn qq{-- chdir : @{[$app->home->detect]} } if DEBUG;
 
-  $self->secret(b(file(__FILE__)->absolute)->sha1_sum);
+  $app->secret(b(file(__FILE__)->absolute)->sha1_sum);
+
+  if ($app->mode eq 'production') {
+    warn qq{-- production_mode\n} if DEBUG;
+    # Sessionをsecureに（httpsでログイン）する場合は，1を設定する
+    $app->app->sessions->secure(0);
+  }
+  elsif ($app->mode eq 'development') {
+    warn qq{-- development_mode\n} if DEBUG;
+
+    # Sessionをsecureにする場合は，1を設定する
+    $app->app->sessions->secure(0);
+  }
+
 
   # name
-  $self->helper(brandname => sub {q{Chiffon Viewer}});
+  $app->helper(brandname => sub {q{Chiffon Viewer}});
 
   # Plugins
-  $self->plugin(
+  $app->plugin(
     'Config' => {
       default => {
         hypnotoad => {listen => ['http://*:8080'], workers => 2, proxy => 1},
@@ -71,19 +66,19 @@ sub startup {
       file => 'chiffon-web.conf',
     }
   );
-  $self->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
+  $app->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
 
   # Config check
-  my $datetime_format = $self->config->{datetime_format};
+  my $datetime_format = $app->config->{datetime_format};
   my $check           = Time::Piece->new->strftime($datetime_format);
   die 'invalid character in datetime_format. You use `-` or `.` or `_`'
     unless $check =~ /\A[-\.\_\w]+\z/ms;
 
   # Log
-  $self->log->level(lc $self->config->{log_level});
+  $app->log->level(lc $app->config->{log_level});
 
   # Sessions
-  $self->app->sessions->cookie_path('/')->default_expiration(3600);
+  $app->sessions->cookie_path('/')->default_expiration(3600);
 
   # ログの発生場所を追加で書き込む
   no warnings 'redefine';
@@ -102,11 +97,11 @@ sub startup {
   };
 
   # Static
-  unshift @{$self->static->paths}, $self->config->{recipes_dir};
+  unshift @{$app->static->paths}, $app->config->{recipes_dir};
 
   # helpers
   # ユーザー情報を取得する
-  $self->helper(
+  $app->helper(
     get_user => sub {
       my $self = shift;
       my $user_id = shift || $self->session('user_id') // '';
@@ -119,7 +114,7 @@ sub startup {
   );
 
   # time_for_navigate
-  $self->helper(
+  $app->helper(
     time_for_navigate => sub {
       my $self = shift;
       my ($sec, $usec) = Time::HiRes::gettimeofday;
@@ -130,7 +125,7 @@ sub startup {
   );
 
   # デバッグ出力用
-  $self->helper(
+  $app->helper(
     pretty_dumper => sub {
       my $self = shift;
       my $arg  = shift;
@@ -141,7 +136,7 @@ sub startup {
   );
 
   # 閲覧ID生成
-  $self->helper(
+  $app->helper(
     session_id => sub {
       my $self       = shift;
       my $session_id = $self->session('session_id');
@@ -159,7 +154,7 @@ sub startup {
   );
 
   # user_name
-  $self->helper(
+  $app->helper(
     user_name => sub {
       my $self      = shift;
       my $user      = $self->get_user;
@@ -170,7 +165,7 @@ sub startup {
   );
 
   # recipe_xml_file
-  $self->helper(
+  $app->helper(
     recipe_xml_file => sub {
       my $self = shift;
       my $recipe_xml_file = $self->session('recipe_xml_file') // '';
@@ -190,7 +185,7 @@ sub startup {
   );
 
   # validate
-  $self->helper(
+  $app->helper(
     hmml_validate => sub {
       my $self      = shift;
       my $hmml_file = shift or die 'recipe file required';
@@ -209,7 +204,7 @@ sub startup {
 
 
   # post_to_navigator
-  $self->helper(
+  $app->helper(
     post_to_navigator => sub {
       my $self = shift;
       my $args = shift // +{};
@@ -240,7 +235,7 @@ sub startup {
 
   # Navigator通信用
   # 閲覧IDリセット
-  $self->helper(
+  $app->helper(
     clear_recipe_session => sub {
       my $self = shift;
       warn qq{-- clear_recipe_session } if DEBUG;
@@ -251,7 +246,7 @@ sub startup {
   );
 
   # validate hash
-  $self->helper(
+  $app->helper(
     csh_validate => sub {
       my ($self, $salted, $plain) = @_;
       return Crypt::SaltedHash->validate($salted, $plain);
@@ -264,7 +259,7 @@ sub startup {
   #     msg  => 'メッセージ',
   #   }
   # );
-  $self->helper(
+  $app->helper(
     add_stash_message => sub {
       my ($self, $msg) = @_;
       my $messages = $self->stash('message') // [];
@@ -272,7 +267,7 @@ sub startup {
       $self->stash(message => $messages);
     }
   );
-  $self->helper(
+  $app->helper(
     stash2flash => sub {
       my ($self) = @_;
       my $messages = $self->stash('message') // [];
@@ -282,7 +277,7 @@ sub startup {
   );
 
   # メッセージをリセット
-  $self->helper(
+  $app->helper(
     reset_stash_message => sub {
       shift->stash(message => []);
     }
@@ -290,7 +285,7 @@ sub startup {
 
 
   # Router
-  my $r = $self->routes;
+  my $r = $app->routes;
 
   # 認証なしでOKのルート
   # login
