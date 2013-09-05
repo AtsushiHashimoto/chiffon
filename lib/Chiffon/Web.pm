@@ -31,7 +31,8 @@ sub startup {
 
   if ($app->mode eq 'production') {
     warn qq{-- production_mode\n} if DEBUG;
-    # Sessionをsecureに（httpsでログイン）する場合は，1を設定する
+
+# Sessionをsecureに（httpsでログイン）する場合は，1を設定する
     $app->app->sessions->secure(0);
   }
   elsif ($app->mode eq 'development') {
