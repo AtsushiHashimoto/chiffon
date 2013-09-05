@@ -12,6 +12,8 @@ requires 'Term::Encoding'            => 0;
 requires 'Term::ReadKey'             => 0;
 requires 'JSON::XS'                  => 0;
 requires 'XML::LibXML'               => 0;
+requires 'Try::Tiny'                 => 0;
+requires 'Capture::Tiny'             => 0;
 
 on develop => sub {
   requires 'Perl::Tidy', 0;
