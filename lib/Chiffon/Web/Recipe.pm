@@ -72,7 +72,6 @@ sub start {
           last unless $ids{$id}++;
         }
         $elm->{id} = $id;
-        say $elm->{id};
       }
     );
   }
