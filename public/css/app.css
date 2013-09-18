@@ -220,7 +220,7 @@ background-color: transparent;
   margin: -32px 0 0 -32px;
 }
 
-.hidden1 {
+.hidden {
 	display: none;
 }
 /* header setting  ----------------*/
@@ -290,9 +290,9 @@ background-color: transparent;
 
 .span4:before{
 	content:url(../images/nav_title.png);
- -webkit-transform: scale(0.5); 
+ -webkit-transform: scale(0.5);
  -moz-transform: scale(0.5);
-	
+
 }
 .span4{
  background: url(../images/nav_title.png) #fff no-repeat top;

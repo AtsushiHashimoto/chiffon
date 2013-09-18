@@ -18,15 +18,12 @@
 
 <div id="overview" class="hidden">
 %= tag h2 => l('Overview')
-%= link_to l('Materials') => url_for('/navigator/channel/materials'), class => 'btn navigate'
-%= link_to l('Guide') => url_for('/navigator/channel/guide'), class => 'btn navigate'
 %= image url_for(qq{/$name/$recipe->{overview}})->path->canonicalize;
 </div>
 
 <div id="materials" class="hidden">
 %= tag h2 => l('Materials')
-%= link_to l('Overview') => url_for('/navigator/channel/overview'), class => 'btn navigate'
-%= link_to l('Guide') => url_for('/navigator/channel/guide'), class => 'btn navigate'
+  <div class="content_area">
 % for my $material ($recipe->materials->children->each) {
   % if ($material->type eq 'object_group') {
     <div class="well">
@@ -39,12 +36,11 @@
     %= include 'widgets/object', object => $material;
   % }
 % }
+  </div>
 </div>
 
 <div id="guide" class="hidden">
 %= tag h2 => l('Guide')
-%= link_to l('Overview') => url_for('/navigator/channel/overview'), class => 'btn navigate'
-%= link_to l('Materials') => url_for('/navigator/channel/materials'), class => 'btn navigate'
 <div class="row">
 <div id="detail" class="span8">
 % for my $substep ($recipe->find('substep')->each) {
