@@ -49,8 +49,9 @@
 % for my $notification ($recipe->find('notification')->each) {
   %= include 'widgets/html_contents', object => $notification, hide_play_button => 1;
 % }
-</div>
+</div><!-- #detail -->
 <div id="navi" class="span4">
+<div class="navi_area">
 <ul>
 % for my $step ($recipe->find('step')->each) {
     %= tag li => id => 'navi-'.$step->{id}, class => 'navi-step', begin
@@ -70,9 +71,10 @@
     % end
 % }
 </ul>
-</div>
-</div>
-</div>
+</div><!-- .navi_area -->
+</div><!-- #navi -->
+</div><!-- .row -->
+</div><!-- #guide -->
 
 <%=
   link_to 'init' => url_for('/navigator'),
