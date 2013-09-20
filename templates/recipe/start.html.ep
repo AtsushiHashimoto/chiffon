@@ -56,14 +56,18 @@
 % for my $step ($recipe->find('step')->each) {
     %= tag li => id => 'navi-'.$step->{id}, class => 'navi-step', begin
       %= check_box 'check-name-'.$step->{id} => 'on', id => 'check-'.$step->{id}, class => 'check', 'data-url' => url_for('navigator/check/'.$step->{id});
+      <label class="btn">
       %= link_to $step->{navi_text} => url_for('/navigator/navi_menu/'.$step->{id}), class => 'navigate'
+      </label>
       % my @substeps = $step->find('substep')->each;
       % if (@substeps) {
         <ul>
         % for my $substep (@substeps) {
           %= tag li => id => 'navi-'.$substep->{id}, class => 'navi-step', begin
             %= check_box 'check-name-'.$substep->{id} => 'on', id => 'check-'.$substep->{id}, class => 'check', 'data-url' => url_for('/navigator/check/'.$substep->{id});
+            <label class="btn">
             %= link_to $substep->{navi_text} => url_for('/navigator/navi_menu/'.$substep->{id}), class => 'navigate';
+            </label>
           % end
         % }
         </ul>
