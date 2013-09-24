@@ -106,7 +106,8 @@ background-color: transparent;
 }
 #overview,
 #materials,
-#guide
+#guide,
+#finished
 {
 	background:#fff;
 	width:1220px;
@@ -123,6 +124,7 @@ background-color: transparent;
 	background: transparent;
 	border:none;
 }
+#finished h2,
 #overview h2,
 #materials h2,
 #guide h2{
@@ -143,7 +145,8 @@ background-color: transparent;
 #materials h2{
 	background: url(../images/materials.png) no-repeat #efe1be 15px 50%;
 }
-#guide h2{
+#guide h2,
+#finished h2{
 	background: url(../images/overview.png) no-repeat #efe1be 15px 50%;
 }
 #overview img{
@@ -156,7 +159,7 @@ background-color: transparent;
 }
 
 #guide .row{
-	width:850px;
+	width:854px;
 	height: 750px;
 	overflow:hidden;
 	float: left;
@@ -183,8 +186,9 @@ background-color: transparent;
 .span8{
 	margin-left:0;
 }
-#guide .span8{
-	width:775px;
+#guide .span8
+{
+	width:812px;
 	height: 730px;
 	overflow:scroll;
     border-radius: 0 0 10px 10px;           /* 草案 */
@@ -220,7 +224,7 @@ background-color: transparent;
   margin: -32px 0 0 -32px;
 }
 
-.hidden {
+.hidden1 {
 	display: none;
 }
 /* header setting  ----------------*/
@@ -277,7 +281,7 @@ background-color: transparent;
 	background-color: #f8b548 !important;
 }
 .container{
-	margin-top:65px;
+	margin-top:15px;
 }
 
 .container h1{
@@ -288,12 +292,6 @@ background-color: transparent;
 
 /* navi setting  ----------------*/
 
-.span4:before{
-	content:url(../images/nav_title.png);
- -webkit-transform: scale(0.5);
- -moz-transform: scale(0.5);
-
-}
 .span4{
  background: url(../images/nav_title.png) #fff no-repeat top;
  background-attachment: fixed;
@@ -308,56 +306,211 @@ background-color: transparent;
     -moz-border-bottom-topright: 10px;
     -moz-border-bottom-topleft: 10px;
 }
+.span4:before{
+	content:url(../images/nav_title.png);
+ -webkit-transform: scale(0.5); 
+ -moz-transform: scale(0.5);
+	
+}
 .navi_area{
 	height: 692px;
 	overflow:scroll;
 	text-align: left;
-	font-size: 22px;
+	font-size: 18px;
 }
 
 .navi-step {
-  margin: 3px;
-  padding: 3px;
+	padding: 10px 5px;
 	line-height: 120%;
 }
+ul li{
+	padding: 0;
+	margin: 0;
+	display: block;
+    position: relative;
+	list-style:none;
+}
 
+.navi_area input[type="checkbox"]{
+    position: absolute;
+    right: 0;
+    margin: 5px 0px 10px 0;
+    width: 30px;
+    height: 30px;
+}
+.navi_area ul li a{
+	color: #300203;
+	text-decoration: none;
+}
+.navi_area ul li a:hover{
+	text-decoration:underline;
+}
+
+/*親要素---*/
+.navi_area ul li{
+	background:url(../images/list_label.png) no-repeat 5px 10px;
+	display: block;
+	padding-left: 45px;
+	padding-right: 10px;
+	color: #300203;
+	text-decoration: none;
+}
+.navi_area ul li.step-finished{
+	background:#fce5e7 url(../images/list_label_finish.png) no-repeat 5px 10px;
+	display: block;
+	padding-left: 45px;
+	color: #300203;
+	text-decoration: none;
+}
+
+.navi_area ul li.navi-current-open{
+	background:url(../images/list_label_current.png) no-repeat 5px 10px;
+	display: block;
+	padding-left: 45px;
+	padding-right: 10px;
+	color: #300203;
+	text-decoration: none;
+}
+.navi_area ul li label.btn{
+	text-align:left;
+	display: block;
+	width:255px;
+    background: url(../images/step_icon.png) no-repeat right 0;
+    padding: 0 35px 0 0;
+    color: #f00;
+    text-decoration: none;
+    z-index: 1;
+}
+.navi_area ul li.step-finished label.btn{
+	text-align:left;
+	display: block;
+	width:255	px;
+    background:url(../images/step_fin_icon.png) no-repeat right 0;
+    padding: 0 35px 0 0;
+    color: #f00;
+    text-decoration: none;
+    z-index: 1;
+}
+
+/*子要素---*/
+.navi_area ul li ul li{
+	background: url(../images/sub_list_label.png) no-repeat 0 10px;
+	padding-left: 0px;
+	text-align:left;
+	width:230px;
+    background: none;
+	padding-right: 0;
+    text-decoration: none;
+    z-index: 1;
+}
+
+
+/*.step-finished setting ----*/
+
+.navi_area ul li ul li.step-finished{
+	background: url(../images/sub_list_label_finished.png) no-repeat 0 10px !important;
+	padding-left: 0;
+	color: #e60012;
+}
+.navi_area ul li ul li.step-finished label.btn{
+	background: none;
+}
+
+/* end --------------------*/
+
+
+/*.navi-others setting ----*/
+
+.navi_area ul li ul li.navi-others,
+.navi_area ul li ul li.navi-able{
+	background: url(../images/sub_list_label.png) no-repeat 0 10px;
+	padding-left: 25px;
+}
+.navi_area ul li ul li.navi-others label.btn,
+.navi_area ul li ul li.navi-able label.btn{
+	background: none;
+}
+/* end --------------------*/
+
+/*.navi-current setting ----*/
+
+.navi_area ul li ul li.navi-current{
+	background: url(../images/sub_list_current.png) no-repeat 0 10px;
+	padding-left: 25px;
+}
+.navi_area ul li ul li.navi-current a{
+	color: #e60012;
+	font-weight: bold;
+}
+.navi_area ul li ul li.navi-current label.btn{
+	background: none;
+}
+/* end --------------------*/
+
+
+.navi-step input[type="checkbox"]{
+    opacity : 0;  
+	width:30px;
+	height:30px;
+	cursor: pointer; 
+    padding: 0;  
+}
+
+
+
+li:last-child label{
+    border-bottom:none;
+}
 li.navi-step {
 	border-bottom: 3px solid #e3d6b7;
 }
 li.navi-step ul li{
 	border-bottom: none;
 }
- input[type="checkbox"]{
-	float: left;
-	margin: 0;
+
+/* movie_Area  ----------------------
+*/
+.media_area{
+	width: 320px;
+	border: 2px solid #300203;
+	margin-bottom: 30px;
 }
-.navi-step > a[href] {
-  padding: 3px;
-  display: block;
-  margin-left: 20px;
-  color: #300203;
+.media_btn{
+	text-align: center;
+	background: #300203;
+	padding: 5px 0;
 }
 
-.navi-current > a[href] {
-  font-weight: bold;
-  background-color: crimson;
-  color: whitesmoke;
-  cursor: default;
-  text-decoration: none;
+a.media-play,
+a.media-pause,
+a.softer,
+a.louder,
+a.full-screen{
+	display:inline-block;
+	width: 22px;
+	height: 22px;
+	padding-right: 10px;
+	text-indent: -9999em;
 }
-.navi-current:before {
-  content: "(c)";
+a.media-play{
+	background: url(../images/btn_play.png) no-repeat;
 }
-.navi-able > a[href] {
-  font-weight: bold;
-  background-color: tomato;
-  color: whitesmoke;
+a.media-pause{
+	background: url(../images/btn_Pause.png) no-repeat;
 }
-.navi-able:before {
-  content: "(a)";
+a.softer{
+	background: url(../images/btn_Softer.png) no-repeat;
 }
-.navi-others > a[href] {
+a.louder{
+	background: url(../images/btn_Louder.png) no-repeat;
 }
-.navi-others:before {
-  content: "(o)";
+a.full-screen{
+	background: url(../images/btn_full.png) no-repeat;
+}
+a.media-play:hover,
+a.media-pause:hover,
+a.softer:hover,
+a.louder:hover,
+a.full-screen:hover{
+	background-position: 0;
 }
