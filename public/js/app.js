@@ -448,6 +448,7 @@ jQuery(function ($) {
     $('.navigate')
         .on('click', function (e) {
             e.preventDefault();
+            if ($(this).hasClass('disabled')) {return}
             var url = $(this)
                 .attr('href');
             $.getJSON(url)

@@ -159,6 +159,15 @@ background-color: transparent;
 .login .span12{
 	width: 790px;
 }
+.login .span12 h2{
+	font-size: 31.5px;
+	margin: 10px 0;
+	font-family: inherit;
+	font-weight: bold;
+	line-height: 20px;
+	color: inherit;
+	text-rendering: optimizelegibility;
+}
 .login .span12 ul{
 	margin: 0;
 }
