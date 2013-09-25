@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     // global variables
-    var DEBUG = 1;
+    var DEBUG = 0;
     var notification_live_sec;
     var external_input_url;
     var check_url;
@@ -205,11 +205,14 @@ jQuery(function ($) {
                         $('#' + id)
                             .hide(0);
                     });
+                    $('.naviModuleH').children().children('li').children('a').removeClass('disabled');
+                    if (DEBUG) console.log($('.naviModuleH').children().children('li').length);
                     var pane = $('#' + channels[obj.ChannelSwitch.channel]);
                     if (!pane.length) {
                         warning_handler('unknown channel : ' + obj.ChannelSwitch.channel);
                     }
                     pane.show(0);
+                    $('#btn-' + channels[obj.ChannelSwitch.channel]).addClass('disabled');
                 } else if (obj.DetailDraw) {
                     // DetailDraw
                     if (DEBUG) console.log({

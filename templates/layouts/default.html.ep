@@ -30,9 +30,9 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
     % if ($controller eq 'recipe') {
     <div class="naviModuleH">
       <ul>
-        <li class="btn01"><%= link_to l('Overview') => url_for('/navigator/channel/overview'), class => 'btn navigate' %></li>
-        <li class="btn02"><%= link_to l('Materials') => url_for('/navigator/channel/materials'), class => 'btn navigate' %></li>
-        <li class="btn03"><%= link_to l('Guide') => url_for('/navigator/channel/guide'), class => 'btn navigate' %></li>
+        <li class="btn01"><%= link_to l('Overview') => url_for('/navigator/channel/overview'), id => 'btn-overview', class => 'btn navigate' %></li>
+        <li class="btn02"><%= link_to l('Materials') => url_for('/navigator/channel/materials'), id => 'btn-materials', class => 'btn navigate' %></li>
+        <li class="btn03"><%= link_to l('Guide') => url_for('/navigator/channel/guide'), id => 'btn-guide', class => 'btn navigate' %></li>
       </ul>
     </div>
     % }
