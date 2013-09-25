@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     // global variables
-    var DEBUG = 0;
+    var DEBUG = 1;
     var notification_live_sec;
     var external_input_url;
     var check_url;
@@ -47,6 +47,8 @@ jQuery(function ($) {
 
     // メニューの表示切り替えテーブル
     var navigations = {
+        'is_finished': 'step-finished',
+        'is_open': 'navi-current-open',
         'CURRENT': 'navi-current',
         'ABLE': 'navi-able',
         'OTHERS': 'navi-others'
@@ -111,7 +113,7 @@ jQuery(function ($) {
         if (!media) return;
         jobs[id] = media;
         var step = $(media)
-            .parent('.step');
+            .parents('.step');
         if (DEBUG) console.log(step);
         var showOrHide = step.is(':visible');
         if (DEBUG) console.log(showOrHide);
@@ -231,15 +233,21 @@ jQuery(function ($) {
                     $('.navi-step')
                         .removeClass(navigation_classes)
                         .hide(0);
-                    var finished = true;
+                    var all_finished = true;
                     $.each(obj.NaviDraw.steps, function (i, step) {
-                        if (finished) {
-                            finished = step.is_finished ? true : false
+                        if (all_finished) {
+                            all_finished = step.is_finished ? true : false
                         }
                         if ($('#navi-' + step.id)
                             .length) {
                             $('#check-' + step.id)
                                 .attr('checked', step.is_finished ? true : false);
+                            if ( step.is_finished ) {
+                                $('#navi-' + step.id).addClass('step-finished');
+                            }
+                            if ( step.is_open ) {
+                                $('#navi-' + step.id).addClass('navi-current-open');
+                            }
                             $('#navi-' + step.id)
                                 .addClass(navigations[step.visual])
                                 .show(0);
@@ -247,7 +255,7 @@ jQuery(function ($) {
                             warning_handler('missing recipe for NaviDraw : ' + step.id);
                         }
                     });
-                    if (finished) {
+                    if (all_finished) {
                         $('#finished')
                             .show(0);
                     }

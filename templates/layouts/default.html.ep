@@ -27,6 +27,7 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
 <div class="navbar navbar-fixed-top navbar-inverse">
   <div class="navbar-inner">
     <p><a class="brand" href="<%= url_for '/' %>"><%= brandname %></a></p>
+    % if ($controller eq 'recipe') {
     <div class="naviModuleH">
       <ul>
         <li class="btn01"><%= link_to l('Overview') => url_for('/navigator/channel/overview'), class => 'btn navigate' %></li>
@@ -34,6 +35,7 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
         <li class="btn03"><%= link_to l('Guide') => url_for('/navigator/channel/guide'), class => 'btn navigate' %></li>
       </ul>
     </div>
+    % }
     <div class="nav-collapse">
       <ul class="nav pull-right">
       % my $user_id = session('user_id') || '';
@@ -51,18 +53,30 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
 </div>
 % }
 
+% if ($controller eq 'recipe') {
 <div class="container clearfix">
 <h1><%= title %></h1>
+% } else {
+<div class="top_container clearfix">
+<h1><%= title %></h1>
+<div class="login">
+% }
+% if ($controller eq 'index') {
+<h2><%= title %></h2>
+% }
 
 %= include 'widgets/alert';
-%= tag div => (class => 'row') => begin
-  %= content
-% end
+%= content
 %#= include 'widgets/development';
 
+% if ($controller ne 'recipe') {
+</div><!-- .login -->
+% }
+
 <footer id="copyright" class="footer">
-  <small>&copy; <%= brandname %> Powered by <a href="http://www.nishimiyahara.net">IT Office 西宮原</a></small>
+  <small class="copy">© 2013 Kyoto University</small><small class="logo"><a href="http://www.nishimiyahara.net"><img src="images/footer_btn01.png" alt="footer_btn01" width="181" height="31"></a><img src="images/footer_btn02.png" alt="footer_btn02" width="132" height="31"><a href="http://www.mm.media.kyoto-u.ac.jp/"><img src="images/footer_btn03.png" alt="footer_btn01" width="35" height="31"></a></small>
 </footer>
+
 </div>
 </body>
 </html>

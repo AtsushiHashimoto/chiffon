@@ -1,8 +1,6 @@
-<div class="span12">
-
 <div id="finished" class="hidden">
   %= link_to l('Recipe List') => url_for('/'), class => 'btn btn-primary navigator-end', 'data-url' => url_for('/navigator/end');
-</div>
+</div><!-- #finished -->
 
 % if (config->{update_sound} ne '') {
 <div class="hidden">
@@ -40,8 +38,8 @@
 </div>
 
 <div id="guide" class="hidden">
-%= tag h2 => l('Guide')
 <div class="row">
+%= tag h2 => l('Guide')
 <div id="detail" class="span8">
 % for my $substep ($recipe->find('substep')->each) {
   %= include 'widgets/html_contents', object => $substep;
@@ -50,6 +48,7 @@
   %= include 'widgets/html_contents', object => $notification, hide_play_button => 1;
 % }
 </div><!-- #detail -->
+</div><!-- .row -->
 <div id="navi" class="span4">
 <div class="navi_area">
 <ul>
@@ -77,7 +76,6 @@
 </ul>
 </div><!-- .navi_area -->
 </div><!-- #navi -->
-</div><!-- .row -->
 </div><!-- #guide -->
 
 <%=
@@ -91,5 +89,3 @@
     'data-receiver_url' => url_for('/external')->to_abs->scheme('ws'),
     'data-session_id' => session_id,
 %>
-
-</div>
