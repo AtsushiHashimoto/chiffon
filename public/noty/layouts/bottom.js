@@ -8,15 +8,15 @@
 			selector: 'ul#noty_bottom_layout_container',
 			style: function() {
 				$(this).css({
-					bottom: 0,
+					top: '400px',
 					left: '5%',
-					position: 'fixed',
+					position: 'absolute',
 					width: '90%',
 					height: 'auto',
 					margin: 0,
-					padding: 0,
 					listStyleType: 'none',
-					zIndex: 9999999
+					zIndex: 9999999,
+					borderRadius: '0px 0px 0px 0px'
 				});
 			}
 		},
@@ -26,7 +26,12 @@
 			css: {}
 		},
 		css: {
-			display: 'none'
+			display: 'none',
+			background: "url('./images/noty_bk.png') repeat-x scroll left top",
+			border: 'none',
+			padding: '30px',
+			fontSize:'20px',
+			borderRadius: '0px 0px 0px 0px'
 		},
 		addClass: ''
 	};
