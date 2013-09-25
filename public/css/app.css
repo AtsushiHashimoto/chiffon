@@ -218,8 +218,8 @@ input.btn-primary:hover{
 }
 #overview,
 #materials,
-#guide,
-#finished
+#guide/*,
+#finished*/
 {
 	background:#fff;
 	width:1220px;
@@ -492,7 +492,7 @@ box-shadow:  inherit;
 	
 }
 .navi_area{
-	height: 692px;
+	height: 680px;
 	overflow:auto;
 	text-align: left;
 	font-size: 18px;
@@ -700,6 +700,7 @@ span.noty_text{
 }
 .footer{
 	height: 40px;
+	padding-top: 20px;
 }
 small{
 	position: relative
