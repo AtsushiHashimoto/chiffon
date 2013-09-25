@@ -135,11 +135,12 @@ background-color: transparent;
 	width: 300px;
 	text-align: center;
 	float: left;
+	font-size: 38.5px;
 }
 .top_container h1:before{
 	content: url(../images/top_logo.png);
- -webkit-transform: scale(0.5); 
- -moz-transform: scale(0.5);
+	-webkit-transform: scale(0.5); 
+	-moz-transform: scale(0.5);
 }
 .login{
 	width: 790px;
