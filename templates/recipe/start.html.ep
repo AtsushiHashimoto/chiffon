@@ -1,7 +1,3 @@
-<div id="finished" class="hidden">
-  %= link_to l('Recipe List') => url_for('/'), class => 'btn btn-primary navigator-end', 'data-url' => url_for('/navigator/end');
-</div><!-- #finished -->
-
 % if (config->{update_sound} ne '') {
 <div class="hidden">
   %= tag audio => id => 'update_sound', src => config->{update_sound}, preload => 'none', begin
@@ -41,6 +37,9 @@
 <div class="row">
 %= tag h2 => l('Guide')
 <div id="detail" class="span8">
+<div id="finished">
+  %= link_to l('Recipe List') => url_for('/'), class => 'btn btn-primary navigator-end', 'data-url' => url_for('/navigator/end');
+</div><!-- #finished -->
 % for my $substep ($recipe->find('substep')->each) {
   %= include 'widgets/html_contents', object => $substep;
 % }
