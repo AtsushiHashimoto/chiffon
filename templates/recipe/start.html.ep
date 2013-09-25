@@ -1,9 +1,3 @@
-<div class="span12">
-
-<div id="finished" class="hidden">
-  %= link_to l('Recipe List') => url_for('/'), class => 'btn btn-primary navigator-end', 'data-url' => url_for('/navigator/end');
-</div>
-
 % if (config->{update_sound} ne '') {
 <div class="hidden">
   %= tag audio => id => 'update_sound', src => config->{update_sound}, preload => 'none', begin
@@ -18,15 +12,12 @@
 
 <div id="overview" class="hidden">
 %= tag h2 => l('Overview')
-%= link_to l('Materials') => url_for('/navigator/channel/materials'), class => 'btn navigate'
-%= link_to l('Guide') => url_for('/navigator/channel/guide'), class => 'btn navigate'
 %= image url_for(qq{/$name/$recipe->{overview}})->path->canonicalize;
 </div>
 
 <div id="materials" class="hidden">
 %= tag h2 => l('Materials')
-%= link_to l('Overview') => url_for('/navigator/channel/overview'), class => 'btn navigate'
-%= link_to l('Guide') => url_for('/navigator/channel/guide'), class => 'btn navigate'
+  <div class="content_area">
 % for my $material ($recipe->materials->children->each) {
   % if ($material->type eq 'object_group') {
     <div class="well">
@@ -39,34 +30,42 @@
     %= include 'widgets/object', object => $material;
   % }
 % }
+  </div>
 </div>
 
 <div id="guide" class="hidden">
-%= tag h2 => l('Guide')
-%= link_to l('Overview') => url_for('/navigator/channel/overview'), class => 'btn navigate'
-%= link_to l('Materials') => url_for('/navigator/channel/materials'), class => 'btn navigate'
 <div class="row">
+%= tag h2 => l('Guide')
 <div id="detail" class="span8">
+<div id="finished">
+  %= link_to l('Recipe List') => url_for('/'), class => 'btn btn-primary navigator-end', 'data-url' => url_for('/navigator/end');
+</div><!-- #finished -->
 % for my $substep ($recipe->find('substep')->each) {
   %= include 'widgets/html_contents', object => $substep;
 % }
 % for my $notification ($recipe->find('notification')->each) {
   %= include 'widgets/html_contents', object => $notification, hide_play_button => 1;
 % }
-</div>
+</div><!-- #detail -->
+</div><!-- .row -->
 <div id="navi" class="span4">
+<div class="navi_area">
 <ul>
 % for my $step ($recipe->find('step')->each) {
     %= tag li => id => 'navi-'.$step->{id}, class => 'navi-step', begin
       %= check_box 'check-name-'.$step->{id} => 'on', id => 'check-'.$step->{id}, class => 'check', 'data-url' => url_for('navigator/check/'.$step->{id});
+      <label class="btn">
       %= link_to $step->{navi_text} => url_for('/navigator/navi_menu/'.$step->{id}), class => 'navigate'
+      </label>
       % my @substeps = $step->find('substep')->each;
       % if (@substeps) {
         <ul>
         % for my $substep (@substeps) {
           %= tag li => id => 'navi-'.$substep->{id}, class => 'navi-step', begin
             %= check_box 'check-name-'.$substep->{id} => 'on', id => 'check-'.$substep->{id}, class => 'check', 'data-url' => url_for('/navigator/check/'.$substep->{id});
+            <label class="btn">
             %= link_to $substep->{navi_text} => url_for('/navigator/navi_menu/'.$substep->{id}), class => 'navigate';
+            </label>
           % end
         % }
         </ul>
@@ -74,9 +73,9 @@
     % end
 % }
 </ul>
-</div>
-</div>
-</div>
+</div><!-- .navi_area -->
+</div><!-- #navi -->
+</div><!-- #guide -->
 
 <%=
   link_to 'init' => url_for('/navigator'),
@@ -89,5 +88,3 @@
     'data-receiver_url' => url_for('/external')->to_abs->scheme('ws'),
     'data-session_id' => session_id,
 %>
-
-</div>
