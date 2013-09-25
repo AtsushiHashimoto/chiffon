@@ -1,7 +1,7 @@
 package Chiffon::Web;
 use Mojo::Base 'Mojolicious';
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 use Mojo::ByteStream qw(b);
 
