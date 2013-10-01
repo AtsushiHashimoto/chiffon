@@ -465,31 +465,31 @@ border-radius: 0px;
 -moz-box-shadow:  inherit;
 box-shadow:  inherit;
 }
-.well{
+#materials .content_area{
 	padding: 30px;
 }
-.well h3,
-.well p{
-	font-size: 45px;
-	line-height: 160%;
-	color: #300203;
+.well{
+	padding-bottom: 30px;
 }
 .well h3{
 	color: #FF8F8F;
 	font-weight: bold;
 }
-#materials .well h3{
+#materials .content_area h3,
+#materials .content_area .well h3{
 	font-size: 24px;
 	line-height: 160%;
 	color: #FF8F8F;
 	font-weight: bold;
 }
-#materials .well p{
+#materials .content_area p,
+#materials .content_area .well p{
 	font-size: 20px;
 	line-height: 160%;
 	color: #300203;
 }
-#materials .well img{
+#materials .content_area img,
+#materials .content_area .well img{
 	width: auto;
 	max-height:  32px;
 }
