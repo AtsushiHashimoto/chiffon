@@ -135,7 +135,7 @@ jQuery(function ($) {
 
     // お知らせを表示する
     var notify_play = function (id) {
-        console.log('-- notify_play id : ' + id);
+        if (DEBUG) console.log('-- notify_play id : ' + id);
         var notify = $('#' + id);
         if (!notify.length) {
             warning_handler('missing recipe for notify_play : ' + id);
