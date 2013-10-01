@@ -1,4 +1,3 @@
-<div class="media_area">
 % my $src = $audio->{path} // next;
 % $src = url_for(qq{/$name/$src})->path->canonicalize;
 %= tag audio => id => $audio->{id}, src => $src, preload => 'none', begin
@@ -10,4 +9,3 @@
 %= link_to l('Softer') => url_for, class => $hide_play_button ? 'hidden' : 'btn softer', 'data-for' => $audio->{id};
 %= link_to l('Louder') => url_for, class => $hide_play_button ? 'hidden' : 'btn louder', 'data-for' => $audio->{id};
 </div><!-- .media_btn -->
-</div><!-- .media_area -->

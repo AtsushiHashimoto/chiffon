@@ -478,6 +478,21 @@ box-shadow:  inherit;
 	color: #FF8F8F;
 	font-weight: bold;
 }
+#materials .well h3{
+	font-size: 24px;
+	line-height: 160%;
+	color: #FF8F8F;
+	font-weight: bold;
+}
+#materials .well p{
+	font-size: 20px;
+	line-height: 160%;
+	color: #300203;
+}
+#materials .well img{
+	width: auto;
+	max-height:  32px;
+}
 /* navi setting  ----------------*/
 
 .span4{
@@ -507,7 +522,7 @@ box-shadow:  inherit;
 	font-size: 18px;
 }
 .navi-step {
-	padding: 10px 0 10px 0px;
+	padding: 5px 0 5px 0px;
 	line-height: 120%;
 }
 ul li{
@@ -520,8 +535,16 @@ ul li{
 
 .navi_area input[type="checkbox"]{
     position: absolute;
-    margin: 5px 0px 10px 0;
+    margin: 0 0px 10px 0;
     width: 30px;
+	right: 3px;
+    height: 30px;
+}
+ul li ul li.navi-step input[type="checkbox"]{
+    position: absolute;
+    margin: 0 0px 10px 0;
+    width: 30px;
+	left: 0;
     height: 30px;
 }
 .navi_area ul li a{
@@ -561,7 +584,7 @@ ul li{
 	text-align:left;
 	display: block;
     background: url(../images/step_icon.png) no-repeat right 0;
-    padding: 0 35px 0 0;
+    padding: 10px 35px 10px 0;
     color: #f00;
     text-decoration: none;
     z-index: 1;
@@ -569,7 +592,7 @@ ul li{
 .navi_area ul li.step-finished label.btn{
 	text-align:left;
     background:url(../images/step_fin_icon.png) no-repeat right 0;
-    padding: 0 35px 0 0;
+    padding: 10px 35px 10px 0;
     color: #f00;
     text-decoration: none;
     z-index: 1;
@@ -577,7 +600,7 @@ ul li{
 
 /*子要素---*/
 .navi_area ul li ul{
-	margin: 5px 0;
+	margin-bottom: 5px;
 }
 .navi_area ul li ul li{
 	background: url(../images/sub_list_label.png) no-repeat 0 10px;
@@ -614,7 +637,7 @@ ul li{
 .navi_area ul li ul li.navi-others label.btn,
 .navi_area ul li ul li.navi-able label.btn{
 	background: none;
-    padding: 0;
+    padding: 3px 0px;
 }
 /* end --------------------*/
 
@@ -630,7 +653,7 @@ ul li{
 }
 .navi_area ul li ul li.navi-current label.btn{
 	background: none;
-	padding: 0;
+    padding: 3px 0px;
 }
 /* end --------------------*/
 
@@ -658,16 +681,25 @@ li.navi-step ul li{
 
 
 /* movie_Area  ----------------------
-*/
-.media_area{
+*/.media_area{
+	display: block;
 	width: 320px;
 	border: 2px solid #300203;
 	margin-bottom: 30px;
+	float: right;
 }
+h3.media-title{
+	font-size: 24.5px;
+	color: #300203;
+	background-color: #fff;
+}
+
 .media_btn{
 	text-align: center;
 	background: #300203;
 	padding: 5px 0;
+	line-height: 100%;
+	margin-bottom: 15px;
 }
 
 a.media-play,

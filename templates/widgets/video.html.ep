@@ -1,4 +1,3 @@
-<div class="media_area">
 % my $src = $video->{path} // next;
 % $src = url_for(qq{/$name/$src})->path->canonicalize;
 %= tag video => id => $video->{id}, src => $src, preload => 'none', width => config->{video_width}, height => config->{video_height}, begin
@@ -14,4 +13,3 @@
 %= link_to l('Softer') => url_for, class => 'btn softer', 'data-for' => $video->{id};
 %= link_to l('Louder') => url_for, class => 'btn louder', 'data-for' => $video->{id};
 </div><!-- .media_btn -->
-</div><!-- .media_area -->
