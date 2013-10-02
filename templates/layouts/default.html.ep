@@ -74,7 +74,7 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
 % }
 
 <footer id="copyright" class="footer clearboth">
-  <small class="copy">© 2013 Kyoto University</small><small class="logo"><a href="http://www.nishimiyahara.net"><img src="images/footer_btn01.png" alt="footer_btn01" width="181" height="31"></a><img src="images/footer_btn02.png" alt="footer_btn02" width="132" height="31"><a href="http://www.mm.media.kyoto-u.ac.jp/"><img src="images/footer_btn03.png" alt="footer_btn01" width="35" height="31"></a></small>
+  <small class="logo"><a href="http://www.mm.media.kyoto-u.ac.jp/"><img src="images/footer_btn03.png" alt="footer_btn01" width="35" height="31"></a></small>
 </footer>
 
 </div>
