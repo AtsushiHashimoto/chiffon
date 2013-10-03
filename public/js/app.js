@@ -260,11 +260,13 @@ jQuery(function ($) {
                             else {
                                 navi.addClass(navigations[step.visual]);
                             }
-                            if ( step.is_open ) {
-                                navi.addClass('pane-open');
-                            }
-                            else {
-                                navi.addClass('pane-close');
+                            if (!navi.hasClass('navi-substep')) {
+                                if ( step.is_open ) {
+                                    navi.addClass('pane-open');
+                                }
+                                else {
+                                    navi.addClass('pane-close');
+                                }
                             }
                             navi.show(0);
                         } else {
