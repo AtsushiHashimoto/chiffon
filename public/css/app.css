@@ -139,7 +139,7 @@ background-color: transparent;
 }
 .top_container h1:before{
 	content: url(../images/top_logo.png);
-	-webkit-transform: scale(0.5); 
+	-webkit-transform: scale(0.5);
 	-moz-transform: scale(0.5);
 }
 .login{
@@ -511,9 +511,9 @@ box-shadow:  inherit;
 }
 .span4:before{
 	content:url(../images/nav_title.png);
- -webkit-transform: scale(0.5); 
+ -webkit-transform: scale(0.5);
  -moz-transform: scale(0.5);
-	
+
 }
 .navi_area{
 	height: 680px;
@@ -556,23 +556,19 @@ ul li ul li.navi-step input[type="checkbox"]{
 }
 
 /*親要素---*/
-.navi_area ul li{
-	background:url(../images/list_label.png) no-repeat 10px 10px;
-	display: block;
-	padding-left: 50px;
-	padding-right: 10px;
-	color: #300203;
-	text-decoration: none;
-}
-.navi_area ul li.step-finished{
+
+.navi_area ul li.navi-finished.pane-close{
 	background:#fce5e7 url(../images/list_label_finish.png) no-repeat 10px 10px;
 	display: block;
 	padding-left: 50px;
 	color: #300203;
 	text-decoration: none;
 }
+.navi_area ul li.navi-finished.pane-open{
+	background:#fce5e7 url(../images/list_label_finish_open.png) no-repeat 10px 10px;
 
-.navi_area ul li.navi-current-open{
+}
+.navi_area ul li.navi-current.pane-close{
 	background:url(../images/list_label_current.png) no-repeat 10px 10px;
 	display: block;
 	padding-left: 50px;
@@ -580,6 +576,35 @@ ul li ul li.navi-step input[type="checkbox"]{
 	color: #300203;
 	text-decoration: none;
 }
+.navi_area ul li.navi-current.pane-open{
+	background:url(../images/list_label_current_open.png) no-repeat 10px 10px;
+}
+
+.navi_area ul li.navi-able.pane-close{
+	background:url(../images/list_label.png) no-repeat 10px 10px;
+	display: block;
+	padding-left: 50px;
+	padding-right: 10px;
+	color: #300203;
+	text-decoration: none;
+}
+.navi_area ul li.navi-able.pane-open{
+	background:url(../images/list_label_open.png) no-repeat 10px 10px;
+}
+
+.navi_area ul li.navi-others.pane-close{
+	background:url(../images/list_others_label.png) no-repeat 10px 10px;
+	display: block;
+	padding-left: 50px;
+	padding-right: 10px;
+	color: #300203;
+	text-decoration: none;
+}
+
+.navi_area ul li.navi-others.pane-open{
+	background:url(../images/list_others_label_open.png) no-repeat 10px 10px;
+}
+
 .navi_area ul li label.btn{
 	text-align:left;
 	display: block;
@@ -589,7 +614,7 @@ ul li ul li.navi-step input[type="checkbox"]{
     text-decoration: none;
     z-index: 1;
 }
-.navi_area ul li.step-finished label.btn{
+.navi_area ul li.navi-finished label.btn{
 	text-align:left;
     background:url(../images/step_fin_icon.png) no-repeat right 0;
     padding: 10px 35px 10px 0;
@@ -613,14 +638,15 @@ ul li ul li.navi-step input[type="checkbox"]{
 }
 
 
-/*.step-finished setting ----*/
+/*.navi-finished setting ----*/
 
-.navi_area ul li ul li.step-finished{
+.navi_area ul li ul li.navi-finished{
 	background: url(../images/sub_list_label_finished.png) no-repeat 0 10px !important;
 	padding-left: 0;
 	color: #e60012;
 }
-.navi_area ul li ul li.step-finished label.btn{
+
+.navi_area ul li ul li.navi-finished label.btn{
 	background: none;
 }
 
@@ -647,6 +673,7 @@ ul li ul li.navi-step input[type="checkbox"]{
 	background: url(../images/sub_list_current.png) no-repeat 0 10px;
 	padding-left: 25px;
 }
+.navi_area ul li ul li.navi-current,
 .navi_area ul li ul li.navi-current a{
 	color: #e60012;
 	font-weight: bold;
@@ -659,11 +686,11 @@ ul li ul li.navi-step input[type="checkbox"]{
 
 
 .navi-step input[type="checkbox"]{
-    opacity : 0;  
+    opacity : 0;
 	width:30px;
 	height:30px;
-	cursor: pointer; 
-    padding: 0;  
+	cursor: pointer;
+    padding: 0;
 }
 
 
@@ -757,7 +784,7 @@ small.copy{
 small.logo{
 	display:inline-block;
 	vertical-align: bottom;
-	width: 60%;
+	width: 45px;
 	text-align: right;
 	float: right;
 }
