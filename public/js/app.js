@@ -13,8 +13,13 @@ jQuery(function ($) {
     var media_controls = {};
 
     // show_notify
-    var show_notify = function (obj) {
-        noty(obj);
+    var show_notify = function (obj, on_debug) {
+        if (on_debug) {
+            if(DEBUG) noty(obj);
+        }
+        else {
+            noty(obj);
+        }
     };
 
     // loading
@@ -310,7 +315,7 @@ jQuery(function ($) {
                             show_notify({
                                 type: 'success',
                                 text: 'timer for `' + v + '` is canceled'
-                            });
+                            }, 1);
                             delete jobs[v];
                         } else if (typeof (job) == 'object') {
                             media_controls[v] = {
@@ -320,7 +325,7 @@ jQuery(function ($) {
                             show_notify({
                                 type: 'success',
                                 text: 'video/audio for `' + v + '` is paused'
-                            });
+                            }, 1);
                             delete jobs[v];
                         } else {
                             if (DEBUG) console.log({
