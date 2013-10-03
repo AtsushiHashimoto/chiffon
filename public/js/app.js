@@ -218,12 +218,12 @@ jQuery(function ($) {
                     if (DEBUG) console.log({
                         '-- DetailDraw': obj.DetailDraw
                     });
+                    $('#detail')
+                        .children('div')
+                        .hide(0);
                     var id = obj.DetailDraw.id;
                     var pane = $('#' + id);
                     if (pane.length) {
-                        $('#detail')
-                            .children('div')
-                            .hide(0);
                         pane.show(0);
                     } else {
                         warning_handler('missing recipe for DetailDraw : ' + id);
