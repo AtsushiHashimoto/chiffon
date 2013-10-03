@@ -52,8 +52,9 @@ jQuery(function ($) {
 
     // メニューの表示切り替えテーブル
     var navigations = {
-        'is_finished': 'step-finished',
-        'is_open': 'navi-current-open',
+        'finished': 'navi-finished',
+        'is_open': 'pane-open',
+        'is_close': 'pane-close',
         'CURRENT': 'navi-current',
         'ABLE': 'navi-able',
         'OTHERS': 'navi-others'
@@ -250,17 +251,22 @@ jQuery(function ($) {
                         }
                         if ($('#navi-' + step.id)
                             .length) {
+                            var navi = $('#navi-' + step.id);
                             $('#check-' + step.id)
                                 .attr('checked', step.is_finished ? true : false);
                             if ( step.is_finished ) {
-                                $('#navi-' + step.id).addClass('step-finished');
+                                navi.addClass('navi-finished');
+                            }
+                            else {
+                                navi.addClass(navigations[step.visual]);
                             }
                             if ( step.is_open ) {
-                                $('#navi-' + step.id).addClass('navi-current-open');
+                                navi.addClass('pane-open');
                             }
-                            $('#navi-' + step.id)
-                                .addClass(navigations[step.visual])
-                                .show(0);
+                            else {
+                                navi.addClass('pane-close');
+                            }
+                            navi.show(0);
                         } else {
                             warning_handler('missing recipe for NaviDraw : ' + step.id);
                         }
