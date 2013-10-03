@@ -227,11 +227,13 @@ jQuery(function ($) {
                         .children('div')
                         .hide(0);
                     var id = obj.DetailDraw.id;
-                    var pane = $('#' + id);
-                    if (pane.length) {
-                        pane.show(0);
-                    } else {
-                        warning_handler('missing recipe for DetailDraw : ' + id);
+                    if (id) {
+                        var pane = $('#' + id);
+                        if (pane.length) {
+                            pane.show(0);
+                        } else {
+                            warning_handler('missing recipe for DetailDraw : ' + id);
+                        }
                     }
                 } else if (obj.NaviDraw) {
                     // NaviDraw
