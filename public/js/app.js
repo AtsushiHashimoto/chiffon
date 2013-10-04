@@ -273,6 +273,14 @@ jQuery(function ($) {
                             warning_handler('missing recipe for NaviDraw : ' + step.id);
                         }
                     });
+                    var area_top = $('.navi_area').last().offset().top;
+                    if (DEBUG) console.log(area_top);
+                    var current = $('.navi-current');
+                    if (current.length) {
+                        var current_top = current.last().offset().top;
+                        if (DEBUG) console.log(current_top);
+                        $('.navi_area').scrollTop(current_top - area_top - 300);
+                    }
                     if (all_finished) {
                         $('#finished')
                             .show(0);
