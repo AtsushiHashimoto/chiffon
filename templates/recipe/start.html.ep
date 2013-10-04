@@ -12,7 +12,9 @@
 
 <div id="overview" class="hidden">
 %= tag h2 => l('Overview')
+  <div class="content_area">
 %= image url_for(qq{/$name/$recipe->{overview}})->path->canonicalize;
+  </div><!-- .content_area -->
 </div>
 
 <div id="materials" class="hidden">

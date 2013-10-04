@@ -23,8 +23,8 @@ footer{
 }
 
 body {
-  padding-top: 50px;
-  overflow: scroll;
+  /*padding-top: 50px;*/
+  overflow:hidden;
   background:#f7f3e8;
   color:#300203;
 }
@@ -139,7 +139,7 @@ background-color: transparent;
 }
 .top_container h1:before{
 	content: url(../images/top_logo.png);
-	-webkit-transform: scale(0.5); 
+	-webkit-transform: scale(0.5);
 	-moz-transform: scale(0.5);
 }
 .login{
@@ -220,6 +220,7 @@ input.btn-primary:hover{
 /*content area
 ---------------------------------------------------------------------- */
 .container{
+	padding-top: 50px;
 	margin-top:15px;
 }
 .row{
@@ -467,6 +468,14 @@ box-shadow:  inherit;
 }
 #materials .content_area{
 	padding: 30px;
+	height: 660px;
+	overflow:auto;
+}
+
+#overview .content_area{
+	padding: 30px;
+	height: 660px;
+	overflow:auto;
 }
 .well{
 	padding-bottom: 30px;
@@ -511,9 +520,9 @@ box-shadow:  inherit;
 }
 .span4:before{
 	content:url(../images/nav_title.png);
- -webkit-transform: scale(0.5); 
+ -webkit-transform: scale(0.5);
  -moz-transform: scale(0.5);
-	
+
 }
 .navi_area{
 	height: 680px;
@@ -569,7 +578,7 @@ ul li ul li.navi-step input[type="checkbox"]{
 }
 .navi_area ul li.navi-finished.pane-open{
 	background:#fce5e7 url(../images/list_label_finish_open.png) no-repeat 10px 10px;
-	
+
 }
 .navi_area ul li.navi-current.pane-close{
 	background:url(../images/list_label_current.png) no-repeat 10px 10px;
@@ -592,7 +601,7 @@ ul li ul li.navi-step input[type="checkbox"]{
 .navi_area ul li.navi-others.pane-open{
 	background:url(../images/list_others_label_open.png) no-repeat 10px 10px;
 }
-	
+
 .navi_area ul li label.btn{
 	text-align:left;
 	display: block;
@@ -603,7 +612,7 @@ ul li ul li.navi-step input[type="checkbox"]{
     text-decoration: none;
     z-index: 1;
 }
-.navi_area ul li.step-finished label.btn{
+.navi_area ul li.navi-finished label.btn{
 	text-align:left;
     background:url(../images/step_fin_icon.png) no-repeat right 0;
     padding: 10px 35px 10px 0;
@@ -668,7 +677,7 @@ ul li ul li.navi-step input[type="checkbox"]{
 	background: url(../images/sub_list_current.png) no-repeat 0 10px;
 	padding-left: 25px;
 }
-.navi_area ul li ul li.navi-current .
+.navi_area ul li ul li.navi-current,
 .navi_area ul li ul li.navi-current a{
 	color: #e60012;
 	font-weight: bold;
@@ -681,11 +690,11 @@ ul li ul li.navi-step input[type="checkbox"]{
 
 
 .navi-step input[type="checkbox"]{
-    opacity : 0;  
+    opacity : 0;
 	width:30px;
 	height:30px;
-	cursor: pointer; 
-    padding: 0;  
+	cursor: pointer;
+    padding: 0;
 }
 
 
