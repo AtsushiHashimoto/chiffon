@@ -24,7 +24,7 @@ footer{
 
 body {
   /*padding-top: 50px;*/
-  overflow:hidden;
+  overflow:auto;
   background:#f7f3e8;
   color:#300203;
 }
