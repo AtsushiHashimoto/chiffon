@@ -12,7 +12,9 @@
 
 <div id="overview" class="hidden">
 %= tag h2 => l('Overview')
+  <div class="content_area">
 %= image url_for(qq{/$name/$recipe->{overview}})->path->canonicalize;
+  </div><!-- .content_area -->
 </div>
 
 <div id="materials" class="hidden">
@@ -61,7 +63,7 @@
       % if (@substeps) {
         <ul>
         % for my $substep (@substeps) {
-          %= tag li => id => 'navi-'.$substep->{id}, class => 'navi-step', begin
+          %= tag li => id => 'navi-'.$substep->{id}, class => 'navi-step navi-substep', begin
             %= check_box 'check-name-'.$substep->{id} => 'on', id => 'check-'.$substep->{id}, class => 'check', 'data-url' => url_for('/navigator/check/'.$substep->{id});
             <label class="btn">
             %= link_to $substep->{navi_text} => url_for('/navigator/navi_menu/'.$substep->{id}), class => 'navigate';

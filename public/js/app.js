@@ -13,8 +13,13 @@ jQuery(function ($) {
     var media_controls = {};
 
     // show_notify
-    var show_notify = function (obj) {
-        noty(obj);
+    var show_notify = function (obj, on_debug) {
+        if (on_debug) {
+            if(DEBUG) noty(obj);
+        }
+        else {
+            noty(obj);
+        }
     };
 
     // loading
@@ -47,8 +52,9 @@ jQuery(function ($) {
 
     // メニューの表示切り替えテーブル
     var navigations = {
-        'is_finished': 'step-finished',
-        'is_open': 'navi-current-open',
+        'finished': 'navi-finished',
+        'is_open': 'pane-open',
+        'is_close': 'pane-close',
         'CURRENT': 'navi-current',
         'ABLE': 'navi-able',
         'OTHERS': 'navi-others'
@@ -135,7 +141,7 @@ jQuery(function ($) {
 
     // お知らせを表示する
     var notify_play = function (id) {
-        console.log('-- notify_play id : ' + id);
+        if (DEBUG) console.log('-- notify_play id : ' + id);
         var notify = $('#' + id);
         if (!notify.length) {
             warning_handler('missing recipe for notify_play : ' + id);
@@ -218,15 +224,17 @@ jQuery(function ($) {
                     if (DEBUG) console.log({
                         '-- DetailDraw': obj.DetailDraw
                     });
+                    $('#detail')
+                        .children('div')
+                        .hide(0);
                     var id = obj.DetailDraw.id;
-                    var pane = $('#' + id);
-                    if (pane.length) {
-                        $('#detail')
-                            .children('div')
-                            .hide(0);
-                        pane.show(0);
-                    } else {
-                        warning_handler('missing recipe for DetailDraw : ' + id);
+                    if (id) {
+                        var pane = $('#' + id);
+                        if (pane.length) {
+                            pane.show(0);
+                        } else {
+                            warning_handler('missing recipe for DetailDraw : ' + id);
+                        }
                     }
                 } else if (obj.NaviDraw) {
                     // NaviDraw
@@ -243,21 +251,36 @@ jQuery(function ($) {
                         }
                         if ($('#navi-' + step.id)
                             .length) {
+                            var navi = $('#navi-' + step.id);
                             $('#check-' + step.id)
                                 .attr('checked', step.is_finished ? true : false);
                             if ( step.is_finished ) {
-                                $('#navi-' + step.id).addClass('step-finished');
+                                navi.addClass('navi-finished');
                             }
-                            if ( step.is_open ) {
-                                $('#navi-' + step.id).addClass('navi-current-open');
+                            else {
+                                navi.addClass(navigations[step.visual]);
                             }
-                            $('#navi-' + step.id)
-                                .addClass(navigations[step.visual])
-                                .show(0);
+                            if (!navi.hasClass('navi-substep')) {
+                                if ( step.is_open ) {
+                                    navi.addClass('pane-open');
+                                }
+                                else {
+                                    navi.addClass('pane-close');
+                                }
+                            }
+                            navi.show(0);
                         } else {
                             warning_handler('missing recipe for NaviDraw : ' + step.id);
                         }
                     });
+                    var area_top = $('.navi_area').last().offset().top;
+                    if (DEBUG) console.log(area_top);
+                    var current = $('.navi-current');
+                    if (current.length) {
+                        var current_top = current.last().offset().top;
+                        if (DEBUG) console.log(current_top);
+                        $('.navi_area').scrollTop(current_top - area_top - 300);
+                    }
                     if (all_finished) {
                         $('#finished')
                             .show(0);
@@ -310,7 +333,7 @@ jQuery(function ($) {
                             show_notify({
                                 type: 'success',
                                 text: 'timer for `' + v + '` is canceled'
-                            });
+                            }, 1);
                             delete jobs[v];
                         } else if (typeof (job) == 'object') {
                             media_controls[v] = {
@@ -320,7 +343,7 @@ jQuery(function ($) {
                             show_notify({
                                 type: 'success',
                                 text: 'video/audio for `' + v + '` is paused'
-                            });
+                            }, 1);
                             delete jobs[v];
                         } else {
                             if (DEBUG) console.log({

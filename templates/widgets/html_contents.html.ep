@@ -1,11 +1,17 @@
 %= tag div => id => $object->{id}, class => 'step hidden', begin
+  % my @video = $object->children('video')->each;
+  % my @audio = $object->children('audio')->each;
+  % if ( @video or @audio ) {
+  <div class="media_area">
+    % for my $video (@video) {
+      %= include 'widgets/video', video => $video;
+    % }
+    % for my $audio (@audio) {
+      %= include 'widgets/audio', audio => $audio,  hide_play_button => stash('hide_play_button');
+    % }
+  </div><!-- .media_area -->
+  % }
   % for my $content ($object->children('html_contents')->each) {
     %== $content->content_xml;
-  % }
-  % for my $video ($object->children('video')->each) {
-    %= include 'widgets/video', video => $video;
-  % }
-  % for my $audio ($object->children('audio')->each) {
-    %= include 'widgets/audio', audio => $audio,  hide_play_button => stash('hide_play_button');
   % }
 % end
