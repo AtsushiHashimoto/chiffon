@@ -63,7 +63,7 @@ sub startup {
         video_width            => 320,
         video_height           => 180,
         complement_recipes_dir => 'var/complement_recipes',
-        timeout                => 300,
+        ws_timeout             => 300,
       },
       file => 'chiffon-web.conf',
     }
