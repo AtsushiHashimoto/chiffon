@@ -9,7 +9,8 @@ sub start {
   my $ws_clients = $self->app->ws_clients;
   warn qq{-- ws_clients : @{[keys %{$ws_clients}]} } if DEBUG;
 
-  Mojo::IOLoop->stream($self->tx->connection)->timeout(300);
+  my $timeout = $self->config('timeout');
+  Mojo::IOLoop->stream($self->tx->connection)->timeout($timeout);
 
   my $id = sprintf '%s', $self->tx;
   warn qq{-- id : $id } if DEBUG;
