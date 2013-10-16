@@ -1,7 +1,7 @@
 package Chiffon::Web;
 use Mojo::Base 'Mojolicious';
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 use Mojo::ByteStream qw(b);
 
@@ -63,6 +63,7 @@ sub startup {
         video_width            => 320,
         video_height           => 180,
         complement_recipes_dir => 'var/complement_recipes',
+        ws_timeout             => 300,
       },
       file => 'chiffon-web.conf',
     }

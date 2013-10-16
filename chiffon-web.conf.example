@@ -11,4 +11,5 @@
   video_width            => 320,
   video_height           => 180,
   complement_recipes_dir => 'var/complement_recipes',
+  ws_timeout             => 300,
 }
