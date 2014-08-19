@@ -232,6 +232,7 @@ input.btn-primary:hover{
 #finished*/
 {
   background:#fff;
+  overflow:hidden;
   width:1220px;
   height:790px;
   text-align: center;
@@ -283,7 +284,6 @@ input.btn-primary:hover{
   height: 740px;
   overflow:auto;
 }
-
 #guide .row,
 #finished .row{
   width:860px;
@@ -505,10 +505,11 @@ box-shadow:  inherit;
 /* navi setting  ----------------*/
 
 .span4{
+ position:absolute;
  background: url(../images/nav_title.png) #fff no-repeat top;
  background-attachment: fixed;
   width:338px;
-  margin-left: 20px;
+  margin-left: 880px;
   border:1px solid #e3d6b7;
     border-radius:10px;           /* 草案 */
     /* Safari,Google Chrome用 */
