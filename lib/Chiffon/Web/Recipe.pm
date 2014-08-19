@@ -34,10 +34,10 @@ sub start {
   }
 
   # validate
-  (undef, my $err) = $self->hmml_validate($recipe_xml_file);
+  (undef, my $err) = $self->hwml_validate($recipe_xml_file);
   if ($err) {
     return $self->render_exception(
-      qq{invalid hmml document `$recipe_xml_file` : $err});
+      qq{invalid hwml document `$recipe_xml_file` : $err});
   }
 
   # id complement

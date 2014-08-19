@@ -18,14 +18,17 @@ use Capture::Tiny qw(capture);
 
 use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 
+
 has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
 sub startup {
   my $app = shift;
 
-  chdir $app->home->detect;
-  warn qq{-- chdir : @{[$app->home->detect]} } if DEBUG;
+  #chdir $app->home->detect;
+  #warn qq{-- chdir : @{[$app->home->detect]} } if DEBUG;
+  chdir $app->home->rel_dir('.');
+  warn qq{-- chdir : @{[$app->home->rel_dir('.')]} } if DEBUG;
 
   $app->secret(b(file(__FILE__)->absolute)->sha1_sum);
 
@@ -55,7 +58,7 @@ sub startup {
         recipe_basename        => 'recipe.xml',
         recipes_dir            => 'var/recipes',
         navigator_endpoint     => 'http://localhost:4567/navi/default',
-        relax_ng_file          => 'rng/hmml-basic.rng',
+        relax_ng_file          => 'rng/hwml-basic.rng',
         log_level              => 'info',
         datetime_format        => '%Y.%m.%d_%H.%M.%S',
         notification_live_sec  => 5,
@@ -69,6 +72,7 @@ sub startup {
     }
   );
   $app->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
+    $app->plugin('JSONP');
 
   # Config check
   my $datetime_format = $app->config->{datetime_format};
@@ -188,16 +192,16 @@ sub startup {
 
   # validate
   $app->helper(
-    hmml_validate => sub {
+    hwml_validate => sub {
       my $self      = shift;
-      my $hmml_file = shift or die 'recipe file required';
+      my $hwml_file = shift or die 'recipe file required';
       my $config    = $self->config;
-      my $hmml_doc  = XML::LibXML->new->parse_file($hmml_file);
+      my $hwml_doc  = XML::LibXML->new->parse_file($hwml_file);
       my $rngschema = XML::LibXML::RelaxNG->new(
         location => file($config->{relax_ng_file})->stringify);
       my $err;
       my ($stdout, $stderr) = capture {
-        $rngschema->validate($hmml_doc);
+        $rngschema->validate($hwml_doc);
       };
       warn qq{-- result : @{[$stdout, $stderr]} } if DEBUG;
       return $stdout, $stderr;
