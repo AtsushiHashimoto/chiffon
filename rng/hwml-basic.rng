@@ -9,7 +9,7 @@
    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
   <include href="xhtml-secure.rng"/>
-  <include href="hmml-block.rng"/>
+  <include href="hwml-block.rng"/>
 
   <define name="recipe">
     <element name="recipe">
@@ -162,9 +162,11 @@
   <!-- start/endに応じて@eventで指定した要素の開始/終了を基準に(delay秒後に)コンテンツを提示する -->
 
   <define name="attlist.trigger" combine="interleave">
-    <attribute name="ref">
-      <data type="IDREFS"/>
-    </attribute>
+    <optional>
+      <attribute name="ref">
+	<data type="IDREFS"/>
+</attribute>
+    </optional>
   </define>
   <!-- timingが開始・終了の基準となるイベント/物体があれば，それを参照する．triggerの列挙でor，単一trigger内でのid列挙でandを表現． -->
 
