@@ -54,7 +54,7 @@
 <div class="navi_area">
 <ul>
 % for my $step ($recipe->find('step')->each) {
-    %= tag li => id => 'navi-'.$step->{id}, class => 'navi-step', begin
+    %= tag li => id => 'navi-'.$step->{id}, class => 'navi-step', 'data-order'=>1, begin
       %= check_box 'check-name-'.$step->{id} => 'on', id => 'check-'.$step->{id}, class => 'check', 'data-url' => url_for('navigator/check/'.$step->{id});
       <label class="btn">
       %= link_to $step->{navi_text} => url_for('/navigator/navi_menu/'.$step->{id}), class => 'navigate'

@@ -136,6 +136,9 @@ jQuery(function ($) {
         if (DEBUG) console.log('-- media_pause id : ' + id);
         var media = get_media(id);
         if (!media) return;
+        media_controls[id] = {
+            send_control: true
+        };
         media.pause();
     };
 
@@ -166,6 +169,7 @@ jQuery(function ($) {
         }
     };
 
+
     // 警告を表示し，サーバーへログを送信する
     var warning_handler = function (str) {
         if (DEBUG) console.log({
@@ -180,6 +184,7 @@ jQuery(function ($) {
             msg: str
         });
     };
+
 
     // エラーを表示し，サーバーへログを送信する
     var error_handler = function (str) {
@@ -244,6 +249,7 @@ jQuery(function ($) {
                     $('.navi-step')
                         .removeClass(navigation_classes)
                         .hide(0);
+
                     var all_finished = true;
                     $.each(obj.NaviDraw.steps, function (i, step) {
                         if (all_finished) {
@@ -261,6 +267,7 @@ jQuery(function ($) {
                                 navi.addClass(navigations[step.visual]);
                             }
                             if (!navi.hasClass('navi-substep')) {
+				navi.attr('data-order',i);
                                 if ( step.is_open ) {
                                     navi.addClass('pane-open');
                                 }
@@ -273,6 +280,21 @@ jQuery(function ($) {
                             warning_handler('missing recipe for NaviDraw : ' + step.id);
                         }
                     });
+
+    var list = $('li.navi-step').not('li.navi-substep').sort(function(a,b){
+	return Number($(a).data('order')) > Number($(b).data('order'));
+    })
+
+    $('.navi_area').hide(0);    
+    $('.navi_area').children('ul').empty();
+    $.each(list,function(i,step){
+	$('.navi_area').children('ul').append(step);
+    });
+/*    $('.navi_area').append($('<ul/>').append(list));*/
+    $('.navi_area').show(0);		  
+    set_navi_func();
+    
+
                     var area_top = $('.navi_area').last().offset().top;
                     if (DEBUG) console.log(area_top);
                     var current = $('.navi-current');
@@ -281,6 +303,7 @@ jQuery(function ($) {
                         if (DEBUG) console.log(current_top);
                         $('.navi_area').scrollTop(current_top - area_top - 300);
                     }
+		    
                     if (all_finished) {
                         $('#finished')
                             .show(0);
@@ -459,12 +482,14 @@ jQuery(function ($) {
     }
 
     // 済ボタン
+    var set_navi_func = function(){
     $('.check')
         .on('click', function (e) {
             var url = $(this)
                 .data('url');
             $.getJSON(url)
                 .done(navigator_callback);
+	    $(this).show(0); // to refresh navi_area
         });
 
     // ナビボタン
@@ -476,8 +501,10 @@ jQuery(function ($) {
                 .attr('href');
             $.getJSON(url)
                 .done(navigator_callback);
+	    $(this).show(0); // to refresh navi_area
         });
-
+    };
+    set_navi_func();
     // 終了ボタン
     $('.navigator-end')
         .on('click', function (e) {
@@ -674,6 +701,7 @@ jQuery(function ($) {
                 .data('for');
             media_pause(id);
         });
+
 });
 
 /* libraries
