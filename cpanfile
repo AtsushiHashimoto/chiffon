@@ -1,10 +1,11 @@
 requires 'perl'              => '5.012';
-requires 'Mojolicious'       => '4.16';
-recommends 'EV'              => 4;
-recommends 'IO::Socket::IP'  => 0.16;
-recommends 'IO::Socket::SSL' => 1.75;
+requires 'Mojolicious'       => '<4.17';
+recommends 'EV'              ==4;
+recommends 'IO::Socket::IP'  == 0.16;
+recommends 'IO::Socket::SSL' == 1.75;
 
 requires 'Mojolicious::Plugin::I18N' => 0;
+requires 'Mojolicious::Plugin::JSONP' => '<=0.03';
 requires 'Path::Class'               => 0;
 requires 'Crypt::SaltedHash'         => 0;
 requires 'App::Rad'                  => 0;
