@@ -21,7 +21,8 @@ sub start {
     next unless $path->is_dir;
     push @recipes, $path;
   }
-  warn qq{-- recipes : @{[@recipes]} } if DEBUG;
+	@recipes = sort {lc $a cmp lc $b} @recipes;
+	warn qq{-- recipes : @{[@recipes]} } if DEBUG;
   $self->stash(recipes => \@recipes);
 
   $self->render(layout => 'default', title => 'Recipe List',);
