@@ -72,7 +72,7 @@ sub startup {
 	  proxy => 1
 	}	
       },
-      file => '../chiffon-web.conf',
+      file => 'chiffon-web.conf',
     }
   );
   $app->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
