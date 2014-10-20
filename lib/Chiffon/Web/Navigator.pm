@@ -10,13 +10,14 @@ sub start {
   my $self            = shift;
   my $logger          = $self->app->log;
   my $recipe_xml_file = $self->recipe_xml_file;
+  my $session_id = $self->session_id;
   unless ($recipe_xml_file) {
     my $msg = 'missing recipe_xml_file';
     return $self->render_exception($msg);
   }
 
   # スタートを記録
-  $logger->info('START');
+  $logger->info('START(' . $session_id . ')');
 
   # Navigator と通信
   my $navigator_response = $self->post_to_navigator(
@@ -35,6 +36,7 @@ sub channel {
   my $self   = shift;
   my $logger = $self->app->log;
   my $id     = $self->param('id') // '';
+  my $session_id = $self->session_id;
   if ($id eq '') {
     my $msg = 'missing channel id';
     return $self->render_exception($msg);
@@ -46,7 +48,7 @@ sub channel {
   $id = uc $id;
 
   # ユーザーの行動をログに記録
-  $logger->info('CHANNEL : ' . $id);
+  $logger->info('CHANNEL(' . $session_id . ') : ' . $id);
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
@@ -61,13 +63,14 @@ sub navi_menu {
   my $self   = shift;
   my $logger = $self->app->log;
   my $id     = $self->param('id') // '';
+  my $session_id = $self->session_id;
   if ($id eq '') {
     my $msg = 'missing navi_menu id';
     return $self->render_exception($msg);
   }
 
   # ユーザーの行動をログに記録
-  $logger->info('NAVI_MENU : ' . $id);
+  $logger->info('NAVI_MENU (' . $session_id . '): ' . $id);
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
@@ -82,6 +85,7 @@ sub check {
   my $self   = shift;
   my $logger = $self->app->log;
   my $id     = $self->param('id') // '';
+  my $session_id = $self->session_id;
   $id ||= $self->param('media_play') // '';
   warn qq{-- id : $id } if DEBUG;
   if ($id eq '') {
@@ -90,7 +94,7 @@ sub check {
   }
 
   # ユーザーの行動をログに記録
-  $logger->info('CHECK : ' . $id);
+  $logger->info('CHECK(' . $session_id . '): ' . $id);
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
@@ -105,6 +109,7 @@ sub external {
   my $self   = shift;
   my $logger = $self->app->log;
   my $input  = $self->param('input') // '';
+  my $session_id = $self->session_id;
   warn qq{-- input : @{[$self->dumper($input)]} } if DEBUG;
 
   if ($input =~ m|\A\{|) {
@@ -124,7 +129,7 @@ sub external {
   }
 
   # 外部入力をログに記録
-  $logger->info('EXTERNAL_INPUT : ' . $input);
+  $logger->info('EXTERNAL_INPUT(' . $session_id . '): ' . $input);
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
@@ -142,6 +147,7 @@ sub play_control {
   my $id        = $self->param('pk') // '';
   my $operation = uc $self->param('operation') // '';
   my $value     = $self->param('value') // '';
+  my $session_id = $self->session_id;
 
   if ($id eq '') {
     my $msg = 'missing play_control pk(id)';
@@ -158,7 +164,7 @@ sub play_control {
   }
 
   # ユーザーの行動をログに記録
-  $logger->info('PLAY_CONTROL : ' . $json->encode($controls));
+  $logger->info('PLAY_CONTROL (' . $session_id . '): ' . $json->encode($controls));
 
   # Navigatorと通信
   my $navigator_response = $self->post_to_navigator(
@@ -172,9 +178,10 @@ sub play_control {
 sub end {
   my $self   = shift;
   my $logger = $self->app->log;
+  my $session_id = $self->session_id;
 
   # 終了を記録
-  $logger->info('END');
+  $logger->info('END(' . $session_id . ')');
 
   # Navigator と通信
   my $navigator_response = $self->post_to_navigator(

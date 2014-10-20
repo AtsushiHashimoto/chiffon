@@ -267,7 +267,7 @@ jQuery(function ($) {
                                 navi.addClass(navigations[step.visual]);
                             }
                             if (!navi.hasClass('navi-substep')) {
-				navi.attr('data-order',i);
+                           navi.attr('data-order',i);
                                 if ( step.is_open ) {
                                     navi.addClass('pane-open');
                                 }
@@ -279,19 +279,22 @@ jQuery(function ($) {
                         } else {
                             warning_handler('missing recipe for NaviDraw : ' + step.id);
                         }
-                    });
-
-    var list = $('li.navi-step').not('li.navi-substep').sort(function(a,b){
-	return Number($(a).data('order')) > Number($(b).data('order'));
-    })
-
-    $('.navi_area').hide(0);    
+                           });
+    var list = $('li.navi-step')
+                   .not('li.navi-substep')
+                   .get();
+    list.sort(function(a,b){
+              var num_a = Number($(a).data('order'));
+              var num_b = Number($(b).data('order'));
+              if(num_a>num_b) return 1;
+              if(num_b>num_a) return -1;
+              return 0;
+    });
+                   
     $('.navi_area').children('ul').empty();
     $.each(list,function(i,step){
-	$('.navi_area').children('ul').append(step);
+           $('.navi_area').children('ul').append(step);
     });
-/*    $('.navi_area').append($('<ul/>').append(list));*/
-    $('.navi_area').show(0);		  
     set_navi_func();
     
 
@@ -703,6 +706,17 @@ jQuery(function ($) {
         });
 
 });
+
+/* hereafter added by A. Hashimoto */
+$(function(){
+    $("#popover_bottom").popover({
+	html: true,
+	placement: "bottom"
+    });
+});
+$(function(){
+	$('a.disable_link').click(function(){return false;})
+});	
 
 /* libraries
 

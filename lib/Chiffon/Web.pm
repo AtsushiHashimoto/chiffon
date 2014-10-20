@@ -22,6 +22,7 @@ use constant DEBUG => $ENV{CHIFFON_WEB_DEBUG} || 0;
 has json       => sub { JSON::XS->new };
 has ws_clients => sub { +{} };
 
+
 sub startup {
   my $app = shift;
 
@@ -31,7 +32,6 @@ sub startup {
   warn qq{-- chdir : @{[$app->home->rel_dir('.')]} } if DEBUG;
 
   $app->secret(b(file(__FILE__)->absolute)->sha1_sum);
-
   if ($app->mode eq 'production') {
     warn qq{-- production_mode\n} if DEBUG;
 
@@ -66,9 +66,13 @@ sub startup {
         video_width            => 320,
         video_height           => 180,
         complement_recipes_dir => 'var/complement_recipes',
-        ws_timeout             => 300,
+	ws_timeout             => 43200,
+	hypnotoad => {
+	  workers => 1,
+	  proxy => 1
+	}	
       },
-      file => 'chiffon-web.conf',
+      file => '../chiffon-web.conf',
     }
   );
   $app->plugin('I18N', namespace => 'Chiffon::Web::I18N', default => 'ja');
@@ -79,6 +83,8 @@ sub startup {
   my $check           = Time::Piece->new->strftime($datetime_format);
   die 'invalid character in datetime_format. You use `-` or `.` or `_`'
     unless $check =~ /\A[-\.\_\w]+\z/ms;
+
+
 
   # Log
   $app->log->level(lc $app->config->{log_level});
@@ -104,7 +110,6 @@ sub startup {
 
   # Static
   unshift @{$app->static->paths}, $app->config->{recipes_dir};
-
   # helpers
   # ユーザー情報を取得する
   $app->helper(
@@ -309,6 +314,9 @@ sub startup {
   $r->via(qw(get post))->route(qq{/:controller/:action/:id})
     ->to(controller => 'index', action => 'start', id => '');
   $r->websocket('/external')->to('external#start');
+
+  # Session ID
+  $r->route('/sessionid')->via(qw(get))->to('sessionid#start');
 }
 
 1;

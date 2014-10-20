@@ -7,6 +7,8 @@ use constant DEBUG => $ENV{CHIFFON_WEB_EXTERNAL_DEBUG} || 0;
 sub start {
   my $self       = shift;
   my $ws_clients = $self->app->ws_clients;
+  my $logger = $self->app->log;
+
   warn qq{-- ws_clients : @{[keys %{$ws_clients}]} } if DEBUG;
 
   my $timeout = $self->config('ws_timeout');

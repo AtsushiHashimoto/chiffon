@@ -22,7 +22,6 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
 %= javascript '/noty/layouts/bottom.js'
 %= javascript '/noty/themes/default.js'
 %= javascript '/js/app.js'
-
 % if ($action ne 'login') {
 <div class="navbar navbar-fixed-top navbar-inverse">
   <div class="navbar-inner">
@@ -44,6 +43,10 @@ window.jQuery || document.write('<script src="<%= url_for(q{/jquery/jquery-1.8.3
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= $user_id %>でログイン中 <b><span class="caret"></span></b></a>
           <ul class="dropdown-menu">
             <li><%= link_to "ログアウト" => "/logout" %></li>
+% if ($controller eq 'recipe') {
+        <li><%= link_to url_for('current')->query(name=>$name)=>("data-content"=>session_id,title=>"session id",id=>"popover_bottom",class=>"disable_link")=>begin %>show session id<% end %>
+</a></li>
+% }
           </ul>
         </li>
       % }

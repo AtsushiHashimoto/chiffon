@@ -12,7 +12,7 @@ use Mojo::ByteStream qw(b);
 sub start {
   my $self   = shift;
   my $logger = $self->app->log;
-
+  my $session_id = $self->session_id;
   my $config = $self->config;
   my $name = $self->param('name') // '';
   if ($name eq '') {
@@ -99,6 +99,7 @@ sub start {
     title    => $dom->recipe->{title},
     template => 'recipe/start',
   );
+  $logger->info('Recipe Rendering(' . $session_id . '): ' . $name);
 }
 
 1;
