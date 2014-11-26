@@ -51,16 +51,16 @@
 
 <define name="Substep.Video.class">
   <ref name="Substep.Optional.class"/>
-  <optional>
+  <zeroOrMore>
    <ref name="video"/>
-  </optional>
+  </zeroOrMore>
 </define>
 
 <define name="Substep.Audio.class">
   <ref name="Substep.Optional.class"/>
-  <optional>
+  <zeroOrMore>
    <ref name="audio"/>
-  </optional>
+  </zeroOrMore>
 </define>
 
 <define name="Substep.HTML.class">

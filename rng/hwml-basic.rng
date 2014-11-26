@@ -228,6 +228,14 @@
 	  </attribute>
   </define>
   <!-- 音声ファイルへのパスを指定 -->
+	
+	<define name="attlist.audio" combine="interleave">
+		<optional>
+			<attribute name="title"/>
+		</optional>
+	</define>
+	<!-- 動画のタイトルを指定, guideの描画時に動画タイトルとして利用 -->
+
 
   <define name="attlist.audio" combine="interleave">
     <optional>
