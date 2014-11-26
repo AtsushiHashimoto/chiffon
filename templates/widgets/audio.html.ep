@@ -4,6 +4,9 @@
   <p>This is audio. Your browser is not support.</p>
 % end
 %= t div => class => $hide_play_button ? 'hidden' : 'media_btn', begin
+	% if ($audio->{title} ne '') {
+		%= tag h3 => class => 'media-title', $audio->{title}
+	% }
   %= link_to l('Play') => url_for, 'data-for' => $audio->{id}, class => 'btn media-play';
   %= link_to l('Pause') => url_for, 'data-for' => $audio->{id}, class => 'btn media-pause';
   %= link_to l('Softer') => url_for, class => 'btn softer', 'data-for' => $audio->{id};
