@@ -715,7 +715,7 @@ li.navi-step ul li{
 }
 .html_content_area{
 	position: relative;
-	height: 110px;
+	height: 180px;
 }
 .video_area{
 	width: 408px;
@@ -730,7 +730,7 @@ li.navi-step ul li{
 .image_area{
 	width: 408px;
 	position: absolute;
-	top: 167px;
+	top: 237px;
 	float: left;
 	margin-bottom: 30px;
 	margin-right: 10px;
