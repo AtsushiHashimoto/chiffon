@@ -196,6 +196,16 @@
   </define>
   <!-- 動画ファイルへのパスを指定 -->
 
+	<define name="attlist.video" combine="interleave">
+		<optional>
+			<attribute name="poster">
+				<data type="anyURI"/>
+			</attribute>
+		</optional>
+	</define>
+	<!-- 動画開始前に表示する画像へのパスを指定 -->
+
+
   <define name="attlist.video" combine="interleave">
     <optional>
       <attribute name="title"/>

@@ -1,6 +1,11 @@
 % my $src = $video->{path} // next;
 % $src = url_for(qq{/$name/$src})->path->canonicalize;
-%= tag video => id => $video->{id}, src => $src, preload => 'none', width => config->{video_width}, height => config->{video_height}, begin
+% my $poster = "";
+% if (defined $video->{poster}) {
+%		$poster = $video->{poster};
+%		$poster = url_for(qq{/$name/$poster})->path->canonicalize;
+% }
+%= tag video => id => $video->{id}, src => $src, preload => 'none', poster => $poster, width => config->{video_width}, height => config->{video_height}, begin
   <p>This is video. Your browser is not support.</p>
 % end
 <div class="media_btn">
