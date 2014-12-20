@@ -5,10 +5,13 @@
 %		$poster = $video->{poster};
 %		$poster = url_for(qq{/$name/$poster})->path->canonicalize;
 % }
-%= tag video => id => $video->{id}, src => $src, preload => 'none', poster => $poster, width => config->{video_width}, begin
+%= tag video => id => $video->{id}, src => $src, preload => 'none', poster => $poster, width => config->{video_width}, height => config->{video_height}, begin
   <p>This is video. Your browser is not support.</p>
 % end
 <div class="media_btn">
+% if ($video->{title} ne '') {
+  %= tag h3 => class => 'media-title', $video->{title}
+% }
 %= link_to l('Play') => url_for, class => 'btn media-play', 'data-for' => $video->{id};
 %= link_to l('Pause') => url_for, class => 'btn media-pause', 'data-for' => $video->{id};
 %= link_to l('Fullscreen') => url_for, class => 'btn full-screen', 'data-for' => $video->{id};
