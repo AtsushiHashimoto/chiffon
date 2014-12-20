@@ -4,7 +4,7 @@
 	%== $content->content_xml;
 	% }
 	</div><!-- .html_content_area -->
-	<hr class="hidden"/>
+	<hr/>
 
 	% my @video = $object->children('video')->each;
   % my @audio = $object->children('audio')->each;
