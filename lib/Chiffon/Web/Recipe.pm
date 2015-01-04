@@ -59,6 +59,15 @@ sub start {
   unless (defined $dom) {
     return $self->render_exception(qq{parse error $recipe_xml_file});
   }
+	
+	$dom->find('recipe')->each(
+		sub {
+			my $elm = shift;
+			return if exists $elm->{id};
+			$elm->{id} = $name;
+		}
+	);
+	
 
   my %ids;
   for my $element_name (@complement_targets) {
