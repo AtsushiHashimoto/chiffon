@@ -141,6 +141,19 @@
       <data type="ID"/>
     </attribute>
   </define>
+	<define name="attlist.event" combine="interleave">
+		<optional>
+			<attribute name="name"/>
+		</optional>
+	</define>
+	<define name="attlist.event" combine="interleave">
+		<optional>
+			<attribute name="img">
+				<data type="anyURI"/>
+			</attribute>
+		</optional>
+	</define>
+	<!-- その物体を表すアイコンがあれば指定する -->
 
   <!-- navigator用に，各要素の表示・再生タイミングを示すTrigger -->
   <define name="trigger">
