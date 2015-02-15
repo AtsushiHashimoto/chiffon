@@ -262,6 +262,9 @@ jQuery(function ($) {
                                 .attr('checked', step.is_finished ? true : false);
                             if ( step.is_finished ) {
                                 navi.addClass('navi-finished');
+																if (step.visual == 'CURRENT'){
+																	navi.addClass(navigations[step.visual]);
+																}
                             }
                             else {
                                 navi.addClass(navigations[step.visual]);
